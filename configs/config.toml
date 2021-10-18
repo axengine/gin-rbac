@@ -1,0 +1,23 @@
+Env = "dev"
+
+[Admin]
+  AuthEnable = true
+  HttpListenAddr = "0.0.0.0:49000"
+
+[Logger]
+  Addr = []
+  Filename = "./log/logger.log"
+  Level = -1
+  Module = "admin_rbac"
+
+[Mysql]
+  ConnMaxLifetime = 7200
+  MaxIdleConn = 200
+  MaxOpenConn = 50
+  ShowSQL = true
+
+  [Mysql.Master]
+    Database = "admin_rbac"
+    HostPort = "192.168.10.23:3306"
+    Password = "111111"
+    Username = "root"
