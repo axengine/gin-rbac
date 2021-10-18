@@ -2,6 +2,7 @@ package dao
 
 import (
 	"github.com/bbdshow/admin-rabc/pkg/conf"
+	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/caches"
 	"github.com/bbdshow/bkit/db/mysql"
 )
@@ -33,7 +34,14 @@ func (d *Dao) Close() {
 
 func (d *Dao) Sync2() {
 	if !d.cfg.Release() {
-		err := d.mysql.Sync2()
+		err := d.mysql.Sync2(
+			new(model.AppConfig),
+			new(model.MenuConfig),
+			new(model.ActionConfig),
+			new(model.MenuAction),
+			new(model.RoleConfig),
+			new(model.Account),
+		)
 		if err != nil {
 			panic(err)
 		}

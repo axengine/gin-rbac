@@ -12,4 +12,5 @@ require (
 	github.com/gin-gonic/gin v1.7.2
 	go.uber.org/zap v1.17.0
 	xorm.io/builder v0.3.9
+	xorm.io/xorm v1.2.3
 )
