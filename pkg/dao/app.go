@@ -56,7 +56,7 @@ func (d *Dao) GetAppConfig(ctx context.Context, in *model.GetAppConfigReq) (bool
 }
 
 func (d *Dao) GetAppConfigFromCache(ctx context.Context, in *model.GetAppConfigReq) (bool, *model.AppConfig, error) {
-	key := fmt.Sprintf("AppConfig_chanId_%d_accessKey_%s", in.Id, in.AccessKey)
+	key := fmt.Sprintf("AppConfig_id_%d_accessKey_%s", in.Id, in.AccessKey)
 
 	v, err := d.memCache.Get(key)
 	if err == nil {

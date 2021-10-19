@@ -4,10 +4,52 @@ import (
 	"context"
 	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/errc"
+	"xorm.io/builder"
 )
 
 func (d *Dao) ListAccount(ctx context.Context, in *model.ListAccountReq) (int64, []*model.Account, error) {
-	return 0, nil, nil
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	if len(in.Nickname) > 0 {
+		sess.And("nickname like ?", "%"+in.Nickname+"%")
+	}
+	if len(in.Username) > 0 {
+		sess.And("username like ?", "%"+in.Username+"%")
+	}
+	if in.AppId > 0 {
+		sess.And("app_id = ?", in.AppId)
+	}
+	if in.Status > 0 {
+		sess.And("status = ?", in.Status)
+	}
+
+	records := make([]*model.Account, 0, in.Size)
+	c, err := sess.OrderBy("id DESC").Limit(in.LimitStart()).FindAndCount(&records)
+	return c, records, errc.WithStack(err)
+}
+
+func (d *Dao) GetAccount(ctx context.Context, in *model.GetAccountReq) (bool, *model.Account, error) {
+	conds := make([]builder.Cond, 0)
+	if in.Id > 0 {
+		conds = append(conds, builder.Eq{"id": in.AppId})
+	}
+	if in.AppId > 0 {
+		conds = append(conds, builder.Eq{"app_id": in.AppId})
+	}
+
+	if len(in.Username) > 0 {
+		conds = append(conds, builder.Eq{"username": in.Username})
+	}
+
+	if len(conds) == 0 {
+		return false, nil, errc.ErrParamInvalid.MultiMsg("condition required")
+	}
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	for _, c := range conds {
+		sess.And(c)
+	}
+	r := &model.Account{}
+	exists, err := sess.Get(r)
+	return exists, r, errc.WithStack(err)
 }
 
 func (d *Dao) CreateAccount(ctx context.Context, in *model.Account) error {
