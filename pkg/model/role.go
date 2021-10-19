@@ -12,7 +12,7 @@ type RoleConfig struct {
 	IsRoot      int32             `xorm:"not null TINYINT(2) comment('ROOT 1-ROOT')"`
 	Status      types.LimitStatus `xorm:"not null TINYINT(2) comment('状态 1-正常 2-锁定')"`
 	Memo        string            `xorm:"not null VARCHAR(128) comment('备注')"`
-	MenuActions types.IntSliceStr `xorm:"not null TEXT comment('菜单功能ID')"`
+	MenuActions types.IntSplitStr `xorm:"not null TEXT comment('菜单功能ID')"`
 	UpdatedAt   time.Time         `xorm:"updated"`
 	CreatedAt   time.Time         `xorm:"created"`
 }

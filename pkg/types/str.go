@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-type IntSliceStr string
+type IntSplitStr string
 
-func (iss IntSliceStr) Unmarshal() []int64 {
+func (iss IntSplitStr) Unmarshal() []int64 {
 	strs := strings.Split(string(iss), ",")
 	ints := make([]int64, 0)
 	for _, s := range strs {
@@ -19,10 +19,10 @@ func (iss IntSliceStr) Unmarshal() []int64 {
 	return ints
 }
 
-func (iss IntSliceStr) Marshal(ints []int64) IntSliceStr {
+func (iss IntSplitStr) Marshal(ints []int64) IntSplitStr {
 	strs := make([]string, 0)
 	for _, i := range ints {
 		strs = append(strs, strconv.FormatInt(i, 10))
 	}
-	return IntSliceStr(strings.Join(strs, ","))
+	return IntSplitStr(strings.Join(strs, ","))
 }

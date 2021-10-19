@@ -1,9 +1,11 @@
 package service
 
-func (svc *Service) ListAccount() {}
+import "context"
 
-func (svc *Service) CreateAccount() {}
+func (svc *Service) ListAccount(ctx context.Context) {}
 
-func (svc *Service) UpdateAccountPassword() {}
+func (svc *Service) CreateAccount(ctx context.Context) {}
 
-func (svc *Service) UpdateAccountRole() {}
+func (svc *Service) UpdateAccountPassword(ctx context.Context) {}
+
+func (svc *Service) UpdateAccountRole(ctx context.Context) {}
