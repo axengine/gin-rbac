@@ -82,11 +82,22 @@ definitions:
     type: object
   model.ListActionConfigReq:
     properties:
+      appId:
+        type: integer
+      id:
+        type: integer
+      method:
+        type: string
+      name:
+        type: string
       page:
         type: integer
+      path:
+        type: string
       size:
         type: integer
     required:
+    - id
     - page
     - size
     type: object
@@ -149,6 +160,11 @@ definitions:
         type: integer
     type: object
   model.LoginOutAccountReq:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
     type: object
   model.UpdateAccountPasswordReq:
     properties:

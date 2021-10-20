@@ -61,6 +61,22 @@ func (svc *Service) LoginAccount(ctx context.Context, in *model.LoginAccountReq,
 }
 
 func (svc *Service) LoginOutAccount(ctx context.Context, in *model.LoginOutAccountReq) error {
+	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
+		Id:    in.Id,
+		Token: in.Token,
+	})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if !exists {
+		return nil
+	}
+	acc.Token = ""
+	acc.TokenExpired = 0
+
+	if err := svc.d.UpdateAccount(ctx, acc, []string{"token", "token_expired"}); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
 	return nil
 }
 
@@ -118,6 +134,7 @@ func (svc *Service) CreateAccount(ctx context.Context, in *model.CreateAccountRe
 	acc := &model.Account{
 		AppId:        in.AppId,
 		Nickname:     in.Nickname,
+		Username:     in.Username,
 		Salt:         str.RandAlphaNumString(6),
 		PwdWrong:     0,
 		LoginLock:    0,
@@ -125,6 +142,7 @@ func (svc *Service) CreateAccount(ctx context.Context, in *model.CreateAccountRe
 		TokenExpired: 0,
 		Memo:         "",
 		Status:       types.LimitNormal,
+		IsRoot:       0,
 		Roles:        "",
 	}
 	acc.Password = str.PasswordSlatMD5(in.Password, acc.Salt)

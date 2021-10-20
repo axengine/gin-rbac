@@ -30,6 +30,7 @@ type GetAccountReq struct {
 	Id       int64
 	AppId    int64
 	Username string
+	Token    string
 }
 
 type CreateAccountReq struct {
@@ -40,7 +41,7 @@ type CreateAccountReq struct {
 }
 
 type LoginAccountReq struct {
-	AppId    int64  `json:"appId" binding:"required,min=1"`
+	AppId    int64  `json:"appId" binding:"omitempty,min=0"`
 	Username string `json:"username" binding:"required,lte=64"`
 	Password string `json:"password" binding:"required,len=32"`
 }
@@ -51,6 +52,7 @@ type LoginAccountResp struct {
 }
 
 type LoginOutAccountReq struct {
+	typ.IdReq
 	Token string `json:"-"`
 }
 

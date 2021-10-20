@@ -41,9 +41,20 @@ type UpdateMenuActionReq struct {
 }
 
 type ListActionConfigReq struct {
+	typ.IdOmitReq
+	AppId  int64  `json:"appId" form:"appId"`
+	Name   string `json:"name" form:"name"`
+	Path   string `json:"path" form:"path"`
+	Method string `json:"method" form:"method"`
 	typ.PageReq
 }
 type ListActionConfig struct {
+	Id        int64  `json:"id"`
+	AppId     int64  `json:"appId"`
+	Name      string `json:"name"`
+	Path      string `json:"path"`
+	Method    string `json:"method"`
+	UpdatedAt int64  `json:"updatedAt"`
 }
 
 type FindActionConfigReq struct {
@@ -106,4 +117,17 @@ type MenuTreeDir struct {
 	Sequence int               `json:"sequence"`
 	Path     string            `json:"path"`
 	Children MenuTreeDirs      `json:"children"`
+}
+
+type SwaggerJSONToActionsReq struct {
+	AppId      int64  `json:"appId" binding:"required,min=0"`
+	SwaggerTxt string `json:"swaggerTxt"`
+}
+
+type SwaggerJSON struct {
+	BasePath string                   `json:"basePath"`
+	Paths    map[string]SwaggerMethod `json:"paths"`
+}
+type SwaggerMethod map[string]struct {
+	Summary string `json:"summary"`
 }

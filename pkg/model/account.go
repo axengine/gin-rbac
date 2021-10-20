@@ -20,6 +20,7 @@ type Account struct {
 	TokenExpired int64             `xorm:"not null BIGINT(20) comment('Token过期时间')"`
 	Memo         string            `xorm:"not null VARCHAR(128) comment('备注')"`
 	Status       types.LimitStatus `xorm:"not null TINYINT(2) comment('状态 1-正常 2-锁定')"`
+	IsRoot       int32             `xorm:"not null TINYINT(2) comment('状态 1-RBAC ROOT')"`
 	Roles        types.IntSplitStr `xorm:"not null TEXT comment('角色ID')"`
 	UpdatedAt    time.Time         `xorm:"updated"`
 	CreatedAt    time.Time         `xorm:"created"`

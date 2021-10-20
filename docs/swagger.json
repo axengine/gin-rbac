@@ -542,12 +542,28 @@
         "model.ListActionConfigReq": {
             "type": "object",
             "required": [
+                "id",
                 "page",
                 "size"
             ],
             "properties": {
+                "appId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
                 "page": {
                     "type": "integer"
+                },
+                "path": {
+                    "type": "string"
                 },
                 "size": {
                     "type": "integer"
@@ -640,7 +656,15 @@
             }
         },
         "model.LoginOutAccountReq": {
-            "type": "object"
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
         },
         "model.UpdateAccountPasswordReq": {
             "type": "object",

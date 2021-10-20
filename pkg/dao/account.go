@@ -39,6 +39,9 @@ func (d *Dao) GetAccount(ctx context.Context, in *model.GetAccountReq) (bool, *m
 	if len(in.Username) > 0 {
 		conds = append(conds, builder.Eq{"username": in.Username})
 	}
+	if len(in.Token) > 0 {
+		conds = append(conds, builder.Eq{"token": in.Token})
+	}
 
 	if len(conds) == 0 {
 		return false, nil, errc.ErrParamInvalid.MultiMsg("condition required")

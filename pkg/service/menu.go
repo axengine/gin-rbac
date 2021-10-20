@@ -7,11 +7,29 @@ import (
 	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/typ"
+	"github.com/bbdshow/bkit/util/icopier"
 	"sort"
 	"strings"
 )
 
 func (svc *Service) ListActionConfig(ctx context.Context, in *model.ListActionConfigReq, out *typ.ListResp) error {
+	c, records, err := svc.d.ListActionConfig(ctx, in)
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	list := make([]*model.ListActionConfig, 0, len(records))
+
+	for _, v := range records {
+		d := &model.ListActionConfig{}
+		if err := icopier.Copy(d, v); err != nil {
+			return errc.ErrInternalErr.MultiErr(err)
+		}
+		d.UpdatedAt = v.UpdatedAt.Unix()
+		list = append(list, d)
+	}
+	out.Count = c
+	out.List = list
+
 	return nil
 }
 

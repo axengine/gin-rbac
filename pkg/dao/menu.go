@@ -56,7 +56,26 @@ func (d *Dao) UpdateMenuConfig(ctx context.Context, in *model.MenuConfig, cols [
 func (d *Dao) UpsertMenuChildrenId() {}
 
 func (d *Dao) ListActionConfig(ctx context.Context, in *model.ListActionConfigReq) (int64, []*model.ActionConfig, error) {
-	return 0, nil, nil
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	if len(in.Name) > 0 {
+		sess.And("name like ?", "%"+in.Name+"%")
+	}
+	if len(in.Path) > 0 {
+		sess.And("path like ?", "%"+in.Path+"%")
+	}
+	if len(in.Method) > 0 {
+		sess.And("method = ?", in.Method)
+	}
+	if in.AppId > 0 {
+		sess.And("app_id = ?", in.AppId)
+	}
+	if in.Id > 0 {
+		sess.And("id = ?", in.Id)
+	}
+
+	records := make([]*model.ActionConfig, 0, in.Size)
+	c, err := sess.OrderBy("updated_at DESC").Limit(in.LimitStart()).FindAndCount(&records)
+	return c, records, errc.WithStack(err)
 }
 
 func (d *Dao) FindActionConfig(ctx context.Context, in *model.FindActionConfigReq) ([]*model.ActionConfig, error) {
