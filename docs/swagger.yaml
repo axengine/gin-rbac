@@ -1,0 +1,466 @@
+basePath: /
+definitions:
+  ginutil.BaseResp:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      traceId:
+        type: string
+    type: object
+  model.CreateAccountReq:
+    properties:
+      appId:
+        type: integer
+      nickname:
+        type: string
+      pwd:
+        type: string
+      username:
+        type: string
+    required:
+    - appId
+    - nickname
+    - pwd
+    - username
+    type: object
+  model.CreateAppConfigReq:
+    properties:
+      memo:
+        type: string
+      name:
+        type: string
+    required:
+    - memo
+    - name
+    type: object
+  model.ListAccount:
+    properties:
+      appId:
+        type: integer
+      appName:
+        type: string
+      createdAt:
+        type: integer
+      loginLock:
+        type: integer
+      memo:
+        type: string
+      nickname:
+        type: string
+      pwdWrong:
+        type: integer
+      roles:
+        items:
+          type: string
+        type: array
+      status:
+        type: integer
+      tokenExpired:
+        type: integer
+    type: object
+  model.ListAccountReq:
+    properties:
+      appId:
+        type: integer
+      nickname:
+        type: string
+      page:
+        type: integer
+      size:
+        type: integer
+      status:
+        type: integer
+      username:
+        type: string
+    required:
+    - page
+    - size
+    type: object
+  model.ListActionConfig:
+    type: object
+  model.ListActionConfigReq:
+    properties:
+      page:
+        type: integer
+      size:
+        type: integer
+    required:
+    - page
+    - size
+    type: object
+  model.ListAppConfig:
+    properties:
+      accessKey:
+        description: 访问KEY
+        type: string
+      createdAt:
+        type: integer
+      id:
+        type: integer
+      memo:
+        description: 备注
+        type: string
+      name:
+        description: APP名
+        type: string
+      secretKey:
+        description: 加密KEY
+        type: string
+      status:
+        description: 状态 1-正常 2-限制
+        type: integer
+      updatedAt:
+        type: integer
+    type: object
+  model.ListAppConfigReq:
+    properties:
+      name:
+        type: string
+      page:
+        type: integer
+      size:
+        type: integer
+      status:
+        type: integer
+    required:
+    - page
+    - size
+    type: object
+  model.LoginAccountReq:
+    properties:
+      appId:
+        type: integer
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - appId
+    - password
+    - username
+    type: object
+  model.LoginAccountResp:
+    properties:
+      token:
+        type: string
+      tokenExpired:
+        type: integer
+    type: object
+  model.LoginOutAccountReq:
+    type: object
+  model.UpdateAccountPasswordReq:
+    properties:
+      id:
+        type: integer
+      pwd:
+        type: string
+    required:
+    - id
+    - pwd
+    type: object
+  model.UpdateAccountRoleReq:
+    properties:
+      id:
+        type: integer
+      roles:
+        items:
+          type: integer
+        type: array
+    required:
+    - id
+    - roles
+    type: object
+  model.UpdateAppConfigReq:
+    properties:
+      id:
+        type: integer
+      memo:
+        type: string
+      name:
+        type: string
+      secretKey:
+        description: true = 重置加密KEY
+        type: boolean
+      status:
+        description: 状态 1-正常 2-限制
+        type: integer
+    required:
+    - id
+    - memo
+    - name
+    type: object
+  model.UpsertActionConfigReq:
+    properties:
+      appId:
+        type: integer
+      method:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+    required:
+    - appId
+    - method
+    - name
+    - path
+    type: object
+host: API_HOST:49000
+info:
+  contact: {}
+  description: admin rbac manage API
+  title: admin rbac
+  version: 1.0.0
+paths:
+  /rbac/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginAccountReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.LoginAccountResp'
+      summary: '[RBAC 登录]'
+      tags:
+      - RBAC 登录/登出
+  /rbac/loginOut:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginOutAccountReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      summary: '[RBAC 登出]'
+      tags:
+      - RBAC 登录/登出
+  /rbac/v1/account/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateAccountReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[账户配置创建]'
+      tags:
+      - RBAC 账户配置
+  /rbac/v1/account/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ListAccountReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.ListAccount'
+      security:
+      - ApiKeyAuth: []
+      summary: '[账户配置列表]'
+      tags:
+      - RBAC 账户配置
+  /rbac/v1/account/pwd/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateAccountPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[账户配置密码更改]'
+      tags:
+      - RBAC 账户配置
+  /rbac/v1/account/role/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateAccountRoleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[账户配置角色更改]'
+      tags:
+      - RBAC 账户配置
+  /rbac/v1/action/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ListActionConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.ListActionConfig'
+      security:
+      - ApiKeyAuth: []
+      summary: '[功能配置列表]'
+      tags:
+      - RBAC 功能配置
+  /rbac/v1/action/upsert:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpsertActionConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[功能配置创建/更新]'
+      tags:
+      - RBAC 功能配置
+  /rbac/v1/app/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateAppConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[APP配置创建]'
+      tags:
+      - RBAC APP配置
+  /rbac/v1/app/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ListAppConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.ListAppConfig'
+      security:
+      - ApiKeyAuth: []
+      summary: '[APP配置列表]'
+      tags:
+      - RBAC APP配置
+  /rbac/v1/app/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateAppConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[APP配置更新]'
+      tags:
+      - RBAC APP配置
+swagger: "2.0"

@@ -3,11 +3,23 @@ package http
 import "github.com/gin-gonic/gin"
 
 func RegisterAdminRouter(e *gin.Engine) {
-	e.POST("/login")
-	//
-	//// 中间件都可以注册在这里
-	//jwt := ginutil.JWTAuthVerify(cfg.Admin.AuthEnable)
-	//
-	admin := e.Group("/v1/admin")
-	admin.GET("")
+	e.POST("/rbac/login", loginAccount)
+	e.POST("/rbac/loginOut", loginOutAccount)
+
+	rbac := e.Group("/rbac/v1")
+
+	app := rbac.Group("/app")
+	app.GET("/list", listAppConfig)
+	app.POST("/create", createAppConfig)
+	app.POST("/update", updateAppConfig)
+
+	action := rbac.Group("/action")
+	action.GET("/list", listActionConfig)
+	action.POST("/upsert", upsertActionConfig)
+
+	account := rbac.Group("/account")
+	account.GET("/list", listAccount)
+	account.POST("/create", createAccount)
+	account.POST("/pwd/update", updateAccountPassword)
+	account.POST("/role/update", updateAccountRole)
 }

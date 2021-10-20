@@ -18,11 +18,12 @@ type GetMenuConfigReq struct {
 }
 
 type CreateMenuConfigReq struct {
-	AppId    int64   `json:"appId"`
-	Name     string  `json:"name"`
-	Memo     string  `json:"memo"`
-	ParentId int64   `json:"parentId"`
-	Sequence int     `json:"sequence"`
+	AppId    int64   `json:"appId" binding:"required,min=1"`
+	Name     string  `json:"name" binding:"required,gte=1,lte=128"`
+	Memo     string  `json:"memo" binding:"omitempty,lte=128"`
+	ParentId int64   `json:"parentId" binding:"required,min=0"`
+	Sequence int     `json:"sequence" binding:"required,min=0"`
+	Path     string  `json:"path" binding:"required,gte=1,lte=256"`
 	Actions  []int64 `json:"actions"`
 }
 
@@ -41,6 +42,8 @@ type UpdateMenuActionReq struct {
 
 type ListActionConfigReq struct {
 	typ.PageReq
+}
+type ListActionConfig struct {
 }
 
 type FindActionConfigReq struct {
@@ -101,5 +104,6 @@ type MenuTreeDir struct {
 	ParentId int64             `json:"parentId"`
 	Status   types.LimitStatus `json:"status"`
 	Sequence int               `json:"sequence"`
+	Path     string            `json:"path"`
 	Children MenuTreeDirs      `json:"children"`
 }

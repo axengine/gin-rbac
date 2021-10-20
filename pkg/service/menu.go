@@ -6,9 +6,14 @@ import (
 	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
+	"github.com/bbdshow/bkit/typ"
 	"sort"
 	"strings"
 )
+
+func (svc *Service) ListActionConfig(ctx context.Context, in *model.ListActionConfigReq, out *typ.ListResp) error {
+	return nil
+}
 
 func (svc *Service) CreateMenuConfig(ctx context.Context, in *model.CreateMenuConfigReq) error {
 	r := &model.MenuConfig{
@@ -18,6 +23,7 @@ func (svc *Service) CreateMenuConfig(ctx context.Context, in *model.CreateMenuCo
 		ParentId: in.ParentId,
 		Status:   types.LimitNormal,
 		Sequence: in.Sequence,
+		Path:     in.Path,
 	}
 	r.Actions = new(types.IntSplitStr).Marshal(in.Actions)
 
@@ -135,6 +141,7 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 			ParentId: v.ParentId,
 			Status:   v.Status,
 			Sequence: v.Sequence,
+			Path:     v.Path,
 			Children: make(model.MenuTreeDirs, 0),
 		}
 		val, ok := dirsMap[v.ParentId]

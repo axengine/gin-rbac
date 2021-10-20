@@ -13,6 +13,7 @@ type MenuConfig struct {
 	ParentId  int64             `xorm:"not null BIGINT(20) comment('父ID')"`
 	Status    types.LimitStatus `xorm:"not null TINYINT(2) comment('状态 1-正常 2-锁定')"`
 	Sequence  int               `xorm:"not null default 0 INT comment('序号')"`
+	Path      string            `xorm:"not null VARCHAR(256) comment('路径')"`
 	Actions   types.IntSplitStr `xorm:"not null TEXT comment('功能ID')"`
 	UpdatedAt time.Time         `xorm:"updated"`
 	CreatedAt time.Time         `xorm:"created"`

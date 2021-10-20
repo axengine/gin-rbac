@@ -60,6 +60,10 @@ func (svc *Service) LoginAccount(ctx context.Context, in *model.LoginAccountReq,
 	return nil
 }
 
+func (svc *Service) LoginOutAccount(ctx context.Context, in *model.LoginOutAccountReq) error {
+	return nil
+}
+
 func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, out *typ.ListResp) error {
 	c, records, err := svc.d.ListAccount(ctx, in)
 	if err != nil {

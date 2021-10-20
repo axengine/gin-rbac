@@ -39,6 +39,6 @@ func (c *Config) EraseSensitive() Config {
 }
 
 type Admin struct {
-	HttpListenAddr string `defval:"0.0.0.0:41001"`
+	HttpListenAddr string `defval:"0.0.0.0:49000"`
 	AuthEnable     bool   `defval:"true"`
 }

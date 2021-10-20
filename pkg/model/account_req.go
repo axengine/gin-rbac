@@ -50,6 +50,10 @@ type LoginAccountResp struct {
 	TokenExpired int64  `json:"tokenExpired"`
 }
 
+type LoginOutAccountReq struct {
+	Token string `json:"-"`
+}
+
 type UpdateAccountPasswordReq struct {
 	typ.IdReq
 	Password string `json:"pwd" binding:"required,lte=32"`
