@@ -59,6 +59,11 @@ var doc = `{
         },
         "/rbac/loginOut": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -394,6 +399,40 @@ var doc = `{
                 }
             }
         },
+        "/rbac/v1/app/select": {
+            "get": {
+                "description": "用于Select组件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC APP配置"
+                ],
+                "summary": "[APP配置筛选列表]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.SelectAppConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.SelectAppConfig"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/app/update": {
             "post": {
                 "security": [
@@ -419,6 +458,158 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.UpdateAppConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/action/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置功能更新]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateMenuConfigActionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置创建]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateMenuConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/tree": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置树]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuTreeDirsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuTreeDirsResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置更新]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateMenuConfigReq"
                         }
                     }
                 ],
@@ -600,6 +791,36 @@ var doc = `{
                 }
             }
         },
+        "model.CreateMenuConfigReq": {
+            "type": "object",
+            "required": [
+                "appId",
+                "name",
+                "parentId",
+                "path",
+                "sequence"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sequence": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.CreateRoleConfigReq": {
             "type": "object",
             "required": [
@@ -618,6 +839,28 @@ var doc = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "model.GetMenuTreeDirsReq": {
+            "type": "object",
+            "required": [
+                "appId"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.GetMenuTreeDirsResp": {
+            "type": "object",
+            "properties": {
+                "dirs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.MenuTreeDir"
+                    }
                 }
             }
         },
@@ -876,12 +1119,79 @@ var doc = `{
             }
         },
         "model.LoginOutAccountReq": {
+            "type": "object"
+        },
+        "model.MenuTreeDir": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "children": {
+                    "$ref": "#/definitions/model.MenuTreeDirs"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sequence": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.MenuTreeDirs": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/model.MenuTreeDir"
+            }
+        },
+        "model.SelectAppConfig": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "APP名",
+                    "type": "string"
+                }
+            }
+        },
+        "model.SelectAppConfigReq": {
             "type": "object",
             "required": [
-                "id"
+                "page",
+                "size"
             ],
             "properties": {
-                "id": {
+                "name": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
                     "type": "integer"
                 }
             }
@@ -940,6 +1250,49 @@ var doc = `{
                 },
                 "status": {
                     "description": "状态 1-正常 2-限制",
+                    "type": "integer"
+                }
+            }
+        },
+        "model.UpdateMenuConfigActionReq": {
+            "type": "object",
+            "required": [
+                "menuId"
+            ],
+            "properties": {
+                "actionId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "menuId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.UpdateMenuConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sequence": {
                     "type": "integer"
                 }
             }

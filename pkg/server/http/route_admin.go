@@ -20,6 +20,12 @@ func RegisterAdminRouter(e *gin.Engine) {
 	action.GET("/list", listActionConfig)
 	action.POST("/upsert", upsertActionConfig)
 
+	menu := rbac.Group("/menu").Use(MidAccessTokenVerify())
+	menu.GET("/tree", treeMenuConfig)
+	menu.POST("/create", createMenuConfig)
+	menu.POST("/update", updateMenuConfig)
+	menu.POST("/action/update", updateMenuConfigAction)
+
 	account := rbac.Group("/account").Use(MidAccessTokenVerify())
 	account.GET("/list", listAccount)
 	account.POST("/create", createAccount)

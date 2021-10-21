@@ -35,6 +35,27 @@ definitions:
     - memo
     - name
     type: object
+  model.CreateMenuConfigReq:
+    properties:
+      appId:
+        type: string
+      memo:
+        type: string
+      name:
+        type: string
+      parentId:
+        type: integer
+      path:
+        type: string
+      sequence:
+        type: integer
+    required:
+    - appId
+    - name
+    - parentId
+    - path
+    - sequence
+    type: object
   model.CreateRoleConfigReq:
     properties:
       appId:
@@ -48,6 +69,20 @@ definitions:
     required:
     - appId
     - name
+    type: object
+  model.GetMenuTreeDirsReq:
+    properties:
+      appId:
+        type: string
+    required:
+    - appId
+    type: object
+  model.GetMenuTreeDirsResp:
+    properties:
+      dirs:
+        items:
+          $ref: '#/definitions/model.MenuTreeDir'
+        type: array
     type: object
   model.ListAccount:
     properties:
@@ -220,11 +255,56 @@ definitions:
         type: integer
     type: object
   model.LoginOutAccountReq:
+    type: object
+  model.MenuTreeDir:
     properties:
+      appId:
+        type: string
+      children:
+        $ref: '#/definitions/model.MenuTreeDirs'
       id:
         type: integer
+      memo:
+        type: string
+      name:
+        type: string
+      parentId:
+        type: integer
+      path:
+        type: string
+      sequence:
+        type: integer
+      status:
+        type: integer
+    type: object
+  model.MenuTreeDirs:
+    items:
+      $ref: '#/definitions/model.MenuTreeDir'
+    type: array
+  model.SelectAppConfig:
+    properties:
+      appId:
+        type: string
+      id:
+        type: integer
+      memo:
+        description: 备注
+        type: string
+      name:
+        description: APP名
+        type: string
+    type: object
+  model.SelectAppConfigReq:
+    properties:
+      name:
+        type: string
+      page:
+        type: integer
+      size:
+        type: integer
     required:
-    - id
+    - page
+    - size
     type: object
   model.UpdateAccountPasswordReq:
     properties:
@@ -261,6 +341,34 @@ definitions:
         type: boolean
       status:
         description: 状态 1-正常 2-限制
+        type: integer
+    required:
+    - id
+    type: object
+  model.UpdateMenuConfigActionReq:
+    properties:
+      actionId:
+        items:
+          type: integer
+        type: array
+      menuId:
+        type: integer
+    required:
+    - menuId
+    type: object
+  model.UpdateMenuConfigReq:
+    properties:
+      id:
+        type: integer
+      memo:
+        type: string
+      name:
+        type: string
+      parentId:
+        type: integer
+      path:
+        type: string
+      sequence:
         type: integer
     required:
     - id
@@ -342,6 +450,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
       summary: '[RBAC 登出]'
       tags:
       - RBAC 登录/登出
@@ -529,6 +639,28 @@ paths:
       summary: '[APP配置列表]'
       tags:
       - RBAC APP配置
+  /rbac/v1/app/select:
+    get:
+      consumes:
+      - application/json
+      description: 用于Select组件
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.SelectAppConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.SelectAppConfig'
+      summary: '[APP配置筛选列表]'
+      tags:
+      - RBAC APP配置
   /rbac/v1/app/update:
     post:
       consumes:
@@ -552,6 +684,98 @@ paths:
       summary: '[APP配置更新]'
       tags:
       - RBAC APP配置
+  /rbac/v1/menu/action/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateMenuConfigActionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[菜单配置功能更新]'
+      tags:
+      - RBAC 菜单配置
+  /rbac/v1/menu/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateMenuConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[菜单配置创建]'
+      tags:
+      - RBAC 菜单配置
+  /rbac/v1/menu/tree:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.GetMenuTreeDirsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.GetMenuTreeDirsResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[菜单配置树]'
+      tags:
+      - RBAC 菜单配置
+  /rbac/v1/menu/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateMenuConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[菜单配置更新]'
+      tags:
+      - RBAC 菜单配置
   /rbac/v1/role/create:
     post:
       consumes:

@@ -5,9 +5,6 @@ import (
 	"github.com/bbdshow/bkit/typ"
 )
 
-type ListMenuConfigReq struct {
-}
-
 type FindMenuConfigReq struct {
 	AppId    string
 	ParentId int64
@@ -18,13 +15,21 @@ type GetMenuConfigReq struct {
 }
 
 type CreateMenuConfigReq struct {
-	AppId    string  `json:"appId" binding:"required,len=6"`
-	Name     string  `json:"name" binding:"required,gte=1,lte=128"`
-	Memo     string  `json:"memo" binding:"omitempty,lte=128"`
-	ParentId int64   `json:"parentId" binding:"required,min=0"`
-	Sequence int     `json:"sequence" binding:"required,min=0"`
-	Path     string  `json:"path" binding:"required,gte=1,lte=256"`
-	Actions  []int64 `json:"actions"`
+	AppId    string `json:"appId" binding:"required,len=6"`
+	Name     string `json:"name" binding:"required,gte=1,lte=128"`
+	Memo     string `json:"memo" binding:"omitempty,lte=128"`
+	ParentId int64  `json:"parentId" binding:"required,min=0"`
+	Sequence int    `json:"sequence" binding:"required,min=0"`
+	Path     string `json:"path" binding:"required,gte=1,lte=256"`
+}
+
+type UpdateMenuConfigReq struct {
+	typ.IdReq
+	Name     string `json:"name" binding:"omitempty,gte=1,lte=128"`
+	Memo     string `json:"memo" binding:"omitempty,lte=128"`
+	ParentId int64  `json:"parentId" binding:"omitempty,min=0"`
+	Sequence int    `json:"sequence" binding:"omitempty,min=0"`
+	Path     string `json:"path" binding:"omitempty,gte=1,lte=256"`
 }
 
 type UpsertActionConfigReq struct {
@@ -34,9 +39,8 @@ type UpsertActionConfigReq struct {
 	Method string `json:"method" binding:"required,upper"`
 }
 
-type UpdateMenuActionReq struct {
-	AppId    string  `json:"appId" binding:"required,len=6"`
-	MenuId   int64   `json:"menuId"`
+type UpdateMenuConfigActionReq struct {
+	MenuId   int64   `json:"menuId" binding:"required,gt=0"`
 	ActionId []int64 `json:"actionId"`
 }
 
@@ -63,7 +67,7 @@ type FindActionConfigReq struct {
 }
 
 type GetMenuTreeDirsReq struct {
-	AppId string
+	AppId string `json:"appId" form:"appId" binding:"required,len=6"`
 }
 
 type GetMenuTreeDirsResp struct {
@@ -88,7 +92,7 @@ type Action struct {
 	Method string `json:"method"`
 }
 
-type MenuTreeDirs []*MenuTreeDir
+type MenuTreeDirs []MenuTreeDir
 
 func (dirs MenuTreeDirs) Len() int           { return len(dirs) }
 func (dirs MenuTreeDirs) Swap(i, j int)      { dirs[i], dirs[j] = dirs[j], dirs[i] }

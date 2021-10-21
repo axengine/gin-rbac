@@ -24,15 +24,13 @@ func TestService_CreateMenuConfig(t *testing.T) {
 		Memo:     "",
 		ParentId: 4,
 		Sequence: 1,
-		Actions:  []int64{},
 	}); err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestService_UpdateMenuAction(t *testing.T) {
-	if err := svc.UpdateMenuAction(ctx, &model.UpdateMenuActionReq{
-		AppId:    "",
+	if err := svc.UpdateMenuConfigAction(ctx, &model.UpdateMenuConfigActionReq{
 		MenuId:   1,
 		ActionId: []int64{1, 2},
 	}); err != nil {

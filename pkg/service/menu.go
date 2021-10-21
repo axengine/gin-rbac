@@ -43,9 +43,59 @@ func (svc *Service) CreateMenuConfig(ctx context.Context, in *model.CreateMenuCo
 		Sequence: in.Sequence,
 		Path:     in.Path,
 	}
-	r.Actions = new(types.IntSplitStr).Marshal(in.Actions)
+
+	if in.ParentId != 0 {
+		exists, _, err := svc.d.GetMenuConfig(ctx, &model.GetMenuConfigReq{Id: in.ParentId})
+		if err != nil {
+			return errc.ErrInternalErr.MultiErr(err)
+		}
+		if !exists {
+			return errc.ErrParamInvalid.MultiMsg("parentId not found")
+		}
+	}
 
 	if err := svc.d.CreateMenuConfig(ctx, r); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	return nil
+}
+
+func (svc *Service) UpdateMenuConfig(ctx context.Context, in *model.UpdateMenuConfigReq) error {
+	d := &model.MenuConfig{
+		Id: in.Id,
+	}
+	cols := make([]string, 0)
+	if len(in.Name) > 0 {
+		cols = append(cols, "name")
+		d.Name = in.Name
+	}
+	if len(in.Memo) > 0 {
+		cols = append(cols, "memo")
+		d.Memo = in.Memo
+	}
+	if len(in.Path) > 0 {
+		cols = append(cols, "path")
+		d.Path = in.Path
+	}
+	if in.ParentId > -1 {
+		if in.ParentId != 0 {
+			exists, _, err := svc.d.GetMenuConfig(ctx, &model.GetMenuConfigReq{Id: in.ParentId})
+			if err != nil {
+				return errc.ErrInternalErr.MultiErr(err)
+			}
+			if !exists {
+				return errc.ErrParamInvalid.MultiMsg("parentId not found")
+			}
+		}
+		cols = append(cols, "parent_id")
+		d.ParentId = in.ParentId
+	}
+	if in.Sequence > -1 {
+		cols = append(cols, "sequence")
+		d.Sequence = in.Sequence
+	}
+
+	if err := svc.d.UpdateMenuConfig(ctx, d, cols); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	return nil
@@ -59,8 +109,8 @@ func (svc *Service) UpsertActionConfig(ctx context.Context, in *model.UpsertActi
 	return nil
 }
 
-func (svc *Service) UpdateMenuAction(ctx context.Context, in *model.UpdateMenuActionReq) error {
-	exists, menu, err := svc.d.GetMenuConfig(ctx, &model.GetMenuConfigReq{Id: in.MenuId, AppId: in.AppId})
+func (svc *Service) UpdateMenuConfigAction(ctx context.Context, in *model.UpdateMenuConfigActionReq) error {
+	exists, menu, err := svc.d.GetMenuConfig(ctx, &model.GetMenuConfigReq{Id: in.MenuId})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
@@ -68,7 +118,7 @@ func (svc *Service) UpdateMenuAction(ctx context.Context, in *model.UpdateMenuAc
 		return errc.ErrNotFound.MultiMsg("menu")
 	}
 	// check action exists
-	actions, err := svc.d.FindActionConfig(ctx, &model.FindActionConfigReq{ActionId: in.ActionId, AppId: in.AppId})
+	actions, err := svc.d.FindActionConfig(ctx, &model.FindActionConfigReq{ActionId: in.ActionId, AppId: menu.AppId})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
@@ -151,7 +201,7 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 	}
 	dirsMap := make(map[int64]model.MenuTreeDirs, 0)
 	for _, v := range menus {
-		dir := &model.MenuTreeDir{
+		dir := model.MenuTreeDir{
 			Id:       v.Id,
 			AppId:    v.AppId,
 			Name:     v.Name,
@@ -164,7 +214,7 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 		}
 		val, ok := dirsMap[v.ParentId]
 		if !ok {
-			dirsMap[v.ParentId] = []*model.MenuTreeDir{dir}
+			dirsMap[v.ParentId] = model.MenuTreeDirs{dir}
 			continue
 		}
 		dirsMap[v.ParentId] = append(val, dir)
@@ -176,8 +226,8 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 	sort.Sort(rootDirs)
 
 	for _, root := range rootDirs {
-		var findChildren func(root *model.MenuTreeDir, parentId int64)
-		findChildren = func(root *model.MenuTreeDir, parentId int64) {
+		var findChildren func(root model.MenuTreeDir, parentId int64)
+		findChildren = func(root model.MenuTreeDir, parentId int64) {
 			children, ok := dirsMap[parentId]
 			if !ok {
 				return

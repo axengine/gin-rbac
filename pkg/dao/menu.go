@@ -8,10 +8,6 @@ import (
 	"xorm.io/xorm"
 )
 
-func (d *Dao) ListMenuConfig(ctx context.Context, in *model.ListMenuConfigReq) (int64, []*model.MenuConfig, error) {
-	return 0, nil, nil
-}
-
 func (d *Dao) FindMenuConfig(ctx context.Context, in *model.FindMenuConfigReq) ([]*model.MenuConfig, error) {
 	sess := d.mysql.Context(ctx).Where("app_id = ?", in.AppId)
 	if in.ParentId >= 0 {
