@@ -7,6 +7,7 @@ import (
 	"github.com/bbdshow/bkit/errc"
 	"time"
 	"xorm.io/builder"
+	"xorm.io/xorm"
 )
 
 func (d *Dao) ListRoleConfig() {}
@@ -62,4 +63,31 @@ func (d *Dao) GetRoleConfigFromCache(ctx context.Context, in *model.GetRoleConfi
 	}
 	_ = d.memCache.SetWithTTL(key, c, 5*time.Minute)
 	return true, c, nil
+}
+
+func (d *Dao) FindAllRoleMenuAction(ctx context.Context, roleId int64) ([]*model.RoleMenuAction, error) {
+	records := make([]*model.RoleMenuAction, 0)
+	err := d.mysql.Context(ctx).Where("role_id = ?", roleId).Find(&records)
+	return records, errc.WithStack(err)
+}
+
+func (d *Dao) UpdateRoleMenuAction(ctx context.Context, add []*model.RoleMenuAction, del []int64) error {
+	err := d.mysql.Transaction(func(sess *xorm.Session) error {
+		if len(add) > 0 {
+			_, err := sess.Context(ctx).Insert(add)
+			if err != nil {
+				return errc.WithStack(err)
+			}
+		}
+
+		if len(del) > 0 {
+			_, err := sess.Context(ctx).In("id", del).Delete(&model.RoleMenuAction{})
+			if err != nil {
+				return errc.WithStack(err)
+			}
+		}
+		return nil
+	})
+
+	return errc.WithStack(err)
 }

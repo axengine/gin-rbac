@@ -19,5 +19,11 @@ type UpdateRoleConfigReq struct {
 }
 
 type UpsertRoleMenuActionReq struct {
-	AppId string
+	RoleId      int64 `json:"roleId" form:"roleId" binding:"required,gt=0"`
+	MenuActions []MenuAction
+}
+
+type MenuAction struct {
+	MenuId   int64 `json:"menuId" binding:"required,min=1"`
+	ActionId int64 `json:"actionId" binding:"required,min=1"`
 }
