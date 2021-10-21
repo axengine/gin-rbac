@@ -45,7 +45,8 @@ type CreateAppConfigReq struct {
 
 type UpdateAppConfigReq struct {
 	typ.IdReq
-	SecretKey bool `json:"secretKey"` // true = 重置加密KEY
-	CreateAppConfigReq
-	Status types.LimitStatus `json:"status"` //状态 1-正常 2-限制
+	SecretKey bool              `json:"secretKey"` // true = 重置加密KEY
+	Name      string            `json:"name"`
+	Memo      string            `json:"memo"`
+	Status    types.LimitStatus `json:"status"` //状态 1-正常 2-限制
 }

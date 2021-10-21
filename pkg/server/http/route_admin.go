@@ -22,4 +22,10 @@ func RegisterAdminRouter(e *gin.Engine) {
 	account.POST("/create", createAccount)
 	account.POST("/pwd/update", updateAccountPassword)
 	account.POST("/role/update", updateAccountRole)
+
+	role := rbac.Group("/role")
+	role.GET("/list", listRoleConfig)
+	role.POST("/create", createRoleConfig)
+	role.POST("/update", updateRoleConfig)
+
 }

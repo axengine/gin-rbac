@@ -431,6 +431,120 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/rbac/v1/role/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置创建]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateRoleConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置列表]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ListRoleConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.ListRoleConfig"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置更新]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateRoleConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -458,7 +572,7 @@ var doc = `{
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "nickname": {
                     "type": "string"
@@ -486,11 +600,32 @@ var doc = `{
                 }
             }
         },
+        "model.CreateRoleConfigReq": {
+            "type": "object",
+            "required": [
+                "appId",
+                "name"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "isRoot": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "model.ListAccount": {
             "type": "object",
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "appName": {
                     "type": "string"
@@ -532,7 +667,7 @@ var doc = `{
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "nickname": {
                     "type": "string"
@@ -552,7 +687,27 @@ var doc = `{
             }
         },
         "model.ListActionConfig": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "integer"
+                }
+            }
         },
         "model.ListActionConfigReq": {
             "type": "object",
@@ -563,7 +718,7 @@ var doc = `{
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
@@ -590,6 +745,9 @@ var doc = `{
             "properties": {
                 "accessKey": {
                     "description": "访问KEY",
+                    "type": "string"
+                },
+                "appId": {
                     "type": "string"
                 },
                 "createdAt": {
@@ -640,6 +798,53 @@ var doc = `{
                 }
             }
         },
+        "model.ListRoleConfig": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "appName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isRoot": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.ListRoleConfigReq": {
+            "type": "object",
+            "required": [
+                "page",
+                "size"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.LoginAccountReq": {
             "type": "object",
             "required": [
@@ -649,7 +854,7 @@ var doc = `{
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "password": {
                     "type": "string"
@@ -717,9 +922,7 @@ var doc = `{
         "model.UpdateAppConfigReq": {
             "type": "object",
             "required": [
-                "id",
-                "memo",
-                "name"
+                "id"
             ],
             "properties": {
                 "id": {
@@ -741,6 +944,29 @@ var doc = `{
                 }
             }
         },
+        "model.UpdateRoleConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "isRoot": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.UpsertActionConfigReq": {
             "type": "object",
             "required": [
@@ -751,7 +977,7 @@ var doc = `{
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "method": {
                     "type": "string"

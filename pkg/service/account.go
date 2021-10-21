@@ -85,7 +85,7 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
-	out.Count = c
+
 	list := make([]*model.ListAccount, 0, len(records))
 	for _, v := range records {
 		d := &model.ListAccount{
@@ -118,6 +118,7 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 		list = append(list, d)
 	}
 
+	out.Count = c
 	out.List = list
 	return nil
 }

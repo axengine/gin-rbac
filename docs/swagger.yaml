@@ -12,7 +12,7 @@ definitions:
   model.CreateAccountReq:
     properties:
       appId:
-        type: integer
+        type: string
       nickname:
         type: string
       pwd:
@@ -35,10 +35,24 @@ definitions:
     - memo
     - name
     type: object
+  model.CreateRoleConfigReq:
+    properties:
+      appId:
+        type: string
+      isRoot:
+        type: integer
+      memo:
+        type: string
+      name:
+        type: string
+    required:
+    - appId
+    - name
+    type: object
   model.ListAccount:
     properties:
       appId:
-        type: integer
+        type: string
       appName:
         type: string
       createdAt:
@@ -63,7 +77,7 @@ definitions:
   model.ListAccountReq:
     properties:
       appId:
-        type: integer
+        type: string
       nickname:
         type: string
       page:
@@ -79,11 +93,24 @@ definitions:
     - size
     type: object
   model.ListActionConfig:
+    properties:
+      appId:
+        type: string
+      id:
+        type: integer
+      method:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      updatedAt:
+        type: integer
     type: object
   model.ListActionConfigReq:
     properties:
       appId:
-        type: integer
+        type: string
       id:
         type: integer
       method:
@@ -105,6 +132,8 @@ definitions:
     properties:
       accessKey:
         description: 访问KEY
+        type: string
+      appId:
         type: string
       createdAt:
         type: integer
@@ -139,10 +168,41 @@ definitions:
     - page
     - size
     type: object
+  model.ListRoleConfig:
+    properties:
+      appId:
+        type: string
+      appName:
+        type: string
+      id:
+        type: integer
+      isRoot:
+        type: integer
+      memo:
+        type: string
+      name:
+        type: string
+      updatedAt:
+        type: integer
+    type: object
+  model.ListRoleConfigReq:
+    properties:
+      appId:
+        type: string
+      name:
+        type: string
+      page:
+        type: integer
+      size:
+        type: integer
+    required:
+    - page
+    - size
+    type: object
   model.LoginAccountReq:
     properties:
       appId:
-        type: integer
+        type: string
       password:
         type: string
       username:
@@ -204,13 +264,26 @@ definitions:
         type: integer
     required:
     - id
-    - memo
-    - name
+    type: object
+  model.UpdateRoleConfigReq:
+    properties:
+      id:
+        type: integer
+      isRoot:
+        type: integer
+      memo:
+        type: string
+      name:
+        type: string
+      status:
+        type: integer
+    required:
+    - id
     type: object
   model.UpsertActionConfigReq:
     properties:
       appId:
-        type: integer
+        type: string
       method:
         type: string
       name:
@@ -479,4 +552,73 @@ paths:
       summary: '[APP配置更新]'
       tags:
       - RBAC APP配置
+  /rbac/v1/role/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateRoleConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[角色配置创建]'
+      tags:
+      - RBAC 角色配置
+  /rbac/v1/role/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.ListRoleConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.ListRoleConfig'
+      security:
+      - ApiKeyAuth: []
+      summary: '[角色配置列表]'
+      tags:
+      - RBAC 角色配置
+  /rbac/v1/role/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateRoleConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[角色配置更新]'
+      tags:
+      - RBAC 角色配置
 swagger: "2.0"

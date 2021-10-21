@@ -10,7 +10,18 @@ import (
 	"xorm.io/xorm"
 )
 
-func (d *Dao) ListRoleConfig() {}
+func (d *Dao) ListRoleConfig(ctx context.Context, in *model.ListRoleConfigReq) (int64, []*model.RoleConfig, error) {
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	if len(in.Name) > 0 {
+		sess.And("name like ?", "%"+in.Name+"%")
+	}
+	if len(in.AppId) > 0 {
+		sess.And("app_id = ?", in.AppId)
+	}
+	records := make([]*model.RoleConfig, 0, in.Size)
+	c, err := sess.OrderBy("id DESC").Limit(in.LimitStart()).FindAndCount(&records)
+	return c, records, errc.WithStack(err)
+}
 
 func (d *Dao) GetRoleConfig(ctx context.Context, in *model.GetRoleConfigReq) (bool, *model.RoleConfig, error) {
 	conds := make([]builder.Cond, 0)

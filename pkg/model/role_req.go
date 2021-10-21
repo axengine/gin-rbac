@@ -1,6 +1,25 @@
 package model
 
-import "github.com/bbdshow/bkit/typ"
+import (
+	"github.com/bbdshow/admin-rabc/pkg/types"
+	"github.com/bbdshow/bkit/typ"
+)
+
+type ListRoleConfigReq struct {
+	AppId string `json:"appId" form:"appId"`
+	Name  string `json:"name" form:"name"`
+	typ.PageReq
+}
+
+type ListRoleConfig struct {
+	Id        int64  `json:"id"`
+	AppId     string `json:"appId"`
+	AppName   string `json:"appName"`
+	Name      string `json:"name"`
+	IsRoot    int32  `json:"isRoot"`
+	Memo      string `json:"memo"`
+	UpdatedAt int64  `json:"updatedAt"`
+}
 
 type GetRoleConfigReq struct {
 	Id int64
@@ -15,7 +34,10 @@ type CreateRoleConfigReq struct {
 
 type UpdateRoleConfigReq struct {
 	typ.IdReq
-	CreateRoleConfigReq // appId 不支持更改
+	Name   string            `json:"name"`
+	IsRoot int32             `json:"isRoot"`
+	Memo   string            `json:"memo"`
+	Status types.LimitStatus `json:"status"`
 }
 
 type UpsertRoleMenuActionReq struct {
