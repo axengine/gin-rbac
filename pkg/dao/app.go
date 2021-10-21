@@ -36,8 +36,8 @@ func (d *Dao) ListAppConfig(ctx context.Context, in *model.ListAppConfigReq) (in
 
 func (d *Dao) GetAppConfig(ctx context.Context, in *model.GetAppConfigReq) (bool, *model.AppConfig, error) {
 	conds := make([]builder.Cond, 0)
-	if in.Id > 0 {
-		conds = append(conds, builder.Eq{"id": in.Id})
+	if len(in.AppId) > 0 {
+		conds = append(conds, builder.Eq{"app_id": in.AppId})
 	}
 	if len(in.AccessKey) > 0 {
 		conds = append(conds, builder.Eq{"access_key": in.AccessKey})
@@ -56,7 +56,7 @@ func (d *Dao) GetAppConfig(ctx context.Context, in *model.GetAppConfigReq) (bool
 }
 
 func (d *Dao) GetAppConfigFromCache(ctx context.Context, in *model.GetAppConfigReq) (bool, *model.AppConfig, error) {
-	key := fmt.Sprintf("AppConfig_id_%d_accessKey_%s", in.Id, in.AccessKey)
+	key := fmt.Sprintf("AppConfig_appId_%s_accessKey_%s", in.AppId, in.AccessKey)
 
 	v, err := d.memCache.Get(key)
 	if err == nil {

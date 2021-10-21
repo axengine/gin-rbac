@@ -9,7 +9,7 @@ import (
 
 type Account struct {
 	Id           int64             `xorm:"not null pk autoincr BIGINT(20)"`
-	AppId        int64             `xorm:"not null BIGINT(20) comment('APP分组')"`
+	AppId        string            `xorm:"not null VARCHAR(6) comment('APP分组')"`
 	Nickname     string            `xorm:"not null VARCHAR(64) comment('昵称')"`
 	Username     string            `xorm:"not null VARCHAR(64) comment('账号名')"`
 	Password     string            `xorm:"not null VARCHAR(64) comment('密码')"`

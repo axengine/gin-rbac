@@ -41,6 +41,7 @@ func (svc *Service) CreateAppConfig(ctx context.Context, in *model.CreateAppConf
 	sk := str.RandAlphaNumString(32, true)
 	d := &model.AppConfig{
 		Name:      in.Name,
+		AppId:     str.RandAlphaNumString(6),
 		AccessKey: ak,
 		SecretKey: sk,
 		Status:    1,

@@ -7,7 +7,7 @@ import (
 
 func TestService_SwaggerJSONToActions(t *testing.T) {
 	in := &model.SwaggerJSONToActionsReq{
-		AppId: 0,
+		AppId: "000000",
 		SwaggerTxt: `{
     "swagger": "2.0",
     "info": {

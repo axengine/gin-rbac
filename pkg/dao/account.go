@@ -15,7 +15,7 @@ func (d *Dao) ListAccount(ctx context.Context, in *model.ListAccountReq) (int64,
 	if len(in.Username) > 0 {
 		sess.And("username like ?", "%"+in.Username+"%")
 	}
-	if in.AppId > 0 {
+	if len(in.AppId) > 0 {
 		sess.And("app_id = ?", in.AppId)
 	}
 	if in.Status > 0 {
@@ -32,7 +32,7 @@ func (d *Dao) GetAccount(ctx context.Context, in *model.GetAccountReq) (bool, *m
 	if in.Id > 0 {
 		conds = append(conds, builder.Eq{"id": in.AppId})
 	}
-	if in.AppId > 0 {
+	if len(in.AppId) > 0 {
 		conds = append(conds, builder.Eq{"app_id": in.AppId})
 	}
 

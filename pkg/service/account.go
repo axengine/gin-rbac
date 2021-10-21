@@ -101,7 +101,7 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 			CreatedAt:    v.CreatedAt.Unix(),
 		}
 		if exists, app, err := svc.d.GetAppConfigFromCache(ctx, &model.GetAppConfigReq{
-			Id: v.AppId,
+			AppId: v.AppId,
 		}); err == nil && exists {
 			d.AppName = app.Name
 		}

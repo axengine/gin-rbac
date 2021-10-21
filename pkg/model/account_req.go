@@ -6,7 +6,7 @@ import (
 )
 
 type ListAccountReq struct {
-	AppId    int64             `json:"appId" form:"appId"`
+	AppId    string            `json:"appId" form:"appId"`
 	Nickname string            `json:"nickname" form:"nickname"`
 	Username string            `json:"username" form:"username"`
 	Status   types.LimitStatus `json:"status" form:"status"`
@@ -15,7 +15,7 @@ type ListAccountReq struct {
 
 type ListAccount struct {
 	AppName      string            `json:"appName"`
-	AppId        int64             `json:"appId"`
+	AppId        string            `json:"appId"`
 	Nickname     string            `json:"nickname"`
 	PwdWrong     int               `json:"pwdWrong"`
 	LoginLock    int64             `json:"loginLock"`
@@ -28,20 +28,20 @@ type ListAccount struct {
 
 type GetAccountReq struct {
 	Id       int64
-	AppId    int64
+	AppId    string
 	Username string
 	Token    string
 }
 
 type CreateAccountReq struct {
-	AppId    int64  `json:"appId" binding:"required,min=1"`
+	AppId    string `json:"appId" binding:"required,len=6"`
 	Nickname string `json:"nickname" binding:"required,lte=64"`
 	Username string `json:"username" binding:"required,lte=64"`
 	Password string `json:"pwd" binding:"required,lte=32"`
 }
 
 type LoginAccountReq struct {
-	AppId    int64  `json:"appId" binding:"omitempty,min=0"`
+	AppId    string `json:"appId" binding:"required,len=6"`
 	Username string `json:"username" binding:"required,lte=64"`
 	Password string `json:"password" binding:"required,len=32"`
 }

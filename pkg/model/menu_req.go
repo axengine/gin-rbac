@@ -9,16 +9,16 @@ type ListMenuConfigReq struct {
 }
 
 type FindMenuConfigReq struct {
-	AppId    int64
+	AppId    string
 	ParentId int64
 }
 type GetMenuConfigReq struct {
 	Id    int64
-	AppId int64
+	AppId string
 }
 
 type CreateMenuConfigReq struct {
-	AppId    int64   `json:"appId" binding:"required,min=1"`
+	AppId    string  `json:"appId" binding:"required,len=6"`
 	Name     string  `json:"name" binding:"required,gte=1,lte=128"`
 	Memo     string  `json:"memo" binding:"omitempty,lte=128"`
 	ParentId int64   `json:"parentId" binding:"required,min=0"`
@@ -28,21 +28,21 @@ type CreateMenuConfigReq struct {
 }
 
 type UpsertActionConfigReq struct {
-	AppId  int64  `json:"appId" binding:"required,min=1"`
+	AppId  string `json:"appId" binding:"required,len=6"`
 	Name   string `json:"name" binding:"required,gte=1,gte=128"`
 	Path   string `json:"path" binding:"required,gte=1,gte=256"`
 	Method string `json:"method" binding:"required,upper"`
 }
 
 type UpdateMenuActionReq struct {
-	AppId    int64   `json:"appId"`
+	AppId    string  `json:"appId" binding:"required,len=6"`
 	MenuId   int64   `json:"menuId"`
 	ActionId []int64 `json:"actionId"`
 }
 
 type ListActionConfigReq struct {
 	typ.IdOmitReq
-	AppId  int64  `json:"appId" form:"appId"`
+	AppId  string `json:"appId" form:"appId"`
 	Name   string `json:"name" form:"name"`
 	Path   string `json:"path" form:"path"`
 	Method string `json:"method" form:"method"`
@@ -50,7 +50,7 @@ type ListActionConfigReq struct {
 }
 type ListActionConfig struct {
 	Id        int64  `json:"id"`
-	AppId     int64  `json:"appId"`
+	AppId     string `json:"appId"`
 	Name      string `json:"name"`
 	Path      string `json:"path"`
 	Method    string `json:"method"`
@@ -58,12 +58,12 @@ type ListActionConfig struct {
 }
 
 type FindActionConfigReq struct {
-	AppId    int64
+	AppId    string
 	ActionId []int64
 }
 
 type GetMenuTreeDirsReq struct {
-	AppId int64
+	AppId string
 }
 
 type GetMenuTreeDirsResp struct {
@@ -71,31 +71,18 @@ type GetMenuTreeDirsResp struct {
 }
 
 type GetMenuActionsReq struct {
-	AppId  int64 `json:"appId" form:"appId"`
-	MenuId int64 `json:"menuId" form:"menuId"`
+	AppId  string `json:"appId" form:"appId"`
+	MenuId int64  `json:"menuId" form:"menuId"`
 }
 
 type GetMenuActionsResp struct {
 	Actions Actions `json:"actions"`
 }
 
-type MenuTrees []*MenuTree
-
-type MenuTree struct {
-	AppId    int64             `json:"appId"`
-	Name     string            `json:"name"`
-	Memo     string            `json:"memo"`
-	ParentId int64             `json:"parentId"`
-	Status   types.LimitStatus `json:"status"`
-	Sequence int               `json:"sequence"`
-	Actions  Actions           `json:"actions"`
-	Children MenuTrees         `json:"children"`
-}
-
 type Actions []*Action
 type Action struct {
 	Id     int64  `json:"id"`
-	AppId  int64  `json:"appId"`
+	AppId  string `json:"appId"`
 	Name   string `json:"name"`
 	Path   string `json:"path"`
 	Method string `json:"method"`
@@ -109,7 +96,7 @@ func (dirs MenuTreeDirs) Less(i, j int) bool { return dirs[i].Sequence < dirs[j]
 
 type MenuTreeDir struct {
 	Id       int64             `json:"id"`
-	AppId    int64             `json:"appId"`
+	AppId    string            `json:"appId"`
 	Name     string            `json:"name"`
 	Memo     string            `json:"memo"`
 	ParentId int64             `json:"parentId"`
@@ -120,7 +107,7 @@ type MenuTreeDir struct {
 }
 
 type SwaggerJSONToActionsReq struct {
-	AppId      int64  `json:"appId" binding:"required,min=0"`
+	AppId      string `json:"appId" binding:"required,len=6"`
 	SwaggerTxt string `json:"swaggerTxt"`
 }
 

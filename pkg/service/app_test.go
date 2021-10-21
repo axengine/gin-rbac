@@ -8,8 +8,8 @@ import (
 
 func TestService_CreateAppConfig(t *testing.T) {
 	if err := svc.CreateAppConfig(context.Background(), &model.CreateAppConfigReq{
-		Name: "Test",
-		Memo: "Test",
+		Name: "RBAC",
+		Memo: "RBAC itself",
 	}); err != nil {
 		t.Fatal(err)
 	}

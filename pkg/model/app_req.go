@@ -12,12 +12,13 @@ type ListAppConfigReq struct {
 }
 
 type GetAppConfigReq struct {
-	Id        int64
+	AppId     string
 	AccessKey string
 }
 
 type GetAppConfigResp struct {
-	Id        int64
+	Id        int64             `json:"id"`
+	AppId     string            `json:"appId"`
 	Name      string            `json:"name"`
 	AccessKey string            `json:"accessKey"` // 访问KEY
 	SecretKey string            `json:"secretKey"` // 加密KEY
@@ -27,6 +28,7 @@ type GetAppConfigResp struct {
 
 type ListAppConfig struct {
 	Id        int64             `json:"id"`
+	AppId     string            `json:"appId"`
 	Name      string            `json:"name"`      // APP名
 	AccessKey string            `json:"accessKey"` // 访问KEY
 	SecretKey string            `json:"secretKey"` // 加密KEY

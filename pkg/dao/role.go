@@ -30,7 +30,15 @@ func (d *Dao) GetRoleConfig(ctx context.Context, in *model.GetRoleConfigReq) (bo
 	return exists, r, errc.WithStack(err)
 }
 
-func (d *Dao) CreateRoleConfig() {}
+func (d *Dao) CreateRoleConfig(ctx context.Context, in *model.RoleConfig) error {
+	_, err := d.mysql.Context(ctx).InsertOne(in)
+	return errc.WithStack(err)
+}
+
+func (d *Dao) UpdateRoleConfig(ctx context.Context, in *model.RoleConfig, cols []string) error {
+	_, err := d.mysql.Context(ctx).ID(in.Id).Cols(cols...).Update(in)
+	return errc.WithStack(err)
+}
 
 func (d *Dao) UpdateMenuActions() {}
 

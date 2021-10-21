@@ -7,6 +7,7 @@ import (
 
 type AppConfig struct {
 	Id        int64             `xorm:"not null pk autoincr INT(20)"`
+	AppId     string            `xorm:"not null VARCHAR(6) unique comment('APP ID')"`
 	Name      string            `xorm:"not null VARCHAR(128) comment('名称')"`
 	AccessKey string            `xorm:"not null VARCHAR(16) comment('AccessKey')"`
 	SecretKey string            `xorm:"not null VARCHAR(32) comment('SecretKey')"`

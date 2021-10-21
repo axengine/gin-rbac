@@ -27,7 +27,7 @@ func (d *Dao) GetMenuConfig(ctx context.Context, in *model.GetMenuConfigReq) (bo
 	if in.Id > 0 {
 		conds = append(conds, builder.Eq{"id": in.Id})
 	}
-	if in.AppId > 0 {
+	if len(in.AppId) > 0 {
 		conds = append(conds, builder.Eq{"app_id": in.AppId})
 	}
 
@@ -66,7 +66,7 @@ func (d *Dao) ListActionConfig(ctx context.Context, in *model.ListActionConfigRe
 	if len(in.Method) > 0 {
 		sess.And("method = ?", in.Method)
 	}
-	if in.AppId > 0 {
+	if len(in.AppId) > 0 {
 		sess.And("app_id = ?", in.AppId)
 	}
 	if in.Id > 0 {

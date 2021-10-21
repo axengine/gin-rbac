@@ -38,8 +38,8 @@ func (d *Dao) Sync2() {
 			new(model.AppConfig),
 			new(model.MenuConfig),
 			new(model.ActionConfig),
-			new(model.MenuAction),
 			new(model.RoleConfig),
+			new(model.RoleMenuAction),
 			new(model.Account),
 		)
 		if err != nil {
