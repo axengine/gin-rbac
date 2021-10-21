@@ -32,13 +32,19 @@ func loginAccount(c *gin.Context) {
 // @Summary [RBAC 登出]
 // @Description
 // @Tags RBAC 登录/登出
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Param Request body model.LoginOutAccountReq true "request param"
 // @Success 200 {object} ginutil.BaseResp "success"
 // @Router /rbac/loginOut [post]
 func loginOutAccount(c *gin.Context) {
-	err := svc.LoginOutAccount(c.Request.Context(), &model.LoginOutAccountReq{})
+	token, err := GetContextAccessToken(c)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err = svc.LoginOutAccount(c.Request.Context(), &model.LoginOutAccountReq{Token: token})
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return

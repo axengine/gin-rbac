@@ -11,6 +11,30 @@ type ListAppConfigReq struct {
 	typ.PageReq
 }
 
+type ListAppConfig struct {
+	Id        int64             `json:"id"`
+	AppId     string            `json:"appId"`
+	Name      string            `json:"name"`      // APP名
+	AccessKey string            `json:"accessKey"` // 访问KEY
+	SecretKey string            `json:"secretKey"` // 加密KEY
+	Status    types.LimitStatus `json:"status"`    // 状态 1-正常 2-限制
+	Memo      string            `json:"memo"`      // 备注
+	UpdatedAt int64             `json:"updatedAt"`
+	CreatedAt int64             `json:"createdAt"`
+}
+
+type SelectAppConfigReq struct {
+	Name string `form:"name"`
+	typ.PageReq
+}
+
+type SelectAppConfig struct {
+	Id    int64  `json:"id"`
+	AppId string `json:"appId"`
+	Name  string `json:"name"` // APP名
+	Memo  string `json:"memo"` // 备注
+}
+
 type GetAppConfigReq struct {
 	AppId     string
 	AccessKey string
@@ -24,18 +48,6 @@ type GetAppConfigResp struct {
 	SecretKey string            `json:"secretKey"` // 加密KEY
 	Status    types.LimitStatus `json:"status"`    // 状态 1-正常 2-限制
 	Memo      string            `json:"memo"`      // 备注
-}
-
-type ListAppConfig struct {
-	Id        int64             `json:"id"`
-	AppId     string            `json:"appId"`
-	Name      string            `json:"name"`      // APP名
-	AccessKey string            `json:"accessKey"` // 访问KEY
-	SecretKey string            `json:"secretKey"` // 加密KEY
-	Status    types.LimitStatus `json:"status"`    // 状态 1-正常 2-限制
-	Memo      string            `json:"memo"`      // 备注
-	UpdatedAt int64             `json:"updatedAt"`
-	CreatedAt int64             `json:"createdAt"`
 }
 
 type CreateAppConfigReq struct {

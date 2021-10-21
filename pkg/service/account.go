@@ -62,7 +62,6 @@ func (svc *Service) LoginAccount(ctx context.Context, in *model.LoginAccountReq,
 
 func (svc *Service) LoginOutAccount(ctx context.Context, in *model.LoginOutAccountReq) error {
 	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
-		Id:    in.Id,
 		Token: in.Token,
 	})
 	if err != nil {
@@ -121,6 +120,25 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 	out.Count = c
 	out.List = list
 	return nil
+}
+
+func (svc *Service) VerifyAccountToken(ctx context.Context, token string) (*model.Account, error) {
+	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
+		Token: token,
+	})
+	if err != nil {
+		return nil, errc.ErrInternalErr.MultiErr(err)
+	}
+	if !exists {
+		return nil, fmt.Errorf("token not found")
+	}
+	if acc.TokenExpired < time.Now().Unix() {
+		return nil, fmt.Errorf("token expired")
+	}
+	if acc.LoginLock > time.Now().Unix() {
+		return nil, fmt.Errorf("account locked")
+	}
+	return acc, nil
 }
 
 func (svc *Service) CreateAccount(ctx context.Context, in *model.CreateAccountReq) error {

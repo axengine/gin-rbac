@@ -52,7 +52,6 @@ type LoginAccountResp struct {
 }
 
 type LoginOutAccountReq struct {
-	typ.IdReq
 	Token string `json:"-"`
 }
 

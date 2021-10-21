@@ -20,6 +20,7 @@ func (svc *Service) ListAppConfig(ctx context.Context, in *model.ListAppConfigRe
 	for _, v := range records {
 		list = append(list, &model.ListAppConfig{
 			Id:        v.Id,
+			AppId:     v.AppId,
 			Name:      v.Name,
 			AccessKey: v.AccessKey,
 			SecretKey: v.SecretKey,
@@ -32,6 +33,29 @@ func (svc *Service) ListAppConfig(ctx context.Context, in *model.ListAppConfigRe
 	out.Count = c
 	out.List = list
 
+	return nil
+}
+
+func (svc *Service) SelectAppConfig(ctx context.Context, in *model.SelectAppConfigReq, out *typ.ListResp) error {
+	c, records, err := svc.d.ListAppConfig(ctx, &model.ListAppConfigReq{
+		Name:    in.Name,
+		Status:  1,
+		PageReq: in.PageReq,
+	})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	list := make([]*model.SelectAppConfig, 0, len(records))
+	for _, v := range records {
+		list = append(list, &model.SelectAppConfig{
+			Id:    v.Id,
+			AppId: v.AppId,
+			Name:  v.Name,
+			Memo:  v.Memo,
+		})
+	}
+	out.Count = c
+	out.List = list
 	return nil
 }
 

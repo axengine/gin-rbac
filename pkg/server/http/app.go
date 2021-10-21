@@ -31,6 +31,29 @@ func listAppConfig(c *gin.Context) {
 	ginutil.RespData(c, out)
 }
 
+// @Summary [APP配置筛选列表]
+// @Description 用于Select组件
+// @Tags RBAC APP配置
+// @Accept json
+// @Produce json
+// @Param Request body model.SelectAppConfigReq true "request param"
+// @Success 200 {object} model.SelectAppConfig "success"
+// @Router /rbac/v1/app/select [get]
+func selectAppConfig(c *gin.Context) {
+	in := &model.SelectAppConfigReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	out := &typ.ListResp{}
+	err := svc.SelectAppConfig(c.Request.Context(), in, out)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespData(c, out)
+}
+
 // @Summary [APP配置创建]
 // @Description
 // @Tags RBAC APP配置
