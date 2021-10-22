@@ -76,7 +76,7 @@ func (d *Dao) GetRoleConfigFromCache(ctx context.Context, in *model.GetRoleConfi
 	return true, c, nil
 }
 
-func (d *Dao) FindAllRoleMenuAction(ctx context.Context, roleId int64) ([]*model.RoleMenuAction, error) {
+func (d *Dao) FindRoleAllMenuAction(ctx context.Context, roleId int64) ([]*model.RoleMenuAction, error) {
 	records := make([]*model.RoleMenuAction, 0)
 	err := d.mysql.Context(ctx).Where("role_id = ?", roleId).Find(&records)
 	return records, errc.WithStack(err)
@@ -101,4 +101,59 @@ func (d *Dao) UpdateRoleMenuAction(ctx context.Context, add []*model.RoleMenuAct
 	})
 
 	return errc.WithStack(err)
+}
+
+func (d *Dao) FindAllRole(ctx context.Context) (model.Roles, error) {
+	roles := make(model.Roles, 0)
+	roleRecords := make([]*model.RoleConfig, 0)
+	if err := d.mysql.Context(ctx).Where("status = 1").Find(&roleRecords); err != nil {
+		return nil, errc.WithStack(err)
+	}
+	actionsMap := map[string][]*model.ActionConfig{}
+
+	for _, v := range roleRecords {
+		role := model.Role{
+			RoleId:  v.Id,
+			Actions: make(model.Actions, 0),
+		}
+
+		menuActions, err := d.FindRoleAllMenuAction(ctx, v.Id)
+		if err != nil {
+			return nil, err
+		}
+		if len(menuActions) > 0 {
+			_, ok := actionsMap[v.AppId]
+			if !ok {
+				actions, err := d.FindActionConfig(ctx, &model.FindActionConfigReq{
+					AppId: v.AppId,
+				})
+				if err != nil {
+					return nil, err
+				}
+				actionsMap[v.AppId] = actions
+			}
+		}
+
+		actions, ok := actionsMap[v.AppId]
+		if !ok {
+			continue
+		}
+		for _, ma := range menuActions {
+			for _, act := range actions {
+				if ma.ActionId == act.Id {
+					role.Actions = append(role.Actions, &model.Action{
+						Id:     act.Id,
+						AppId:  act.AppId,
+						Name:   act.Name,
+						Path:   act.Path,
+						Method: act.Method,
+						Status: act.Status,
+					})
+					break
+				}
+			}
+		}
+		roles = append(roles, role)
+	}
+	return roles, nil
 }

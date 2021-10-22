@@ -12,9 +12,9 @@ var (
 )
 
 type Config struct {
-	Env   string `defval:"dev"`
-	Admin Admin
-
+	Env    string `defval:"dev"`
+	Admin  Admin
+	Casbin Casbin
 	Mysql  mysql.Config
 	Logger logs.Config
 }
@@ -41,4 +41,8 @@ func (c *Config) EraseSensitive() Config {
 type Admin struct {
 	HttpListenAddr string `defval:"0.0.0.0:49000"`
 	AuthEnable     bool   `defval:"true"`
+}
+
+type Casbin struct {
+	Model string `defval:"./configs/model.conf"`
 }

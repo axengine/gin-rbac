@@ -20,10 +20,11 @@ type MenuConfig struct {
 }
 
 type ActionConfig struct {
-	Id        int64     `xorm:"not null pk autoincr BIGINT(20)"`
-	AppId     string    `xorm:"not null VARCHAR(6) comment('APP分组')"`
-	Name      string    `xorm:"not null VARCHAR(128) comment('名称')"`
-	Path      string    `xorm:"not null VARCHAR(256) comment('访问路径')"`
-	Method    string    `xorm:"not null VARCHAR(10) comment('GET POST PUT DELETE')"`
-	UpdatedAt time.Time `xorm:"updated"`
+	Id        int64             `xorm:"not null pk autoincr BIGINT(20)"`
+	AppId     string            `xorm:"not null VARCHAR(6) comment('APP分组')"`
+	Name      string            `xorm:"not null VARCHAR(128) comment('名称')"`
+	Path      string            `xorm:"not null VARCHAR(256) comment('访问路径')"`
+	Method    string            `xorm:"not null VARCHAR(10) comment('GET POST PUT DELETE')"`
+	Status    types.LimitStatus `xorm:"not null TINYINT(2) comment('状态 1-正常 2-锁定')"`
+	UpdatedAt time.Time         `xorm:"updated"`
 }

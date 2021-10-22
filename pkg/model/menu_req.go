@@ -85,11 +85,12 @@ type GetMenuActionsResp struct {
 
 type Actions []*Action
 type Action struct {
-	Id     int64  `json:"id"`
-	AppId  string `json:"appId"`
-	Name   string `json:"name"`
-	Path   string `json:"path"`
-	Method string `json:"method"`
+	Id     int64             `json:"id"`
+	AppId  string            `json:"appId"`
+	Name   string            `json:"name"`
+	Path   string            `json:"path"`
+	Method string            `json:"method"`
+	Status types.LimitStatus `json:"status"`
 }
 
 type MenuTreeDirs []MenuTreeDir

@@ -65,4 +65,17 @@ func (d *Dao) UpdateAccount(ctx context.Context, in *model.Account, cols []strin
 	return errc.WithStack(err)
 }
 
+func (d *Dao) FindAccount(ctx context.Context, in *model.FindAccountReq) ([]*model.Account, error) {
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	if len(in.AppId) > 0 {
+		sess.And("app_id = ?", in.AppId)
+	}
+	if in.Status > 0 {
+		sess.And("status = ?", in.Status)
+	}
+	records := make([]*model.Account, 0)
+	err := sess.Find(&records)
+	return records, errc.WithStack(err)
+}
+
 func (d *Dao) DelAccount() {}

@@ -33,6 +33,11 @@ type GetAccountReq struct {
 	Token    string
 }
 
+type FindAccountReq struct {
+	AppId  string
+	Status types.LimitStatus
+}
+
 type CreateAccountReq struct {
 	AppId    string `json:"appId" binding:"required,len=6"`
 	Nickname string `json:"nickname" binding:"required,lte=64"`

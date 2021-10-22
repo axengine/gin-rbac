@@ -49,3 +49,10 @@ type MenuAction struct {
 	MenuId   int64 `json:"menuId" binding:"required,min=1"`
 	ActionId int64 `json:"actionId" binding:"required,min=1"`
 }
+
+type Roles []Role
+
+type Role struct {
+	RoleId  int64
+	Actions Actions
+}

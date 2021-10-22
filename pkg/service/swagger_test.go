@@ -5,10 +5,7 @@ import (
 	"testing"
 )
 
-func TestService_SwaggerJSONToActions(t *testing.T) {
-	in := &model.SwaggerJSONToActionsReq{
-		AppId: "000000",
-		SwaggerTxt: `{
+var swaggerTxt = `{
     "swagger": "2.0",
     "info": {
         "description": "admin rbac manage API",
@@ -30,7 +27,7 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
                 "tags": [
                     "RBAC 登录/登出"
                 ],
-                "summary": "RBAC 登录",
+                "summary": "[RBAC 登录]",
                 "parameters": [
                     {
                         "description": "request param",
@@ -54,6 +51,11 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
         },
         "/rbac/loginOut": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -389,6 +391,40 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
                 }
             }
         },
+        "/rbac/v1/app/select": {
+            "get": {
+                "description": "用于Select组件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC APP配置"
+                ],
+                "summary": "[APP配置筛选列表]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.SelectAppConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.SelectAppConfig"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/app/update": {
             "post": {
                 "security": [
@@ -414,6 +450,272 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.UpdateAppConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/action/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置功能更新]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateMenuConfigActionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置创建]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateMenuConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/tree": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置树]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuTreeDirsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuTreeDirsResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/menu/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置更新]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateMenuConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置创建]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateRoleConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置列表]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ListRoleConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.ListRoleConfig"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置更新]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateRoleConfigReq"
                         }
                     }
                 ],
@@ -453,7 +755,7 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "nickname": {
                     "type": "string"
@@ -481,11 +783,84 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
                 }
             }
         },
+        "model.CreateMenuConfigReq": {
+            "type": "object",
+            "required": [
+                "appId",
+                "name",
+                "parentId",
+                "path",
+                "sequence"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sequence": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.CreateRoleConfigReq": {
+            "type": "object",
+            "required": [
+                "appId",
+                "name"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "isRoot": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.GetMenuTreeDirsReq": {
+            "type": "object",
+            "required": [
+                "appId"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.GetMenuTreeDirsResp": {
+            "type": "object",
+            "properties": {
+                "dirs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.MenuTreeDir"
+                    }
+                }
+            }
+        },
         "model.ListAccount": {
             "type": "object",
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "appName": {
                     "type": "string"
@@ -527,7 +902,7 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "nickname": {
                     "type": "string"
@@ -547,7 +922,27 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             }
         },
         "model.ListActionConfig": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "integer"
+                }
+            }
         },
         "model.ListActionConfigReq": {
             "type": "object",
@@ -558,7 +953,7 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
@@ -585,6 +980,9 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             "properties": {
                 "accessKey": {
                     "description": "访问KEY",
+                    "type": "string"
+                },
+                "appId": {
                     "type": "string"
                 },
                 "createdAt": {
@@ -635,6 +1033,53 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
                 }
             }
         },
+        "model.ListRoleConfig": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "appName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isRoot": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.ListRoleConfigReq": {
+            "type": "object",
+            "required": [
+                "page",
+                "size"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.LoginAccountReq": {
             "type": "object",
             "required": [
@@ -644,7 +1089,7 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "password": {
                     "type": "string"
@@ -666,12 +1111,79 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             }
         },
         "model.LoginOutAccountReq": {
+            "type": "object"
+        },
+        "model.MenuTreeDir": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "children": {
+                    "$ref": "#/definitions/model.MenuTreeDirs"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sequence": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.MenuTreeDirs": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/model.MenuTreeDir"
+            }
+        },
+        "model.SelectAppConfig": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "APP名",
+                    "type": "string"
+                }
+            }
+        },
+        "model.SelectAppConfigReq": {
             "type": "object",
             "required": [
-                "id"
+                "page",
+                "size"
             ],
             "properties": {
-                "id": {
+                "name": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
                     "type": "integer"
                 }
             }
@@ -712,9 +1224,7 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
         "model.UpdateAppConfigReq": {
             "type": "object",
             "required": [
-                "id",
-                "memo",
-                "name"
+                "id"
             ],
             "properties": {
                 "id": {
@@ -736,6 +1246,72 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
                 }
             }
         },
+        "model.UpdateMenuConfigActionReq": {
+            "type": "object",
+            "required": [
+                "menuId"
+            ],
+            "properties": {
+                "actionId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "menuId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.UpdateMenuConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parentId": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "sequence": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.UpdateRoleConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "isRoot": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.UpsertActionConfigReq": {
             "type": "object",
             "required": [
@@ -746,7 +1322,7 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             ],
             "properties": {
                 "appId": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "method": {
                     "type": "string"
@@ -760,7 +1336,12 @@ func TestService_SwaggerJSONToActions(t *testing.T) {
             }
         }
     }
-}`,
+}`
+
+func TestService_SwaggerJSONToActions(t *testing.T) {
+	in := &model.SwaggerJSONToActionsReq{
+		AppId:      "000000",
+		SwaggerTxt: swaggerTxt,
 	}
 	if err := svc.SwaggerJSONToActions(ctx, in); err != nil {
 		t.Fatal(err)

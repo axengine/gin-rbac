@@ -84,7 +84,7 @@ func (svc *Service) UpdateRoleConfig(ctx context.Context, in *model.UpdateRoleCo
 }
 
 func (svc *Service) UpsertRoleMenuAction(ctx context.Context, in *model.UpsertRoleMenuActionReq) error {
-	rmas, err := svc.d.FindAllRoleMenuAction(ctx, in.RoleId)
+	rmas, err := svc.d.FindRoleAllMenuAction(ctx, in.RoleId)
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
