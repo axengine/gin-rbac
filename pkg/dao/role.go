@@ -112,26 +112,46 @@ func (d *Dao) FindAllRole(ctx context.Context) (model.Roles, error) {
 	actionsMap := map[string][]*model.ActionConfig{}
 
 	for _, v := range roleRecords {
+		_, ok := actionsMap[v.AppId]
+		if !ok {
+			actions, err := d.FindActionConfig(ctx, &model.FindActionConfigReq{
+				AppId: v.AppId,
+			})
+			if err != nil {
+				return nil, err
+			}
+			actionsMap[v.AppId] = actions
+		}
+
 		role := model.Role{
 			RoleId:  v.Id,
 			Actions: make(model.Actions, 0),
 		}
 
+		if v.IsRoot == 1 {
+			// 如果是超级角色，则角色拥有此 appId 下的所有功能权限
+			actions, ok := actionsMap[v.AppId]
+			if !ok {
+				continue
+			}
+			for _, act := range actions {
+				role.Actions = append(role.Actions, &model.Action{
+					Id:     act.Id,
+					AppId:  act.AppId,
+					Name:   act.Name,
+					Path:   act.Path,
+					Method: act.Method,
+					Status: act.Status,
+				})
+			}
+			roles = append(roles, role)
+			continue
+		}
+
+		// 普通用户
 		menuActions, err := d.FindRoleAllMenuAction(ctx, v.Id)
 		if err != nil {
 			return nil, err
-		}
-		if len(menuActions) > 0 {
-			_, ok := actionsMap[v.AppId]
-			if !ok {
-				actions, err := d.FindActionConfig(ctx, &model.FindActionConfigReq{
-					AppId: v.AppId,
-				})
-				if err != nil {
-					return nil, err
-				}
-				actionsMap[v.AppId] = actions
-			}
 		}
 
 		actions, ok := actionsMap[v.AppId]
