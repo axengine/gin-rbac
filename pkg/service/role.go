@@ -39,6 +39,40 @@ func (svc *Service) ListRoleConfig(ctx context.Context, in *model.ListRoleConfig
 	return nil
 }
 
+func (svc *Service) GetRoleMenuAction(ctx context.Context, in *model.GetRoleMenuActionReq, out *model.GetRoleMenuActionResp) error {
+	exists, role, err := svc.d.GetRoleConfig(ctx, &model.GetRoleConfigReq{
+		Id: in.RoleId,
+	})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if !exists {
+		return errc.ErrNotFound.MultiMsg("roleId")
+	}
+
+	actions, err := svc.d.FindRoleAllMenuAction(ctx, role.Id)
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+
+	menusMap := make(map[int64][]int64)
+	for _, v := range actions {
+		vv, ok := menusMap[v.MenuId]
+		if ok {
+			menusMap[v.MenuId] = append(vv, v.ActionId)
+		} else {
+			menusMap[v.MenuId] = []int64{v.ActionId}
+		}
+	}
+	for mid, aid := range menusMap {
+		out.MenuActions = append(out.MenuActions, model.MenuAction{
+			MenuId:  mid,
+			Actions: aid,
+		})
+	}
+	return nil
+}
+
 func (svc *Service) CreateRoleConfig(ctx context.Context, in *model.CreateRoleConfigReq) error {
 	r := &model.RoleConfig{
 		AppId:  in.AppId,
@@ -101,17 +135,19 @@ func (svc *Service) UpsertRoleMenuAction(ctx context.Context, in *model.UpsertRo
 	}
 	add := make([]*model.RoleMenuAction, 0)
 	for _, v := range in.MenuActions {
-		k := fmt.Sprintf("mid_%d_aid_%d", v.MenuId, v.ActionId)
-		rma, ok := rmaMap[k]
-		if ok {
-			rma.hit = true
-			rmaMap[k] = rma
-		} else {
-			add = append(add, &model.RoleMenuAction{
-				RoleId:   in.RoleId,
-				MenuId:   v.MenuId,
-				ActionId: v.ActionId,
-			})
+		for _, aid := range v.Actions {
+			k := fmt.Sprintf("mid_%d_aid_%d", v.MenuId, aid)
+			rma, ok := rmaMap[k]
+			if ok {
+				rma.hit = true
+				rmaMap[k] = rma
+			} else {
+				add = append(add, &model.RoleMenuAction{
+					RoleId:   in.RoleId,
+					MenuId:   v.MenuId,
+					ActionId: aid,
+				})
+			}
 		}
 	}
 	del := make([]int64, 0)

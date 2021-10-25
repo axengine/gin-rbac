@@ -87,6 +87,10 @@ func RBACEnforce(enable bool, enforce *casbin.SyncedEnforcer, skipPrefixPaths ..
 			c.Abort()
 			return
 		}
+		if account.IsRoot == 1 {
+			c.Next()
+			return
+		}
 		pass, err := enforce.Enforce(account.Id, path, method)
 		if err != nil {
 			logs.Qezap.Error("MidRBACEnforce", zap.Any("Enforce", err))

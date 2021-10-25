@@ -31,6 +31,30 @@ func listActionConfig(c *gin.Context) {
 	ginutil.RespData(c, out)
 }
 
+// @Summary [功能配置查询]
+// @Description 根据功能ID，查询基础信息
+// @Tags RBAC 功能配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.FindActionConfigReq true "request param"
+// @Success 200 {object} model.FindActionConfigResp "success"
+// @Router /rbac/v1/action/find [post]
+func findActionConfig(c *gin.Context) {
+	in := &model.FindActionConfigReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	out := &model.FindActionConfigResp{}
+	err := svc.FindActionConfig(c.Request.Context(), in, out)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespData(c, out)
+}
+
 // @Summary [功能配置创建/更新]
 // @Description
 // @Tags RBAC 功能配置

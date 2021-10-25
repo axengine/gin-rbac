@@ -22,7 +22,15 @@ type ListRoleConfig struct {
 }
 
 type GetRoleConfigReq struct {
-	Id int64
+	Id int64 `json:"id" form:"id"`
+}
+
+type GetRoleMenuActionReq struct {
+	RoleId int64 `json:"roleId" form:"roleId" binding:"required,min=1"`
+}
+
+type GetRoleMenuActionResp struct {
+	MenuActions []MenuAction `json:"menuActions"`
 }
 
 type CreateRoleConfigReq struct {
@@ -41,13 +49,13 @@ type UpdateRoleConfigReq struct {
 }
 
 type UpsertRoleMenuActionReq struct {
-	RoleId      int64 `json:"roleId" form:"roleId" binding:"required,gt=0"`
+	RoleId      int64 `json:"roleId" form:"roleId" binding:"required,min=1"`
 	MenuActions []MenuAction
 }
 
 type MenuAction struct {
-	MenuId   int64 `json:"menuId" binding:"required,min=1"`
-	ActionId int64 `json:"actionId" binding:"required,min=1"`
+	MenuId  int64   `json:"menuId" binding:"required,min=1"`
+	Actions []int64 `json:"actions"`
 }
 
 type Roles []Role

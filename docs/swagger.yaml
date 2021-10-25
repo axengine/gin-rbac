@@ -24,6 +24,19 @@ definitions:
       status:
         type: integer
     type: object
+  model.ActionBase:
+    properties:
+      appId:
+        type: string
+      id:
+        type: integer
+      method:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+    type: object
   model.CreateAccountReq:
     properties:
       appId:
@@ -86,6 +99,24 @@ definitions:
     - appId
     - name
     type: object
+  model.FindActionConfigReq:
+    properties:
+      actionId:
+        items:
+          type: integer
+        type: array
+      appId:
+        type: string
+    required:
+    - appId
+    type: object
+  model.FindActionConfigResp:
+    properties:
+      actions:
+        items:
+          $ref: '#/definitions/model.ActionBase'
+        type: array
+    type: object
   model.GetMenuActionsReq:
     properties:
       menuId:
@@ -112,6 +143,20 @@ definitions:
       dirs:
         items:
           $ref: '#/definitions/model.MenuTreeDir'
+        type: array
+    type: object
+  model.GetRoleMenuActionReq:
+    properties:
+      roleId:
+        type: integer
+    required:
+    - roleId
+    type: object
+  model.GetRoleMenuActionResp:
+    properties:
+      menuActions:
+        items:
+          $ref: '#/definitions/model.MenuAction'
         type: array
     type: object
   model.ListAccount:
@@ -189,7 +234,6 @@ definitions:
       size:
         type: integer
     required:
-    - id
     - page
     - size
     type: object
@@ -286,8 +330,23 @@ definitions:
     type: object
   model.LoginOutAccountReq:
     type: object
+  model.MenuAction:
+    properties:
+      actions:
+        items:
+          type: integer
+        type: array
+      menuId:
+        type: integer
+    required:
+    - menuId
+    type: object
   model.MenuTreeDir:
     properties:
+      actions:
+        items:
+          type: integer
+        type: array
       appId:
         type: string
       children:
@@ -427,6 +486,7 @@ definitions:
       appId:
         type: string
       method:
+        description: GET POST PUT DELETE
         type: string
       name:
         type: string
@@ -437,6 +497,17 @@ definitions:
     - method
     - name
     - path
+    type: object
+  model.UpsertRoleMenuActionReq:
+    properties:
+      menuActions:
+        items:
+          $ref: '#/definitions/model.MenuAction'
+        type: array
+      roleId:
+        type: integer
+    required:
+    - roleId
     type: object
 host: API_HOST:49000
 info:
@@ -581,6 +652,30 @@ paths:
       summary: '[账户配置角色更改]'
       tags:
       - RBAC 账户配置
+  /rbac/v1/action/find:
+    post:
+      consumes:
+      - application/json
+      description: 根据功能ID，查询基础信息
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.FindActionConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.FindActionConfigResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[功能配置查询]'
+      tags:
+      - RBAC 功能配置
   /rbac/v1/action/list:
     get:
       consumes:
@@ -833,6 +928,52 @@ paths:
       summary: '[菜单配置更新]'
       tags:
       - RBAC 菜单配置
+  /rbac/v1/role/action:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.GetRoleMenuActionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.GetRoleMenuActionResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[获取角色菜单功能]'
+      tags:
+      - RBAC 角色配置
+  /rbac/v1/role/action/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpsertRoleMenuActionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[角色配置功能绑定]'
+      tags:
+      - RBAC 角色配置
   /rbac/v1/role/create:
     post:
       consumes:

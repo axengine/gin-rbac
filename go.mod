@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
-	github.com/bbdshow/bkit v0.2.0
+	github.com/bbdshow/bkit v0.2.1
 	github.com/bbdshow/bkit/db/mysql v0.1.0
 	github.com/casbin/casbin/v2 v2.1.2
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

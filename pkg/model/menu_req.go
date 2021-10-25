@@ -38,7 +38,7 @@ type UpsertActionConfigReq struct {
 	AppId  string `json:"appId" binding:"required,len=6"`
 	Name   string `json:"name" binding:"required,gte=1,gte=128"`
 	Path   string `json:"path" binding:"required,gte=1,gte=256"`
-	Method string `json:"method" binding:"required,upper"`
+	Method string `json:"method" binding:"required,oneof=GET POST PUT DELETE"` // GET POST PUT DELETE
 }
 
 type UpdateMenuConfigActionReq struct {
@@ -47,7 +47,7 @@ type UpdateMenuConfigActionReq struct {
 }
 
 type ListActionConfigReq struct {
-	typ.IdOmitReq
+	Id     int64  `json:"id" form:"id" binding:"omitempty,gt=0"`
 	AppId  string `json:"appId" form:"appId"`
 	Name   string `json:"name" form:"name"`
 	Path   string `json:"path" form:"path"`
@@ -64,8 +64,20 @@ type ListActionConfig struct {
 }
 
 type FindActionConfigReq struct {
-	AppId    string
-	ActionId []int64
+	AppId    string  `json:"appId" form:"appId" binding:"required,len=6"`
+	ActionId []int64 `json:"actionId" form:"actionId"`
+}
+
+type FindActionConfigResp struct {
+	Actions []ActionBase
+}
+
+type ActionBase struct {
+	Id     int64  `json:"id"`
+	AppId  string `json:"appId"`
+	Name   string `json:"name"`
+	Path   string `json:"path"`
+	Method string `json:"method"`
 }
 
 type GetMenuTreeDirsReq struct {
@@ -110,6 +122,7 @@ type MenuTreeDir struct {
 	Status   types.LimitStatus `json:"status"`
 	Sequence int               `json:"sequence"`
 	Path     string            `json:"path"`
+	Actions  []int64           `json:"actions"`
 	Children MenuTreeDirs      `json:"children"`
 }
 

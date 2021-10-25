@@ -33,6 +33,29 @@ func (svc *Service) ListActionConfig(ctx context.Context, in *model.ListActionCo
 	return nil
 }
 
+func (svc *Service) FindActionConfig(ctx context.Context, in *model.FindActionConfigReq, out *model.FindActionConfigResp) error {
+	if len(in.ActionId) <= 0 {
+		out.Actions = make([]model.ActionBase, 0)
+		return nil
+	}
+	records, err := svc.d.FindActionConfig(ctx, in)
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	list := make([]model.ActionBase, 0, len(records))
+	for _, v := range records {
+		list = append(list, model.ActionBase{
+			Id:     v.Id,
+			AppId:  v.AppId,
+			Name:   v.Name,
+			Path:   v.Path,
+			Method: v.Method,
+		})
+	}
+	out.Actions = list
+	return nil
+}
+
 func (svc *Service) CreateMenuConfig(ctx context.Context, in *model.CreateMenuConfigReq) error {
 	r := &model.MenuConfig{
 		AppId:    in.AppId,
@@ -175,6 +198,7 @@ func (svc *Service) GetMenuActions(ctx context.Context, in *model.GetMenuActions
 		return nil
 	}
 	actions, err := svc.d.FindActionConfig(ctx, &model.FindActionConfigReq{
+		AppId:    menu.AppId,
 		ActionId: actionId,
 	})
 	if err != nil {
@@ -214,6 +238,7 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 			Status:   v.Status,
 			Sequence: v.Sequence,
 			Path:     v.Path,
+			Actions:  v.Actions.Unmarshal(),
 			Children: make(model.MenuTreeDirs, 0),
 		}
 		val, ok := dirsMap[v.ParentId]

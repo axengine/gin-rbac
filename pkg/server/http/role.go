@@ -31,6 +31,30 @@ func listRoleConfig(c *gin.Context) {
 	ginutil.RespData(c, out)
 }
 
+// @Summary [获取角色菜单功能]
+// @Description
+// @Tags RBAC 角色配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.GetRoleMenuActionReq true "request param"
+// @Success 200 {object} model.GetRoleMenuActionResp "success"
+// @Router /rbac/v1/role/action [get]
+func getRoleMenuAction(c *gin.Context) {
+	in := &model.GetRoleMenuActionReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	out := &model.GetRoleMenuActionResp{}
+	err := svc.GetRoleMenuAction(c.Request.Context(), in, out)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespData(c, out)
+}
+
 // @Summary [角色配置创建]
 // @Description
 // @Tags RBAC 角色配置
@@ -70,6 +94,29 @@ func updateRoleConfig(c *gin.Context) {
 		return
 	}
 	err := svc.UpdateRoleConfig(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
+// @Summary [角色配置功能绑定]
+// @Description
+// @Tags RBAC 角色配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.UpsertRoleMenuActionReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/role/action/update [post]
+func upsertRoleMenuAction(c *gin.Context) {
+	in := &model.UpsertRoleMenuActionReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.UpsertRoleMenuAction(c.Request.Context(), in)
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return

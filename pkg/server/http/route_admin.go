@@ -31,6 +31,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 	action := rbac.Group("/action").Use(midAccessTokenVerify()).Use(MidRBACEnforce())
 	action.GET("/list", listActionConfig)
 	action.POST("/upsert", upsertActionConfig)
+	action.POST("/find", findActionConfig)
 
 	menu := rbac.Group("/menu").Use(midAccessTokenVerify()).Use(MidRBACEnforce())
 	menu.GET("/tree", treeMenuConfig)
@@ -49,4 +50,6 @@ func RegisterAdminRouter(e *gin.Engine) {
 	role.GET("/list", listRoleConfig)
 	role.POST("/create", createRoleConfig)
 	role.POST("/update", updateRoleConfig)
+	role.GET("/action", getRoleMenuAction)
+	role.POST("/action/upsert", upsertRoleMenuAction)
 }

@@ -36,6 +36,8 @@ github.com/aws/aws-sdk-go v1.27.0/go.mod h1:KmX6BPdI08NWTb3/sm4ZGu5ShLoqVDhKgpiN
 github.com/aws/aws-sdk-go-v2 v0.18.0/go.mod h1:JWVYvqSMppoMJC0x5wdwiImzgXTI9FuZwxzkQq9wy+g=
 github.com/bbdshow/bkit v0.2.0 h1:1pk9SZTNjJGgIz4M9YbMf89SOgr9Gh4yACGOVq6RLBk=
 github.com/bbdshow/bkit v0.2.0/go.mod h1:eMIRovzgoOK74llTnLLZ7+37Lh3kX3YwtnIX8UVuLLs=
+github.com/bbdshow/bkit v0.2.1 h1:+HgTiYZwOQMyGxigCd4muUUdK690PNqpZXkvhTT3b5U=
+github.com/bbdshow/bkit v0.2.1/go.mod h1:eMIRovzgoOK74llTnLLZ7+37Lh3kX3YwtnIX8UVuLLs=
 github.com/bbdshow/bkit/db/mysql v0.1.0 h1:6cPdSrAaMF8IifdRFYWS0QHhp5krRCMpUSfZvD9ysSs=
 github.com/bbdshow/bkit/db/mysql v0.1.0/go.mod h1:8IYg0HevqoyuUzvrPupEzqS//E7qbB09b/YOhLpr4Ns=
 github.com/bbdshow/qelog/api v1.0.1 h1:4GYKc61Jis08eeZKTXSD6CKUbT2nmqHraQ/nX+g59qo=
