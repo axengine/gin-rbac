@@ -18,8 +18,8 @@ type CreateMenuConfigReq struct {
 	AppId    string `json:"appId" binding:"required,len=6"`
 	Name     string `json:"name" binding:"required,gte=1,lte=128"`
 	Memo     string `json:"memo" binding:"omitempty,lte=128"`
-	ParentId int64  `json:"parentId" binding:"required,min=0"`
-	Sequence int    `json:"sequence" binding:"required,min=0"`
+	ParentId int64  `json:"parentId" binding:"omitempty,min=0"`
+	Sequence int    `json:"sequence" binding:"omitempty,min=0"`
 	Path     string `json:"path" binding:"required,gte=1,lte=256"`
 	Typ      int    `json:"typ" binding:"required,min=1,max=2"`
 }
@@ -77,8 +77,7 @@ type GetMenuTreeDirsResp struct {
 }
 
 type GetMenuActionsReq struct {
-	AppId  string `json:"appId" form:"appId"`
-	MenuId int64  `json:"menuId" form:"menuId"`
+	MenuId int64 `json:"menuId" form:"menuId" binding:"required,min=1"`
 }
 
 type GetMenuActionsResp struct {
@@ -95,7 +94,7 @@ type Action struct {
 	Status types.LimitStatus `json:"status"`
 }
 
-type MenuTreeDirs []MenuTreeDir
+type MenuTreeDirs []*MenuTreeDir
 
 func (dirs MenuTreeDirs) Len() int           { return len(dirs) }
 func (dirs MenuTreeDirs) Swap(i, j int)      { dirs[i], dirs[j] = dirs[j], dirs[i] }

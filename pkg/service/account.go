@@ -8,6 +8,7 @@ import (
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/gen/str"
 	"github.com/bbdshow/bkit/typ"
+	"github.com/bbdshow/bkit/util/icopier"
 	"time"
 )
 
@@ -122,23 +123,26 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 	return nil
 }
 
-func (svc *Service) VerifyAccountToken(ctx context.Context, token string) (*model.Account, error) {
+func (svc *Service) VerifyAccountToken(ctx context.Context, token string, out *model.VerifyAccountTokenResp) error {
 	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
 		Token: token,
 	})
 	if err != nil {
-		return nil, errc.ErrInternalErr.MultiErr(err)
+		return errc.ErrInternalErr.MultiErr(err)
 	}
 	if !exists {
-		return nil, fmt.Errorf("token not found")
+		return fmt.Errorf("token not found")
 	}
 	if acc.TokenExpired < time.Now().Unix() {
-		return nil, fmt.Errorf("token expired")
+		return fmt.Errorf("token expired")
 	}
 	if acc.LoginLock > time.Now().Unix() {
-		return nil, fmt.Errorf("account locked")
+		return fmt.Errorf("account locked")
 	}
-	return acc, nil
+	if err := icopier.Copy(out, acc); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (svc *Service) CreateAccount(ctx context.Context, in *model.CreateAccountReq) error {

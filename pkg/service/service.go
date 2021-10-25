@@ -46,10 +46,15 @@ func (svc *Service) initSyncEnforce() (*casbin.SyncedEnforcer, error) {
 		return nil, errc.WithStack(err)
 	}
 	se.EnableEnforce(svc.cfg.Casbin.Enable)
-
-	se.StartAutoLoadPolicy(15 * time.Second)
-	svc.enforceClose = func() {
-		se.StopAutoLoadPolicy()
+	if svc.cfg.Casbin.Enable {
+		se.StartAutoLoadPolicy(30 * time.Second)
+		svc.enforceClose = func() {
+			se.StopAutoLoadPolicy()
+		}
 	}
 	return se, nil
+}
+
+func (svc *Service) GetSyncedEnforcer() *casbin.SyncedEnforcer {
+	return svc.enforce
 }

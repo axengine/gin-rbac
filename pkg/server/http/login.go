@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/bbdshow/admin-rabc/pkg/middleware"
 	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/ginutil"
 	"github.com/gin-gonic/gin"
@@ -39,7 +40,7 @@ func loginAccount(c *gin.Context) {
 // @Success 200 {object} ginutil.BaseResp "success"
 // @Router /rbac/loginOut [post]
 func loginOutAccount(c *gin.Context) {
-	token, err := GetContextAccessToken(c)
+	token, err := middleware.GetContextAccessToken(c)
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return

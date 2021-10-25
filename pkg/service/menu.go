@@ -160,8 +160,7 @@ func (svc *Service) GetMenuTreeDirs(ctx context.Context, in *model.GetMenuTreeDi
 
 func (svc *Service) GetMenuActions(ctx context.Context, in *model.GetMenuActionsReq, out *model.GetMenuActionsResp) error {
 	exists, menu, err := svc.d.GetMenuConfig(ctx, &model.GetMenuConfigReq{
-		Id:    in.MenuId,
-		AppId: in.AppId,
+		Id: in.MenuId,
 	})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
@@ -176,7 +175,6 @@ func (svc *Service) GetMenuActions(ctx context.Context, in *model.GetMenuActions
 		return nil
 	}
 	actions, err := svc.d.FindActionConfig(ctx, &model.FindActionConfigReq{
-		AppId:    in.AppId,
 		ActionId: actionId,
 	})
 	if err != nil {
@@ -206,7 +204,7 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 	}
 	dirsMap := make(map[int64]model.MenuTreeDirs, 0)
 	for _, v := range menus {
-		dir := model.MenuTreeDir{
+		dir := &model.MenuTreeDir{
 			Id:       v.Id,
 			AppId:    v.AppId,
 			Name:     v.Name,
@@ -232,8 +230,8 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 	sort.Sort(rootDirs)
 
 	for _, root := range rootDirs {
-		var findChildren func(root model.MenuTreeDir, parentId int64)
-		findChildren = func(root model.MenuTreeDir, parentId int64) {
+		var findChildren func(root *model.MenuTreeDir, parentId int64)
+		findChildren = func(root *model.MenuTreeDir, parentId int64) {
 			children, ok := dirsMap[parentId]
 			if !ok {
 				return

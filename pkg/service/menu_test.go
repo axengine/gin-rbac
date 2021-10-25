@@ -39,7 +39,7 @@ func TestService_UpdateMenuAction(t *testing.T) {
 }
 
 func TestService_menuTreeDirs(t *testing.T) {
-	dirs, err := svc.menuTreeDirs(ctx, &model.GetMenuTreeDirsReq{AppId: ""})
+	dirs, err := svc.menuTreeDirs(ctx, &model.GetMenuTreeDirsReq{AppId: "000000"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +49,6 @@ func TestService_menuTreeDirs(t *testing.T) {
 func TestService_GetMenuActions(t *testing.T) {
 	out := &model.GetMenuActionsResp{}
 	if err := svc.GetMenuActions(ctx, &model.GetMenuActionsReq{
-		AppId:  "",
 		MenuId: 2,
 	}, out); err != nil {
 		t.Fatal(err)

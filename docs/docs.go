@@ -509,6 +509,44 @@ var doc = `{
                 }
             }
         },
+        "/rbac/v1/menu/actions": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置功能]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuActionsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuActionsResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/menu/create": {
             "post": {
                 "security": [
@@ -753,6 +791,29 @@ var doc = `{
                 }
             }
         },
+        "model.Action": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.CreateAccountReq": {
             "type": "object",
             "required": [
@@ -796,9 +857,7 @@ var doc = `{
             "required": [
                 "appId",
                 "name",
-                "parentId",
                 "path",
-                "sequence",
                 "typ"
             ],
             "properties": {
@@ -843,6 +902,28 @@ var doc = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "model.GetMenuActionsReq": {
+            "type": "object",
+            "required": [
+                "menuId"
+            ],
+            "properties": {
+                "menuId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.GetMenuActionsResp": {
+            "type": "object",
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Action"
+                    }
                 }
             }
         },

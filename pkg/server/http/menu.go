@@ -78,6 +78,30 @@ func treeMenuConfig(c *gin.Context) {
 	ginutil.RespData(c, out)
 }
 
+// @Summary [菜单配置功能]
+// @Description
+// @Tags RBAC 菜单配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.GetMenuActionsReq true "request param"
+// @Success 200 {object} model.GetMenuActionsResp "success"
+// @Router /rbac/v1/menu/actions [get]
+func menuActions(c *gin.Context) {
+	in := &model.GetMenuActionsReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	out := &model.GetMenuActionsResp{}
+	err := svc.GetMenuActions(c.Request.Context(), in, out)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespData(c, out)
+}
+
 // @Summary [菜单配置创建]
 // @Description
 // @Tags RBAC 菜单配置

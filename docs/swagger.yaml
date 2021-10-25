@@ -9,6 +9,21 @@ definitions:
       traceId:
         type: string
     type: object
+  model.Action:
+    properties:
+      appId:
+        type: string
+      id:
+        type: integer
+      method:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      status:
+        type: integer
+    type: object
   model.CreateAccountReq:
     properties:
       appId:
@@ -54,9 +69,7 @@ definitions:
     required:
     - appId
     - name
-    - parentId
     - path
-    - sequence
     - typ
     type: object
   model.CreateRoleConfigReq:
@@ -72,6 +85,20 @@ definitions:
     required:
     - appId
     - name
+    type: object
+  model.GetMenuActionsReq:
+    properties:
+      menuId:
+        type: integer
+    required:
+    - menuId
+    type: object
+  model.GetMenuActionsResp:
+    properties:
+      actions:
+        items:
+          $ref: '#/definitions/model.Action'
+        type: array
     type: object
   model.GetMenuTreeDirsReq:
     properties:
@@ -712,6 +739,29 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: '[菜单配置功能更新]'
+      tags:
+      - RBAC 菜单配置
+  /rbac/v1/menu/actions:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.GetMenuActionsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.GetMenuActionsResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[菜单配置功能]'
       tags:
       - RBAC 菜单配置
   /rbac/v1/menu/create:

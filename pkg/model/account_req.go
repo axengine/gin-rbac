@@ -3,6 +3,7 @@ package model
 import (
 	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/typ"
+	"time"
 )
 
 type ListAccountReq struct {
@@ -68,4 +69,16 @@ type UpdateAccountPasswordReq struct {
 type UpdateAccountRoleReq struct {
 	typ.IdReq
 	Roles []int64 `json:"roles" binding:"required"`
+}
+
+type VerifyAccountTokenResp struct {
+	Id        int64
+	AppId     string
+	Nickname  string
+	Username  string
+	LoginLock int64
+	Status    types.LimitStatus
+	IsRoot    int32
+	Roles     types.IntSplitStr
+	CreatedAt time.Time
 }
