@@ -42,6 +42,7 @@ func (svc *Service) CreateMenuConfig(ctx context.Context, in *model.CreateMenuCo
 		Status:   types.LimitNormal,
 		Sequence: in.Sequence,
 		Path:     in.Path,
+		Typ:      in.Typ,
 	}
 
 	if in.ParentId != 0 {
@@ -76,6 +77,10 @@ func (svc *Service) UpdateMenuConfig(ctx context.Context, in *model.UpdateMenuCo
 	if len(in.Path) > 0 {
 		cols = append(cols, "path")
 		d.Path = in.Path
+	}
+	if in.Typ > 0 {
+		cols = append(cols, "typ")
+		d.Typ = in.Typ
 	}
 	if in.ParentId > -1 {
 		if in.ParentId != 0 {
@@ -205,6 +210,7 @@ func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsR
 			Id:       v.Id,
 			AppId:    v.AppId,
 			Name:     v.Name,
+			Typ:      v.Typ,
 			Memo:     v.Memo,
 			ParentId: v.ParentId,
 			Status:   v.Status,

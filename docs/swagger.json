@@ -783,7 +783,8 @@
                 "name",
                 "parentId",
                 "path",
-                "sequence"
+                "sequence",
+                "typ"
             ],
             "properties": {
                 "appId": {
@@ -802,6 +803,9 @@
                     "type": "string"
                 },
                 "sequence": {
+                    "type": "integer"
+                },
+                "typ": {
                     "type": "integer"
                 }
             }
@@ -1135,6 +1139,9 @@
                 },
                 "status": {
                     "type": "integer"
+                },
+                "typ": {
+                    "type": "integer"
                 }
             }
         },
@@ -1278,6 +1285,9 @@
                     "type": "string"
                 },
                 "sequence": {
+                    "type": "integer"
+                },
+                "typ": {
                     "type": "integer"
                 }
             }

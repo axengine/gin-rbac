@@ -21,6 +21,7 @@ type CreateMenuConfigReq struct {
 	ParentId int64  `json:"parentId" binding:"required,min=0"`
 	Sequence int    `json:"sequence" binding:"required,min=0"`
 	Path     string `json:"path" binding:"required,gte=1,lte=256"`
+	Typ      int    `json:"typ" binding:"required,min=1,max=2"`
 }
 
 type UpdateMenuConfigReq struct {
@@ -30,6 +31,7 @@ type UpdateMenuConfigReq struct {
 	ParentId int64  `json:"parentId" binding:"omitempty,min=0"`
 	Sequence int    `json:"sequence" binding:"omitempty,min=0"`
 	Path     string `json:"path" binding:"omitempty,gte=1,lte=256"`
+	Typ      int    `json:"typ" binding:"omitempty,min=1,max=2"`
 }
 
 type UpsertActionConfigReq struct {
@@ -103,6 +105,7 @@ type MenuTreeDir struct {
 	Id       int64             `json:"id"`
 	AppId    string            `json:"appId"`
 	Name     string            `json:"name"`
+	Typ      int               `json:"typ"`
 	Memo     string            `json:"memo"`
 	ParentId int64             `json:"parentId"`
 	Status   types.LimitStatus `json:"status"`

@@ -18,7 +18,7 @@ func init() {
 	casbinModel.AddDef("p", "p", "sub, obj, act")
 	casbinModel.AddDef("g", "g", "_, _")
 	casbinModel.AddDef("e", "e", "some(where (p.eft == allow))")
-	casbinModel.AddDef("m", "m", "g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act")
+	casbinModel.AddDef("m", "m", "g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)")
 }
 
 type CasbinAdapter struct {
@@ -30,6 +30,14 @@ func NewCasbinAdapter(d *dao.Dao) *CasbinAdapter {
 }
 
 func (ca *CasbinAdapter) LoadPolicy(m casbinM.Model) error {
+	if err := ca.loadRole(m); err != nil {
+		return err
+	}
+
+	if err := ca.loadAccount(m); err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -798,7 +798,8 @@ var doc = `{
                 "name",
                 "parentId",
                 "path",
-                "sequence"
+                "sequence",
+                "typ"
             ],
             "properties": {
                 "appId": {
@@ -817,6 +818,9 @@ var doc = `{
                     "type": "string"
                 },
                 "sequence": {
+                    "type": "integer"
+                },
+                "typ": {
                     "type": "integer"
                 }
             }
@@ -1150,6 +1154,9 @@ var doc = `{
                 },
                 "status": {
                     "type": "integer"
+                },
+                "typ": {
+                    "type": "integer"
                 }
             }
         },
@@ -1293,6 +1300,9 @@ var doc = `{
                     "type": "string"
                 },
                 "sequence": {
+                    "type": "integer"
+                },
+                "typ": {
                     "type": "integer"
                 }
             }

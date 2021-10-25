@@ -44,5 +44,6 @@ type Admin struct {
 }
 
 type Casbin struct {
-	Model string `defval:"./configs/model.conf"`
+	Enable bool `defval:"false"`
+	Debug  bool `defval:"true"`
 }

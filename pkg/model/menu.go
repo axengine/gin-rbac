@@ -9,6 +9,7 @@ type MenuConfig struct {
 	Id        int64             `xorm:"not null pk autoincr BIGINT(20)"`
 	AppId     string            `xorm:"not null VARCHAR(6) comment('APP分组')"`
 	Name      string            `xorm:"not null VARCHAR(128) comment('名称')"`
+	Typ       int               `xorm:"not null TINYINT(2) comment('分类 1-菜单 2-分组')"`
 	Memo      string            `xorm:"not null VARCHAR(128) comment('备注')"`
 	ParentId  int64             `xorm:"not null BIGINT(20) comment('父ID')"`
 	Status    types.LimitStatus `xorm:"not null TINYINT(2) comment('状态 1-正常 2-锁定')"`
