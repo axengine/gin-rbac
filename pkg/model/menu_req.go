@@ -35,10 +35,11 @@ type UpdateMenuConfigReq struct {
 }
 
 type UpsertActionConfigReq struct {
-	AppId  string `json:"appId" binding:"required,len=6"`
-	Name   string `json:"name" binding:"required,gte=1,gte=128"`
-	Path   string `json:"path" binding:"required,gte=1,gte=256"`
-	Method string `json:"method" binding:"required,oneof=GET POST PUT DELETE"` // GET POST PUT DELETE
+	AppId  string            `json:"appId" binding:"required,len=6"`
+	Name   string            `json:"name" binding:"required,gte=1,gte=128"`
+	Path   string            `json:"path" binding:"required,gte=1,gte=256"`
+	Method string            `json:"method" binding:"required,oneof=GET POST PUT DELETE"` // GET POST PUT DELETE
+	Status types.LimitStatus `json:"status" binding:"required,min=1,max=2"`               // 1-正常 2-锁定
 }
 
 type UpdateMenuConfigActionReq struct {
@@ -55,12 +56,13 @@ type ListActionConfigReq struct {
 	typ.PageReq
 }
 type ListActionConfig struct {
-	Id        int64  `json:"id"`
-	AppId     string `json:"appId"`
-	Name      string `json:"name"`
-	Path      string `json:"path"`
-	Method    string `json:"method"`
-	UpdatedAt int64  `json:"updatedAt"`
+	Id        int64             `json:"id"`
+	AppId     string            `json:"appId"`
+	Name      string            `json:"name"`
+	Path      string            `json:"path"`
+	Method    string            `json:"method"`
+	Status    types.LimitStatus `json:"status"`
+	UpdatedAt int64             `json:"updatedAt"`
 }
 
 type FindActionConfigReq struct {
@@ -69,15 +71,16 @@ type FindActionConfigReq struct {
 }
 
 type FindActionConfigResp struct {
-	Actions []ActionBase
+	Actions []*ActionBase
 }
 
 type ActionBase struct {
-	Id     int64  `json:"id"`
-	AppId  string `json:"appId"`
-	Name   string `json:"name"`
-	Path   string `json:"path"`
-	Method string `json:"method"`
+	Id     int64             `json:"id"`
+	AppId  string            `json:"appId"`
+	Name   string            `json:"name"`
+	Path   string            `json:"path"`
+	Method string            `json:"method"`
+	Status types.LimitStatus `json:"status"`
 }
 
 type GetMenuTreeDirsReq struct {

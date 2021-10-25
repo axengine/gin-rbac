@@ -239,6 +239,45 @@ var swaggerTxt = `{
                 }
             }
         },
+        "/rbac/v1/action/find": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "根据功能ID，查询基础信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 功能配置"
+                ],
+                "summary": "[功能配置查询]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.FindActionConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.FindActionConfigResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/action/list": {
             "get": {
                 "security": [
@@ -501,6 +540,44 @@ var swaggerTxt = `{
                 }
             }
         },
+        "/rbac/v1/menu/actions": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置功能]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuActionsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetMenuActionsResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/menu/create": {
             "post": {
                 "security": [
@@ -602,6 +679,82 @@ var swaggerTxt = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.UpdateMenuConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/action": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[获取角色菜单功能]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GetRoleMenuActionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetRoleMenuActionResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/action/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置功能绑定]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpsertRoleMenuActionReq"
                         }
                     }
                 ],
@@ -745,6 +898,49 @@ var swaggerTxt = `{
                 }
             }
         },
+        "model.Action": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.ActionBase": {
+            "type": "object",
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
         "model.CreateAccountReq": {
             "type": "object",
             "required": [
@@ -788,9 +984,8 @@ var swaggerTxt = `{
             "required": [
                 "appId",
                 "name",
-                "parentId",
                 "path",
-                "sequence"
+                "typ"
             ],
             "properties": {
                 "appId": {
@@ -809,6 +1004,9 @@ var swaggerTxt = `{
                     "type": "string"
                 },
                 "sequence": {
+                    "type": "integer"
+                },
+                "typ": {
                     "type": "integer"
                 }
             }
@@ -834,6 +1032,56 @@ var swaggerTxt = `{
                 }
             }
         },
+        "model.FindActionConfigReq": {
+            "type": "object",
+            "required": [
+                "appId"
+            ],
+            "properties": {
+                "actionId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "appId": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.FindActionConfigResp": {
+            "type": "object",
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ActionBase"
+                    }
+                }
+            }
+        },
+        "model.GetMenuActionsReq": {
+            "type": "object",
+            "required": [
+                "menuId"
+            ],
+            "properties": {
+                "menuId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.GetMenuActionsResp": {
+            "type": "object",
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Action"
+                    }
+                }
+            }
+        },
         "model.GetMenuTreeDirsReq": {
             "type": "object",
             "required": [
@@ -852,6 +1100,28 @@ var swaggerTxt = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.MenuTreeDir"
+                    }
+                }
+            }
+        },
+        "model.GetRoleMenuActionReq": {
+            "type": "object",
+            "required": [
+                "roleId"
+            ],
+            "properties": {
+                "roleId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.GetRoleMenuActionResp": {
+            "type": "object",
+            "properties": {
+                "menuActions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.MenuAction"
                     }
                 }
             }
@@ -947,7 +1217,6 @@ var swaggerTxt = `{
         "model.ListActionConfigReq": {
             "type": "object",
             "required": [
-                "id",
                 "page",
                 "size"
             ],
@@ -1113,9 +1382,32 @@ var swaggerTxt = `{
         "model.LoginOutAccountReq": {
             "type": "object"
         },
+        "model.MenuAction": {
+            "type": "object",
+            "required": [
+                "menuId"
+            ],
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "menuId": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.MenuTreeDir": {
             "type": "object",
             "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "appId": {
                     "type": "string"
                 },
@@ -1141,6 +1433,9 @@ var swaggerTxt = `{
                     "type": "integer"
                 },
                 "status": {
+                    "type": "integer"
+                },
+                "typ": {
                     "type": "integer"
                 }
             }
@@ -1286,6 +1581,9 @@ var swaggerTxt = `{
                 },
                 "sequence": {
                     "type": "integer"
+                },
+                "typ": {
+                    "type": "integer"
                 }
             }
         },
@@ -1325,6 +1623,7 @@ var swaggerTxt = `{
                     "type": "string"
                 },
                 "method": {
+                    "description": "GET POST PUT DELETE",
                     "type": "string"
                 },
                 "name": {
@@ -1332,6 +1631,23 @@ var swaggerTxt = `{
                 },
                 "path": {
                     "type": "string"
+                }
+            }
+        },
+        "model.UpsertRoleMenuActionReq": {
+            "type": "object",
+            "required": [
+                "roleId"
+            ],
+            "properties": {
+                "menuActions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.MenuAction"
+                    }
+                },
+                "roleId": {
+                    "type": "integer"
                 }
             }
         }

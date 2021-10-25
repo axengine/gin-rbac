@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bbdshow/admin-rabc/pkg/model"
+	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/tests"
 	"path"
@@ -27,6 +28,7 @@ func (svc *Service) SwaggerJSONToActions(ctx context.Context, in *model.SwaggerJ
 				Name:   c.Summary,
 				Path:   path.Join(s.BasePath, p),
 				Method: strings.ToUpper(m),
+				Status: types.LimitNormal,
 			}
 			actions = append(actions, ac)
 		}

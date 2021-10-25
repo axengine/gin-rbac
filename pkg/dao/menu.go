@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"github.com/bbdshow/admin-rabc/pkg/model"
+	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
 	"xorm.io/builder"
 	"xorm.io/xorm"
@@ -98,6 +99,7 @@ func (d *Dao) UpsertActionConfig(ctx context.Context, in *model.UpsertActionConf
 				Name:   in.Name,
 				Path:   in.Path,
 				Method: in.Method,
+				Status: types.LimitNormal,
 			}
 			if _, err := sess.Context(ctx).InsertOne(r); err != nil {
 				return errc.WithStack(err)
@@ -105,11 +107,12 @@ func (d *Dao) UpsertActionConfig(ctx context.Context, in *model.UpsertActionConf
 			return nil
 		}
 
-		if in.Name == ac.Name {
+		if in.Name == ac.Name && in.Status == ac.Status {
 			return nil
 		}
 		ac.Name = in.Name
-		if _, err := sess.Context(ctx).ID(ac.Id).Cols("name").Update(ac); err != nil {
+		ac.Status = in.Status
+		if _, err := sess.Context(ctx).ID(ac.Id).Cols("name", "status").Update(ac); err != nil {
 			return errc.WithStack(err)
 		}
 		return nil

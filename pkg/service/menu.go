@@ -35,22 +35,20 @@ func (svc *Service) ListActionConfig(ctx context.Context, in *model.ListActionCo
 
 func (svc *Service) FindActionConfig(ctx context.Context, in *model.FindActionConfigReq, out *model.FindActionConfigResp) error {
 	if len(in.ActionId) <= 0 {
-		out.Actions = make([]model.ActionBase, 0)
+		out.Actions = make([]*model.ActionBase, 0)
 		return nil
 	}
 	records, err := svc.d.FindActionConfig(ctx, in)
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
-	list := make([]model.ActionBase, 0, len(records))
+	list := make([]*model.ActionBase, 0, len(records))
 	for _, v := range records {
-		list = append(list, model.ActionBase{
-			Id:     v.Id,
-			AppId:  v.AppId,
-			Name:   v.Name,
-			Path:   v.Path,
-			Method: v.Method,
-		})
+		d := &model.ActionBase{}
+		if err := icopier.Copy(d, v); err != nil {
+			return errc.ErrInternalErr.MultiErr(err)
+		}
+		list = append(list, d)
 	}
 	out.Actions = list
 	return nil
