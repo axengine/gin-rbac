@@ -78,6 +78,29 @@ func upsertActionConfig(c *gin.Context) {
 	ginutil.RespSuccess(c)
 }
 
+// @Summary [功能配置导入Swagger]
+// @Description 导入Swagger JSON 文件
+// @Tags RBAC 功能配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.SwaggerJSONToActionsReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/action/import [post]
+func importSwaggerToActions(c *gin.Context) {
+	in := &model.SwaggerJSONToActionsReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.SwaggerJSONToActions(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
 // @Summary [菜单配置树]
 // @Description
 // @Tags RBAC 菜单配置

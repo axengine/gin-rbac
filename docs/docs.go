@@ -286,6 +286,45 @@ var doc = `{
                 }
             }
         },
+        "/rbac/v1/action/import": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "导入Swagger JSON 文件",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 功能配置"
+                ],
+                "summary": "[功能配置导入Swagger]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.SwaggerJSONToActionsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/action/list": {
             "get": {
                 "security": [
@@ -738,7 +777,7 @@ var doc = `{
                 }
             }
         },
-        "/rbac/v1/role/action/update": {
+        "/rbac/v1/role/action/upsert": {
             "post": {
                 "security": [
                     {
@@ -946,6 +985,9 @@ var doc = `{
                 },
                 "path": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
@@ -1146,6 +1188,9 @@ var doc = `{
                 "createdAt": {
                     "type": "integer"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "loginLock": {
                     "type": "integer"
                 },
@@ -1161,7 +1206,7 @@ var doc = `{
                 "roles": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/model.RoleBase"
                     }
                 },
                 "status": {
@@ -1216,6 +1261,9 @@ var doc = `{
                 },
                 "path": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 },
                 "updatedAt": {
                     "type": "integer"
@@ -1454,6 +1502,20 @@ var doc = `{
                 "$ref": "#/definitions/model.MenuTreeDir"
             }
         },
+        "model.RoleBase": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.SelectAppConfig": {
             "type": "object",
             "properties": {
@@ -1488,6 +1550,20 @@ var doc = `{
                 },
                 "size": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.SwaggerJSONToActionsReq": {
+            "type": "object",
+            "required": [
+                "appId"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "swaggerTxt": {
+                    "type": "string"
                 }
             }
         },
@@ -1533,15 +1609,15 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
+                "isSecretKey": {
+                    "description": "1 = 重置加密KEY",
+                    "type": "integer"
+                },
                 "memo": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
-                },
-                "secretKey": {
-                    "description": "true = 重置加密KEY",
-                    "type": "boolean"
                 },
                 "status": {
                     "description": "状态 1-正常 2-限制",
@@ -1624,7 +1700,8 @@ var doc = `{
                 "appId",
                 "method",
                 "name",
-                "path"
+                "path",
+                "status"
             ],
             "properties": {
                 "appId": {
@@ -1639,6 +1716,10 @@ var doc = `{
                 },
                 "path": {
                     "type": "string"
+                },
+                "status": {
+                    "description": "1-正常 2-锁定",
+                    "type": "integer"
                 }
             }
         },

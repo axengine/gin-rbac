@@ -109,7 +109,7 @@ func updateRoleConfig(c *gin.Context) {
 // @Produce json
 // @Param Request body model.UpsertRoleMenuActionReq true "request param"
 // @Success 200 {object} ginutil.BaseResp "success"
-// @Router /rbac/v1/role/action/update [post]
+// @Router /rbac/v1/role/action/upsert [post]
 func upsertRoleMenuAction(c *gin.Context) {
 	in := &model.UpsertRoleMenuActionReq{}
 	if err := ginutil.ShouldBind(c, in); err != nil {

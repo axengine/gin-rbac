@@ -36,6 +36,8 @@ definitions:
         type: string
       path:
         type: string
+      status:
+        type: integer
     type: object
   model.CreateAccountReq:
     properties:
@@ -167,6 +169,8 @@ definitions:
         type: string
       createdAt:
         type: integer
+      id:
+        type: integer
       loginLock:
         type: integer
       memo:
@@ -177,7 +181,7 @@ definitions:
         type: integer
       roles:
         items:
-          type: string
+          $ref: '#/definitions/model.RoleBase'
         type: array
       status:
         type: integer
@@ -214,6 +218,8 @@ definitions:
         type: string
       path:
         type: string
+      status:
+        type: integer
       updatedAt:
         type: integer
     type: object
@@ -372,6 +378,15 @@ definitions:
     items:
       $ref: '#/definitions/model.MenuTreeDir'
     type: array
+  model.RoleBase:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: integer
+    type: object
   model.SelectAppConfig:
     properties:
       appId:
@@ -396,6 +411,15 @@ definitions:
     required:
     - page
     - size
+    type: object
+  model.SwaggerJSONToActionsReq:
+    properties:
+      appId:
+        type: string
+      swaggerTxt:
+        type: string
+    required:
+    - appId
     type: object
   model.UpdateAccountPasswordReq:
     properties:
@@ -423,13 +447,13 @@ definitions:
     properties:
       id:
         type: integer
+      isSecretKey:
+        description: 1 = 重置加密KEY
+        type: integer
       memo:
         type: string
       name:
         type: string
-      secretKey:
-        description: true = 重置加密KEY
-        type: boolean
       status:
         description: 状态 1-正常 2-限制
         type: integer
@@ -492,11 +516,15 @@ definitions:
         type: string
       path:
         type: string
+      status:
+        description: 1-正常 2-锁定
+        type: integer
     required:
     - appId
     - method
     - name
     - path
+    - status
     type: object
   model.UpsertRoleMenuActionReq:
     properties:
@@ -674,6 +702,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: '[功能配置查询]'
+      tags:
+      - RBAC 功能配置
+  /rbac/v1/action/import:
+    post:
+      consumes:
+      - application/json
+      description: 导入Swagger JSON 文件
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.SwaggerJSONToActionsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[功能配置导入Swagger]'
       tags:
       - RBAC 功能配置
   /rbac/v1/action/list:
@@ -951,7 +1003,7 @@ paths:
       summary: '[获取角色菜单功能]'
       tags:
       - RBAC 角色配置
-  /rbac/v1/role/action/update:
+  /rbac/v1/role/action/upsert:
     post:
       consumes:
       - application/json

@@ -94,7 +94,7 @@ func (svc *Service) UpdateAppConfig(ctx context.Context, in *model.UpdateAppConf
 		cols = append(cols, "status")
 		d.Status = in.Status
 	}
-	if in.SecretKey {
+	if in.IsSecretKey == 1 {
 		cols = append(cols, "secret_key")
 		d.SecretKey = str.RandAlphaNumString(32, true)
 	}

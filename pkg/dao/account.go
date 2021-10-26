@@ -30,7 +30,7 @@ func (d *Dao) ListAccount(ctx context.Context, in *model.ListAccountReq) (int64,
 func (d *Dao) GetAccount(ctx context.Context, in *model.GetAccountReq) (bool, *model.Account, error) {
 	conds := make([]builder.Cond, 0)
 	if in.Id > 0 {
-		conds = append(conds, builder.Eq{"id": in.AppId})
+		conds = append(conds, builder.Eq{"id": in.Id})
 	}
 	if len(in.AppId) > 0 {
 		conds = append(conds, builder.Eq{"app_id": in.AppId})

@@ -89,6 +89,7 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 	list := make([]*model.ListAccount, 0, len(records))
 	for _, v := range records {
 		d := &model.ListAccount{
+			Id:           v.Id,
 			AppName:      "",
 			AppId:        v.AppId,
 			Nickname:     v.Nickname,
@@ -97,7 +98,7 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 			TokenExpired: v.TokenExpired,
 			Memo:         v.Memo,
 			Status:       v.Status,
-			Roles:        make([]string, 0),
+			Roles:        make([]model.RoleBase, 0),
 			CreatedAt:    v.CreatedAt.Unix(),
 		}
 		if exists, app, err := svc.d.GetAppConfigFromCache(ctx, &model.GetAppConfigReq{
@@ -105,12 +106,16 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 		}); err == nil && exists {
 			d.AppName = app.Name
 		}
-		roles := make([]string, 0)
+		roles := make([]model.RoleBase, 0)
 		for _, rId := range v.Roles.Unmarshal() {
 			if exists, role, err := svc.d.GetRoleConfigFromCache(ctx, &model.GetRoleConfigReq{
 				Id: rId,
 			}); err == nil && exists {
-				roles = append(roles, role.Name)
+				roles = append(roles, model.RoleBase{
+					Id:     role.Id,
+					Name:   role.Name,
+					Status: role.Status,
+				})
 			}
 		}
 		d.Roles = roles

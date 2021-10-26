@@ -143,6 +143,22 @@ func (svc *Service) UpdateMenuConfigAction(ctx context.Context, in *model.Update
 	if !exists || menu.Id != in.MenuId {
 		return errc.ErrNotFound.MultiMsg("menu")
 	}
+	// remove repeat
+	actionsIds := make([]int64, 0, len(in.ActionId))
+	for _, v := range in.ActionId {
+		hit := false
+		for _, vv := range actionsIds {
+			if v == vv {
+				hit = true
+				break
+			}
+		}
+		if !hit {
+			actionsIds = append(actionsIds, v)
+		}
+	}
+	in.ActionId = actionsIds
+
 	// check action exists
 	actions, err := svc.d.FindActionConfig(ctx, &model.FindActionConfigReq{ActionId: in.ActionId, AppId: menu.AppId})
 	if err != nil {

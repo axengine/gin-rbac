@@ -71,7 +71,7 @@ type FindActionConfigReq struct {
 }
 
 type FindActionConfigResp struct {
-	Actions []*ActionBase
+	Actions []*ActionBase `json:"actions"`
 }
 
 type ActionBase struct {

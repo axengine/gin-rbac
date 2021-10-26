@@ -32,6 +32,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 	action.GET("/list", listActionConfig)
 	action.POST("/upsert", upsertActionConfig)
 	action.POST("/find", findActionConfig)
+	action.POST("/import", importSwaggerToActions)
 
 	menu := rbac.Group("/menu").Use(midAccessTokenVerify()).Use(MidRBACEnforce())
 	menu.GET("/tree", treeMenuConfig)

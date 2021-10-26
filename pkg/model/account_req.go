@@ -15,6 +15,7 @@ type ListAccountReq struct {
 }
 
 type ListAccount struct {
+	Id           int64             `json:"id"`
 	AppName      string            `json:"appName"`
 	AppId        string            `json:"appId"`
 	Nickname     string            `json:"nickname"`
@@ -23,8 +24,14 @@ type ListAccount struct {
 	TokenExpired int64             `json:"tokenExpired"`
 	Memo         string            `json:"memo"`
 	Status       types.LimitStatus `json:"status"`
-	Roles        []string          `json:"roles"`
+	Roles        []RoleBase        `json:"roles"`
 	CreatedAt    int64             `json:"createdAt"`
+}
+
+type RoleBase struct {
+	Id     int64             `json:"id"`
+	Name   string            `json:"name"`
+	Status types.LimitStatus `json:"status"`
 }
 
 type GetAccountReq struct {
