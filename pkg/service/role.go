@@ -23,6 +23,7 @@ func (svc *Service) ListRoleConfig(ctx context.Context, in *model.ListRoleConfig
 			AppName:   "",
 			Name:      v.Name,
 			IsRoot:    v.IsRoot,
+			Status:    v.Status,
 			Memo:      v.Memo,
 			UpdatedAt: v.UpdatedAt.Unix(),
 		}

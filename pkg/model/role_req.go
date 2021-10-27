@@ -12,13 +12,14 @@ type ListRoleConfigReq struct {
 }
 
 type ListRoleConfig struct {
-	Id        int64  `json:"id"`
-	AppId     string `json:"appId"`
-	AppName   string `json:"appName"`
-	Name      string `json:"name"`
-	IsRoot    int32  `json:"isRoot"`
-	Memo      string `json:"memo"`
-	UpdatedAt int64  `json:"updatedAt"`
+	Id        int64             `json:"id"`
+	AppId     string            `json:"appId"`
+	AppName   string            `json:"appName"`
+	Name      string            `json:"name"`
+	IsRoot    int32             `json:"isRoot"`
+	Memo      string            `json:"memo"`
+	Status    types.LimitStatus `json:"status"`
+	UpdatedAt int64             `json:"updatedAt"`
 }
 
 type GetRoleConfigReq struct {
