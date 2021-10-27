@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/gen/str"
+	"github.com/bbdshow/gin-rabc/pkg/model"
 	"testing"
 )
 

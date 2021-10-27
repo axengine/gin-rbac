@@ -1,5 +1,5 @@
 SET_OS=""
-prefix="admin-rbac"
+prefix="gin-rbac"
 
 .PHONY: build
 build:

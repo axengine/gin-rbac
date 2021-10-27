@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/bbdshow/admin-rabc/pkg/model"
-	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/typ"
+	"github.com/bbdshow/gin-rabc/pkg/model"
+	"github.com/bbdshow/gin-rabc/pkg/types"
 )
 
 func (svc *Service) ListRoleConfig(ctx context.Context, in *model.ListRoleConfigReq, out *typ.ListResp) error {

@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/bbdshow/admin-rabc/pkg/model"
-	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/tests"
+	"github.com/bbdshow/gin-rabc/pkg/model"
+	"github.com/bbdshow/gin-rabc/pkg/types"
 	"path"
 	"strings"
 )

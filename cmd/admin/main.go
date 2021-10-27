@@ -1,20 +1,20 @@
 package main
 
 import (
-	"github.com/bbdshow/admin-rabc/pkg/conf"
-	"github.com/bbdshow/admin-rabc/pkg/server/http"
-	"github.com/bbdshow/admin-rabc/pkg/service"
 	"github.com/bbdshow/bkit/logs"
 	"github.com/bbdshow/bkit/runner"
+	"github.com/bbdshow/gin-rabc/pkg/conf"
+	"github.com/bbdshow/gin-rabc/pkg/server/http"
+	"github.com/bbdshow/gin-rabc/pkg/service"
 	"go.uber.org/zap"
 	"log"
 
-	_ "github.com/bbdshow/admin-rabc/docs"
+	_ "github.com/bbdshow/gin-rabc/docs"
 )
 
-// @title admin rbac
+// @title gin rbac
 // @version 1.0.0
-// @description admin rbac manage API
+// @description gin rbac manage API
 
 // @host API_HOST:49000
 // @BasePath /

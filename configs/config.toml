@@ -8,7 +8,7 @@ Env = "dev"
   Addr = []
   Filename = "./log/logger.log"
   Level = -1
-  Module = "admin_rbac"
+  Module = "gin_rbac"
 
 [Mysql]
   ConnMaxLifetime = 7200

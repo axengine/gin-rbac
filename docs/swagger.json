@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "admin rbac manage API",
-        "title": "admin rbac",
+        "description": "gin rbac manage API",
+        "title": "gin rbac",
         "contact": {},
         "version": "1.0.0"
     },

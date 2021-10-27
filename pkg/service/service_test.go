@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/bbdshow/admin-rabc/pkg/conf"
+	"github.com/bbdshow/gin-rabc/pkg/conf"
 	"os"
 	"testing"
 )

@@ -2,9 +2,9 @@ package service
 
 import (
 	"fmt"
-	"github.com/bbdshow/admin-rabc/pkg/conf"
-	"github.com/bbdshow/admin-rabc/pkg/dao"
 	"github.com/bbdshow/bkit/errc"
+	"github.com/bbdshow/gin-rabc/pkg/conf"
+	"github.com/bbdshow/gin-rabc/pkg/dao"
 	"github.com/casbin/casbin/v2"
 	"time"
 )

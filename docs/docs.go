@@ -1758,8 +1758,8 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "API_HOST:49000",
 	BasePath:    "/",
 	Schemes:     []string{},
-	Title:       "admin rbac",
-	Description: "admin rbac manage API",
+	Title:       "gin rbac",
+	Description: "gin rbac manage API",
 }
 
 type s struct{}

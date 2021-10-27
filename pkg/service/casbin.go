@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/bbdshow/admin-rabc/pkg/dao"
-	"github.com/bbdshow/admin-rabc/pkg/model"
-	"github.com/bbdshow/admin-rabc/pkg/types"
+	"github.com/bbdshow/gin-rabc/pkg/dao"
+	"github.com/bbdshow/gin-rabc/pkg/model"
+	"github.com/bbdshow/gin-rabc/pkg/types"
 	casbinM "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 )

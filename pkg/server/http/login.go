@@ -1,9 +1,9 @@
 package http
 
 import (
-	"github.com/bbdshow/admin-rabc/pkg/middleware"
-	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/ginutil"
+	"github.com/bbdshow/gin-rabc/pkg/middleware"
+	"github.com/bbdshow/gin-rabc/pkg/model"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,10 +1,10 @@
 package dao
 
 import (
-	"github.com/bbdshow/admin-rabc/pkg/conf"
-	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/caches"
 	"github.com/bbdshow/bkit/db/mysql"
+	"github.com/bbdshow/gin-rabc/pkg/conf"
+	"github.com/bbdshow/gin-rabc/pkg/model"
 )
 
 type Dao struct {

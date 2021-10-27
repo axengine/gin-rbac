@@ -1,2 +1,2 @@
-# admin-rbac
-admin rbac
+# gin-rbac
+gin framework, rbac api

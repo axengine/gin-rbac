@@ -2,9 +2,9 @@ package dao
 
 import (
 	"context"
-	"github.com/bbdshow/admin-rabc/pkg/model"
-	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
+	"github.com/bbdshow/gin-rabc/pkg/model"
+	"github.com/bbdshow/gin-rabc/pkg/types"
 	"xorm.io/builder"
 	"xorm.io/xorm"
 )

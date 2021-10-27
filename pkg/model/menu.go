@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/bbdshow/admin-rabc/pkg/types"
+	"github.com/bbdshow/gin-rabc/pkg/types"
 	"time"
 )
 

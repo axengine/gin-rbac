@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"context"
-	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/ginutil"
 	"github.com/bbdshow/bkit/logs"
+	"github.com/bbdshow/gin-rabc/pkg/model"
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

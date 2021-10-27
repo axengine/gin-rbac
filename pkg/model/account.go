@@ -2,8 +2,8 @@ package model
 
 import (
 	"fmt"
-	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/gen/str"
+	"github.com/bbdshow/gin-rabc/pkg/types"
 	"time"
 )
 

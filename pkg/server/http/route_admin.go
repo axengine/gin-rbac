@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/bbdshow/admin-rabc/pkg/middleware"
+	"github.com/bbdshow/gin-rabc/pkg/middleware"
 	"github.com/gin-gonic/gin"
 )
 

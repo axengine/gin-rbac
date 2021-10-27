@@ -540,8 +540,8 @@ definitions:
 host: API_HOST:49000
 info:
   contact: {}
-  description: admin rbac manage API
-  title: admin rbac
+  description: gin rbac manage API
+  title: gin rbac
   version: 1.0.0
 paths:
   /rbac/login:

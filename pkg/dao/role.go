@@ -3,8 +3,8 @@ package dao
 import (
 	"context"
 	"fmt"
-	"github.com/bbdshow/admin-rabc/pkg/model"
 	"github.com/bbdshow/bkit/errc"
+	"github.com/bbdshow/gin-rabc/pkg/model"
 	"time"
 	"xorm.io/builder"
 	"xorm.io/xorm"

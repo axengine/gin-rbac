@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"github.com/bbdshow/admin-rabc/pkg/model"
-	"github.com/bbdshow/admin-rabc/pkg/types"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/gen/str"
 	"github.com/bbdshow/bkit/typ"
 	"github.com/bbdshow/bkit/util/icopier"
+	"github.com/bbdshow/gin-rabc/pkg/model"
+	"github.com/bbdshow/gin-rabc/pkg/types"
 	"time"
 )
 

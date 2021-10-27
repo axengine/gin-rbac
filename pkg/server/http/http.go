@@ -1,10 +1,10 @@
 package http
 
 import (
-	"github.com/bbdshow/admin-rabc/pkg/conf"
-	"github.com/bbdshow/admin-rabc/pkg/service"
 	"github.com/bbdshow/bkit/ginutil"
 	"github.com/bbdshow/bkit/runner"
+	"github.com/bbdshow/gin-rabc/pkg/conf"
+	"github.com/bbdshow/gin-rabc/pkg/service"
 )
 
 var (

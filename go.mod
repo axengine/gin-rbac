@@ -1,4 +1,4 @@
-module github.com/bbdshow/admin-rabc
+module github.com/bbdshow/gin-rabc
 
 go 1.15
 
