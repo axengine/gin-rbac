@@ -52,9 +52,20 @@ func (d *Dao) UpdateRoleConfig(ctx context.Context, in *model.RoleConfig, cols [
 	return errc.WithStack(err)
 }
 
-func (d *Dao) UpdateMenuActions() {}
-
-func (d *Dao) DelRoleConfig() {}
+func (d *Dao) DelRoleConfig(ctx context.Context, id int64) error {
+	err := d.mysql.Transaction(func(sess *xorm.Session) error {
+		_, err := sess.Context(ctx).ID(id).Delete(&model.RoleConfig{})
+		if err != nil {
+			return errc.WithStack(err)
+		}
+		_, err = sess.Context(ctx).Where("role_id = ?", id).Delete(&model.RoleMenuAction{})
+		if err != nil {
+			return errc.WithStack(err)
+		}
+		return nil
+	})
+	return err
+}
 
 func (d *Dao) GetRoleConfigFromCache(ctx context.Context, in *model.GetRoleConfigReq) (bool, *model.RoleConfig, error) {
 	key := fmt.Sprintf("RoleConfig_id_%d", in.Id)

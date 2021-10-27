@@ -19,12 +19,14 @@ type ListAccount struct {
 	AppName      string            `json:"appName"`
 	AppId        string            `json:"appId"`
 	Nickname     string            `json:"nickname"`
+	Username     string            `json:"username"`
 	PwdWrong     int               `json:"pwdWrong"`
 	LoginLock    int64             `json:"loginLock"`
 	TokenExpired int64             `json:"tokenExpired"`
 	Memo         string            `json:"memo"`
 	Status       types.LimitStatus `json:"status"`
 	Roles        []RoleBase        `json:"roles"`
+	UpdatedAt    int64             `json:"updatedAt"`
 	CreatedAt    int64             `json:"createdAt"`
 }
 
@@ -51,6 +53,10 @@ type CreateAccountReq struct {
 	Nickname string `json:"nickname" binding:"required,lte=64"`
 	Username string `json:"username" binding:"required,lte=64"`
 	Password string `json:"pwd" binding:"required,lte=32"`
+}
+
+type DelAccountReq struct {
+	typ.IdReq
 }
 
 type LoginAccountReq struct {

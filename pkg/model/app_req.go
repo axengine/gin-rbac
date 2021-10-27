@@ -51,7 +51,7 @@ type GetAppConfigResp struct {
 }
 
 type CreateAppConfigReq struct {
-	Name string `json:"name" binding:"required,gte1,lte=128"`
+	Name string `json:"name" binding:"required,gte=1,lte=128"`
 	Memo string `json:"memo" binding:"required,lte=128"`
 }
 
@@ -61,4 +61,8 @@ type UpdateAppConfigReq struct {
 	Name        string            `json:"name"`
 	Memo        string            `json:"memo"`
 	Status      types.LimitStatus `json:"status"` //状态 1-正常 2-限制
+}
+
+type DelAppConfigReq struct {
+	typ.IdReq
 }

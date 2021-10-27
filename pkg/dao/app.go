@@ -19,6 +19,11 @@ func (d *Dao) UpdateAppConfig(ctx context.Context, in *model.AppConfig, cols []s
 	return errc.WithStack(err)
 }
 
+func (d *Dao) DelAppConfig(ctx context.Context, id int64) error {
+	_, err := d.mysql.Context(ctx).ID(id).Delete(&model.AppConfig{})
+	return errc.WithStack(err)
+}
+
 func (d *Dao) ListAppConfig(ctx context.Context, in *model.ListAppConfigReq) (int64, []*model.AppConfig, error) {
 	sess := d.mysql.Context(ctx).Where("1 = 1")
 	if len(in.Name) > 0 {

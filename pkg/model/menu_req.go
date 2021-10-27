@@ -8,6 +8,7 @@ import (
 type FindMenuConfigReq struct {
 	AppId    string
 	ParentId int64
+	ActionId int64
 }
 type GetMenuConfigReq struct {
 	Id    int64
@@ -34,10 +35,13 @@ type UpdateMenuConfigReq struct {
 	Typ      int    `json:"typ" binding:"omitempty,min=1,max=2"`
 }
 
+type DelActionConfigReq struct {
+	typ.IdReq
+}
 type UpsertActionConfigReq struct {
 	AppId  string            `json:"appId" binding:"required,len=6"`
-	Name   string            `json:"name" binding:"required,gte=1,gte=128"`
-	Path   string            `json:"path" binding:"required,gte=1,gte=256"`
+	Name   string            `json:"name" binding:"required,gte=1,lte=128"`
+	Path   string            `json:"path" binding:"required,gte=1,lte=256"`
 	Method string            `json:"method" binding:"required,oneof=GET POST PUT DELETE"` // GET POST PUT DELETE
 	Status types.LimitStatus `json:"status" binding:"required,min=1,max=2"`               // 1-正常 2-锁定
 }
@@ -131,6 +135,7 @@ type MenuTreeDir struct {
 
 type SwaggerJSONToActionsReq struct {
 	AppId      string `json:"appId" binding:"required,len=6"`
+	Prefix     string `json:"prefix"`
 	SwaggerTxt string `json:"swaggerTxt"`
 }
 
@@ -140,4 +145,8 @@ type SwaggerJSON struct {
 }
 type SwaggerMethod map[string]struct {
 	Summary string `json:"summary"`
+}
+
+type DelMenuConfigReq struct {
+	typ.IdReq
 }

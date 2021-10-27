@@ -133,6 +133,44 @@ var doc = `{
                 }
             }
         },
+        "/rbac/v1/account/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 账户配置"
+                ],
+                "summary": "[账户配置删除]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.DelAccountReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/account/list": {
             "get": {
                 "security": [
@@ -234,6 +272,44 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.UpdateAccountRoleReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/action/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 功能配置"
+                ],
+                "summary": "[功能配置删除]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.DelActionConfigReq"
                         }
                     }
                 ],
@@ -426,6 +502,44 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.CreateAppConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/app/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC APP配置"
+                ],
+                "summary": "[APP配置删除]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.DelAppConfigReq"
                         }
                     }
                 ],
@@ -663,6 +777,44 @@ var doc = `{
                 }
             }
         },
+        "/rbac/v1/menu/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 菜单配置"
+                ],
+                "summary": "[菜单配置删除]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.DelMenuConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/menu/tree": {
             "get": {
                 "security": [
@@ -840,6 +992,44 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.CreateRoleConfigReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/role/delete": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 角色配置"
+                ],
+                "summary": "[角色配置删除]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateRoleConfigReq"
                         }
                     }
                 ],
@@ -1082,6 +1272,50 @@ var doc = `{
                 }
             }
         },
+        "model.DelAccountReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.DelActionConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.DelAppConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.DelMenuConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.FindActionConfigReq": {
             "type": "object",
             "required": [
@@ -1214,6 +1448,12 @@ var doc = `{
                 },
                 "tokenExpired": {
                     "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -1560,6 +1800,9 @@ var doc = `{
             ],
             "properties": {
                 "appId": {
+                    "type": "string"
+                },
+                "prefix": {
                     "type": "string"
                 },
                 "swaggerTxt": {

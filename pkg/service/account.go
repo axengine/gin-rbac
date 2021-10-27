@@ -93,12 +93,14 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 			AppName:      "",
 			AppId:        v.AppId,
 			Nickname:     v.Nickname,
+			Username:     v.Username,
 			PwdWrong:     v.PwdWrong,
 			LoginLock:    v.LoginLock,
 			TokenExpired: v.TokenExpired,
 			Memo:         v.Memo,
 			Status:       v.Status,
 			Roles:        make([]model.RoleBase, 0),
+			UpdatedAt:    v.UpdatedAt.Unix(),
 			CreatedAt:    v.CreatedAt.Unix(),
 		}
 		if exists, app, err := svc.d.GetAppConfigFromCache(ctx, &model.GetAppConfigReq{
@@ -225,5 +227,12 @@ func (svc *Service) UpdateAccountRole(ctx context.Context, in *model.UpdateAccou
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 
+	return nil
+}
+
+func (svc *Service) DelAccount(ctx context.Context, in *model.DelAccountReq) error {
+	if err := svc.d.DelAccount(ctx, in.Id); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
 	return nil
 }

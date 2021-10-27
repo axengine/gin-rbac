@@ -1,7 +1,7 @@
 package http
 
 import (
-	"github.com/bbdshow/gin-rabc/pkg/middleware"
+	"github.com/bbdshow/gin-rabc/pkg/server/http/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,12 +25,14 @@ func RegisterAdminRouter(e *gin.Engine) {
 	app.GET("/list", listAppConfig)
 	app.POST("/create", createAppConfig)
 	app.POST("/update", updateAppConfig)
+	app.POST("/delete", delAppConfig)
 
 	rbac.GET("/app/select", selectAppConfig)
 
 	action := rbac.Group("/action").Use(midAccessTokenVerify()).Use(MidRBACEnforce())
 	action.GET("/list", listActionConfig)
 	action.POST("/upsert", upsertActionConfig)
+	action.POST("/delete", delActionConfig)
 	action.POST("/find", findActionConfig)
 	action.POST("/import", importSwaggerToActions)
 
@@ -39,11 +41,13 @@ func RegisterAdminRouter(e *gin.Engine) {
 	menu.GET("/actions", menuActions)
 	menu.POST("/create", createMenuConfig)
 	menu.POST("/update", updateMenuConfig)
+	menu.POST("/delete", delMenuConfig)
 	menu.POST("/action/update", updateMenuConfigAction)
 
 	account := rbac.Group("/account").Use(midAccessTokenVerify()).Use(MidRBACEnforce())
 	account.GET("/list", listAccount)
 	account.POST("/create", createAccount)
+	account.POST("/delete", delAccount)
 	account.POST("/pwd/update", updateAccountPassword)
 	account.POST("/role/update", updateAccountRole)
 
@@ -51,6 +55,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 	role.GET("/list", listRoleConfig)
 	role.POST("/create", createRoleConfig)
 	role.POST("/update", updateRoleConfig)
+	role.DELETE("/delete", delRoleConfig)
 	role.GET("/action", getRoleMenuAction)
 	role.POST("/action/upsert", upsertRoleMenuAction)
 }

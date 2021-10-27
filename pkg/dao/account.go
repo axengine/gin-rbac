@@ -101,4 +101,7 @@ func (d *Dao) GetAccountByTokenFromCache(ctx context.Context, token string) (boo
 	return true, c, nil
 }
 
-func (d *Dao) DelAccount() {}
+func (d *Dao) DelAccount(ctx context.Context, id int64) error {
+	_, err := d.mysql.Context(ctx).ID(id).Delete(&model.Account{})
+	return errc.WithStack(err)
+}

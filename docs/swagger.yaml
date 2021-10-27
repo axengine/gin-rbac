@@ -101,6 +101,34 @@ definitions:
     - appId
     - name
     type: object
+  model.DelAccountReq:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  model.DelActionConfigReq:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  model.DelAppConfigReq:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  model.DelMenuConfigReq:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
   model.FindActionConfigReq:
     properties:
       actionId:
@@ -187,6 +215,10 @@ definitions:
         type: integer
       tokenExpired:
         type: integer
+      updatedAt:
+        type: integer
+      username:
+        type: string
     type: object
   model.ListAccountReq:
     properties:
@@ -416,6 +448,8 @@ definitions:
     properties:
       appId:
         type: string
+      prefix:
+        type: string
       swaggerTxt:
         type: string
     required:
@@ -611,6 +645,29 @@ paths:
       summary: '[账户配置创建]'
       tags:
       - RBAC 账户配置
+  /rbac/v1/account/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.DelAccountReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[账户配置删除]'
+      tags:
+      - RBAC 账户配置
   /rbac/v1/account/list:
     get:
       consumes:
@@ -680,6 +737,29 @@ paths:
       summary: '[账户配置角色更改]'
       tags:
       - RBAC 账户配置
+  /rbac/v1/action/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.DelActionConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[功能配置删除]'
+      tags:
+      - RBAC 功能配置
   /rbac/v1/action/find:
     post:
       consumes:
@@ -795,6 +875,29 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: '[APP配置创建]'
+      tags:
+      - RBAC APP配置
+  /rbac/v1/app/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.DelAppConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[APP配置删除]'
       tags:
       - RBAC APP配置
   /rbac/v1/app/list:
@@ -934,6 +1037,29 @@ paths:
       summary: '[菜单配置创建]'
       tags:
       - RBAC 菜单配置
+  /rbac/v1/menu/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.DelMenuConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[菜单配置删除]'
+      tags:
+      - RBAC 菜单配置
   /rbac/v1/menu/tree:
     get:
       consumes:
@@ -1047,6 +1173,29 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: '[角色配置创建]'
+      tags:
+      - RBAC 角色配置
+  /rbac/v1/role/delete:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateRoleConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[角色配置删除]'
       tags:
       - RBAC 角色配置
   /rbac/v1/role/list:

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/gin-rabc/pkg/model"
 	"github.com/bbdshow/gin-rabc/pkg/types"
@@ -10,10 +11,26 @@ import (
 )
 
 func (d *Dao) FindMenuConfig(ctx context.Context, in *model.FindMenuConfigReq) ([]*model.MenuConfig, error) {
-	sess := d.mysql.Context(ctx).Where("app_id = ?", in.AppId)
-	if in.ParentId >= 0 {
-		sess.And("parent_id = ?", in.ParentId)
+	conds := make([]builder.Cond, 0)
+	if in.ParentId > 0 {
+		conds = append(conds, builder.Eq{"parent_id": in.ParentId})
 	}
+	if len(in.AppId) > 0 {
+		conds = append(conds, builder.Eq{"app_id": in.AppId})
+	}
+	if in.ActionId > 0 {
+		conds = append(conds, builder.Like{"actions", "%" + fmt.Sprintf("%d", in.ActionId) + "%"})
+	}
+
+	if len(conds) == 0 {
+		return nil, errc.ErrParamInvalid.MultiMsg("condition required")
+	}
+
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	for _, c := range conds {
+		sess.And(c)
+	}
+
 	records := make([]*model.MenuConfig, 0)
 	err := sess.Find(&records)
 	return records, errc.WithStack(err)
@@ -50,7 +67,20 @@ func (d *Dao) UpdateMenuConfig(ctx context.Context, in *model.MenuConfig, cols [
 	return errc.WithStack(err)
 }
 
-func (d *Dao) UpsertMenuChildrenId() {}
+func (d *Dao) DelMenuConfig(ctx context.Context, id int64) error {
+	err := d.mysql.Transaction(func(sess *xorm.Session) error {
+		_, err := sess.Context(ctx).ID(id).Delete(&model.MenuConfig{})
+		if err != nil {
+			return errc.WithStack(err)
+		}
+		_, err = sess.Context(ctx).Where("menu_id = ?", id).Delete(&model.RoleMenuAction{})
+		if err != nil {
+			return errc.WithStack(err)
+		}
+		return nil
+	})
+	return err
+}
 
 func (d *Dao) ListActionConfig(ctx context.Context, in *model.ListActionConfigReq) (int64, []*model.ActionConfig, error) {
 	sess := d.mysql.Context(ctx).Where("1 = 1")
@@ -120,4 +150,7 @@ func (d *Dao) UpsertActionConfig(ctx context.Context, in *model.UpsertActionConf
 	return errc.WithStack(err)
 }
 
-func (d *Dao) DelActionConfig() {}
+func (d *Dao) DelActionConfig(ctx context.Context, id int64) error {
+	_, err := d.mysql.Context(ctx).ID(id).Delete(&model.ActionConfig{})
+	return errc.WithStack(err)
+}

@@ -101,6 +101,29 @@ func updateRoleConfig(c *gin.Context) {
 	ginutil.RespSuccess(c)
 }
 
+// @Summary [角色配置删除]
+// @Description
+// @Tags RBAC 角色配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.UpdateRoleConfigReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/role/delete [post]
+func delRoleConfig(c *gin.Context) {
+	in := &model.DelRoleConfigReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.DelRoleConfig(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
 // @Summary [角色配置功能绑定]
 // @Description
 // @Tags RBAC 角色配置

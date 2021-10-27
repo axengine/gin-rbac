@@ -166,6 +166,9 @@ func (svc *Service) UpsertRoleMenuAction(ctx context.Context, in *model.UpsertRo
 	return nil
 }
 
-func (svc *Service) DelRoleConfig(ctx context.Context) error {
+func (svc *Service) DelRoleConfig(ctx context.Context, in *model.DelRoleConfigReq) error {
+	if err := svc.d.DelRoleConfig(ctx, in.Id); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
 	return nil
 }

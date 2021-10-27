@@ -78,6 +78,29 @@ func upsertActionConfig(c *gin.Context) {
 	ginutil.RespSuccess(c)
 }
 
+// @Summary [功能配置删除]
+// @Description
+// @Tags RBAC 功能配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.DelActionConfigReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/action/delete [post]
+func delActionConfig(c *gin.Context) {
+	in := &model.DelActionConfigReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.DelActionConfig(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
 // @Summary [功能配置导入Swagger]
 // @Description 导入Swagger JSON 文件
 // @Tags RBAC 功能配置
@@ -188,6 +211,29 @@ func updateMenuConfig(c *gin.Context) {
 		return
 	}
 	err := svc.UpdateMenuConfig(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
+// @Summary [菜单配置删除]
+// @Description
+// @Tags RBAC 菜单配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.DelMenuConfigReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/menu/delete [post]
+func delMenuConfig(c *gin.Context) {
+	in := &model.DelMenuConfigReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.DelMenuConfig(c.Request.Context(), in)
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return

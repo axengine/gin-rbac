@@ -135,6 +135,30 @@ func (svc *Service) UpsertActionConfig(ctx context.Context, in *model.UpsertActi
 	return nil
 }
 
+func (svc *Service) DelActionConfig(ctx context.Context, in *model.DelActionConfigReq) error {
+	menus, err := svc.d.FindMenuConfig(ctx, &model.FindMenuConfigReq{ActionId: in.Id})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	for _, v := range menus {
+		hit := false
+		for _, vv := range v.Actions.Unmarshal() {
+			if vv == in.Id {
+				hit = true
+				break
+			}
+		}
+		if hit {
+			return errc.ErrParamInvalid.MultiMsg("action is bound to menu , not allow delete, should setting status")
+		}
+	}
+
+	if err := svc.d.DelActionConfig(ctx, in.Id); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	return nil
+}
+
 func (svc *Service) UpdateMenuConfigAction(ctx context.Context, in *model.UpdateMenuConfigActionReq) error {
 	exists, menu, err := svc.d.GetMenuConfig(ctx, &model.GetMenuConfigReq{Id: in.MenuId})
 	if err != nil {
@@ -180,6 +204,24 @@ func (svc *Service) UpdateMenuConfigAction(ctx context.Context, in *model.Update
 	menu.Actions = new(types.IntSplitStr).Marshal(in.ActionId)
 
 	if err := svc.d.UpdateMenuConfig(ctx, menu, []string{"actions"}); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	return nil
+}
+
+func (svc *Service) DelMenuConfig(ctx context.Context, in *model.DelMenuConfigReq) error {
+	// if have children, not allow del
+	children, err := svc.d.FindMenuConfig(ctx, &model.FindMenuConfigReq{
+		ParentId: in.Id,
+	})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if len(children) > 0 {
+		return errc.ErrParamInvalid.MultiMsg("have children menu, not allow delete")
+	}
+
+	if err := svc.d.DelMenuConfig(ctx, in.Id); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	return nil

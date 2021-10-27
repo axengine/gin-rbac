@@ -22,6 +22,9 @@ func (svc *Service) SwaggerJSONToActions(ctx context.Context, in *model.SwaggerJ
 
 	actions := make([]*model.UpsertActionConfigReq, 0)
 	for p, methods := range s.Paths {
+		if in.Prefix != "" && !strings.HasPrefix(p, in.Prefix) {
+			continue
+		}
 		for m, c := range methods {
 			ac := &model.UpsertActionConfigReq{
 				AppId:  in.AppId,

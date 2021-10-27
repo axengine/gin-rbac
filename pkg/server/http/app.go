@@ -99,3 +99,26 @@ func updateAppConfig(c *gin.Context) {
 	}
 	ginutil.RespSuccess(c)
 }
+
+// @Summary [APP配置删除]
+// @Description
+// @Tags RBAC APP配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.DelAppConfigReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/app/delete [post]
+func delAppConfig(c *gin.Context) {
+	in := &model.DelAppConfigReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.DelAppConfig(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}

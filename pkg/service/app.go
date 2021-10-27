@@ -105,6 +105,13 @@ func (svc *Service) UpdateAppConfig(ctx context.Context, in *model.UpdateAppConf
 	return nil
 }
 
+func (svc *Service) DelAppConfig(ctx context.Context, in *model.DelAppConfigReq) error {
+	if err := svc.d.DelAppConfig(ctx, in.Id); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	return nil
+}
+
 func (svc *Service) GetAppConfig(ctx context.Context, in *model.GetAppConfigReq, out *model.GetAppConfigResp) error {
 	exists, c, err := svc.d.GetAppConfig(ctx, in)
 	if err != nil {

@@ -54,6 +54,29 @@ func createAccount(c *gin.Context) {
 	ginutil.RespSuccess(c)
 }
 
+// @Summary [账户配置删除]
+// @Description
+// @Tags RBAC 账户配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.DelAccountReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/account/delete [post]
+func delAccount(c *gin.Context) {
+	in := &model.DelAccountReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.DelAccount(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
 // @Summary [账户配置密码更改]
 // @Description
 // @Tags RBAC 账户配置

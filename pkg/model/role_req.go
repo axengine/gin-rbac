@@ -48,6 +48,10 @@ type UpdateRoleConfigReq struct {
 	Status types.LimitStatus `json:"status"`
 }
 
+type DelRoleConfigReq struct {
+	typ.IdReq
+}
+
 type UpsertRoleMenuActionReq struct {
 	RoleId      int64 `json:"roleId" form:"roleId" binding:"required,min=1"`
 	MenuActions []MenuAction
