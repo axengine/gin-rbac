@@ -2,8 +2,10 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/gin-rabc/pkg/model"
+	"time"
 	"xorm.io/builder"
 )
 
@@ -76,6 +78,27 @@ func (d *Dao) FindAccount(ctx context.Context, in *model.FindAccountReq) ([]*mod
 	records := make([]*model.Account, 0)
 	err := sess.Find(&records)
 	return records, errc.WithStack(err)
+}
+
+func (d *Dao) GetAccountByTokenFromCache(ctx context.Context, token string) (bool, *model.Account, error) {
+	key := fmt.Sprintf("Account_token_%s", token)
+
+	v, err := d.memCache.Get(key)
+	if err == nil {
+		c, ok := v.(*model.Account)
+		if ok {
+			return true, c, nil
+		}
+	}
+	exists, c, err := d.GetAccount(ctx, &model.GetAccountReq{Token: token})
+	if err != nil {
+		return false, nil, errc.WithStack(err)
+	}
+	if !exists {
+		return false, nil, nil
+	}
+	_ = d.memCache.SetWithTTL(key, c, 30*time.Minute)
+	return true, c, nil
 }
 
 func (d *Dao) DelAccount() {}

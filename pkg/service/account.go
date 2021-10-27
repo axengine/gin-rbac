@@ -129,9 +129,7 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 }
 
 func (svc *Service) VerifyAccountToken(ctx context.Context, token string, out *model.VerifyAccountTokenResp) error {
-	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
-		Token: token,
-	})
+	exists, acc, err := svc.d.GetAccountByTokenFromCache(ctx, token)
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
