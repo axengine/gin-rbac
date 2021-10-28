@@ -45,14 +45,14 @@ definitions:
         type: string
       nickname:
         type: string
-      pwd:
+      password:
         type: string
       username:
         type: string
     required:
     - appId
     - nickname
-    - pwd
+    - password
     - username
     type: object
   model.CreateAppConfigReq:
@@ -123,6 +123,13 @@ definitions:
     - id
     type: object
   model.DelMenuConfigReq:
+    properties:
+      id:
+        type: integer
+    required:
+    - id
+    type: object
+  model.DelRoleConfigReq:
     properties:
       id:
         type: integer
@@ -486,7 +493,7 @@ definitions:
     required:
     - roleId
     type: object
-host: API_HOST:49000
+host: 127.0.0.1:49000
 info:
   contact: {}
   description: gin rbac manage API
@@ -1121,7 +1128,7 @@ paths:
         name: Request
         required: true
         schema:
-          $ref: '#/definitions/model.UpdateRoleConfigReq'
+          $ref: '#/definitions/model.DelRoleConfigReq'
       produces:
       - application/json
       responses:

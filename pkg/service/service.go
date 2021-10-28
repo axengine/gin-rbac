@@ -47,7 +47,7 @@ func (svc *Service) initSyncEnforce() (*casbin.SyncedEnforcer, error) {
 	}
 	se.EnableEnforce(svc.cfg.Casbin.Enable)
 	if svc.cfg.Casbin.Enable {
-		se.StartAutoLoadPolicy(30 * time.Second)
+		se.StartAutoLoadPolicy(time.Duration(svc.cfg.Casbin.AutoIntervalSec) * time.Second)
 		svc.enforceClose = func() {
 			se.StopAutoLoadPolicy()
 		}

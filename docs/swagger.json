@@ -6,7 +6,7 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "API_HOST:49000",
+    "host": "127.0.0.1:49000",
     "basePath": "/",
     "paths": {
         "/rbac/login": {
@@ -1051,7 +1051,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UpdateRoleConfigReq"
+                            "$ref": "#/definitions/model.DelRoleConfigReq"
                         }
                     }
                 ],
@@ -1218,7 +1218,7 @@
             "required": [
                 "appId",
                 "nickname",
-                "pwd",
+                "password",
                 "username"
             ],
             "properties": {
@@ -1228,7 +1228,7 @@
                 "nickname": {
                     "type": "string"
                 },
-                "pwd": {
+                "password": {
                     "type": "string"
                 },
                 "username": {
@@ -1338,6 +1338,17 @@
             }
         },
         "model.DelMenuConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.DelRoleConfigReq": {
             "type": "object",
             "required": [
                 "id"

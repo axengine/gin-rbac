@@ -44,6 +44,7 @@ type Admin struct {
 }
 
 type Casbin struct {
-	Enable bool `defval:"false"`
-	Debug  bool `defval:"true"`
+	Enable          bool `defval:"true"`
+	Debug           bool `defval:"true"`
+	AutoIntervalSec int  `defval:"60"`
 }

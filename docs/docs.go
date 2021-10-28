@@ -1066,7 +1066,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UpdateRoleConfigReq"
+                            "$ref": "#/definitions/model.DelRoleConfigReq"
                         }
                     }
                 ],
@@ -1233,7 +1233,7 @@ var doc = `{
             "required": [
                 "appId",
                 "nickname",
-                "pwd",
+                "password",
                 "username"
             ],
             "properties": {
@@ -1243,7 +1243,7 @@ var doc = `{
                 "nickname": {
                     "type": "string"
                 },
-                "pwd": {
+                "password": {
                     "type": "string"
                 },
                 "username": {
@@ -1353,6 +1353,17 @@ var doc = `{
             }
         },
         "model.DelMenuConfigReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.DelRoleConfigReq": {
             "type": "object",
             "required": [
                 "id"
@@ -1916,7 +1927,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0.0",
-	Host:        "API_HOST:49000",
+	Host:        "127.0.0.1:49000",
 	BasePath:    "/",
 	Schemes:     []string{},
 	Title:       "gin rbac",

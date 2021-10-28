@@ -105,7 +105,7 @@ func updateRoleConfig(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
-// @Param Request body model.UpdateRoleConfigReq true "request param"
+// @Param Request body model.DelRoleConfigReq true "request param"
 // @Success 200 {object} ginutil.BaseResp "success"
 // @Router /rbac/v1/role/delete [post]
 func delRoleConfig(c *gin.Context) {

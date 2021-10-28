@@ -52,7 +52,7 @@ type CreateAccountReq struct {
 	AppId    string `json:"appId" binding:"required,len=6"`
 	Nickname string `json:"nickname" binding:"required,lte=64"`
 	Username string `json:"username" binding:"required,lte=64"`
-	Password string `json:"pwd" binding:"required,lte=32"`
+	Password string `json:"password" binding:"required,len=32"`
 }
 
 type DelAccountReq struct {

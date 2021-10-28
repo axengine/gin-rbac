@@ -9,6 +9,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"strconv"
 	"strings"
 )
 
@@ -80,7 +81,7 @@ func RBACEnforce(enable bool, enforce *casbin.SyncedEnforcer, skipPrefixPaths ..
 			c.Abort()
 			return
 		}
-		account, ok := acc.(model.Account)
+		account, ok := acc.(model.VerifyAccountTokenResp)
 		if !ok {
 			logs.Qezap.Error("MidRBACEnforce", zap.Any("account", account))
 			ginutil.RespErr(c, errc.ErrAuthInternalErr.MultiMsg("account invalid"))
@@ -91,7 +92,7 @@ func RBACEnforce(enable bool, enforce *casbin.SyncedEnforcer, skipPrefixPaths ..
 			c.Next()
 			return
 		}
-		pass, err := enforce.Enforce(account.Id, path, method)
+		pass, err := enforce.Enforce(strconv.FormatInt(account.Id, 10), path, method)
 		if err != nil {
 			logs.Qezap.Error("MidRBACEnforce", zap.Any("Enforce", err))
 			ginutil.RespErr(c, errc.ErrInternalErr.MultiErr(err))
@@ -99,7 +100,7 @@ func RBACEnforce(enable bool, enforce *casbin.SyncedEnforcer, skipPrefixPaths ..
 			return
 		}
 		if !pass {
-			ginutil.RespErr(c, errc.ErrAuthInvalid.MultiMsg("account not auth"))
+			ginutil.RespErr(c, errc.NewError(15, "no access").MultiMsg("account not auth"))
 			c.Abort()
 			return
 		}

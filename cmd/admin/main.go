@@ -16,7 +16,7 @@ import (
 // @version 1.0.0
 // @description gin rbac manage API
 
-// @host API_HOST:49000
+// @host 127.0.0.1:49000
 // @BasePath /
 func main() {
 	if err := conf.InitConf(); err != nil {
