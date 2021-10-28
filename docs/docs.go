@@ -178,9 +178,6 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -190,13 +187,36 @@ var doc = `{
                 "summary": "[账户配置列表]",
                 "parameters": [
                     {
-                        "description": "request param",
-                        "name": "Request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ListAccountReq"
-                        }
+                        "type": "string",
+                        "name": "appId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "nickname",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "username",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -408,9 +428,6 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -420,13 +437,41 @@ var doc = `{
                 "summary": "[功能配置列表]",
                 "parameters": [
                     {
-                        "description": "request param",
-                        "name": "Request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ListActionConfigReq"
-                        }
+                        "type": "string",
+                        "name": "appId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "path",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -560,9 +605,6 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -572,13 +614,26 @@ var doc = `{
                 "summary": "[APP配置列表]",
                 "parameters": [
                     {
-                        "description": "request param",
-                        "name": "Request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ListAppConfigReq"
-                        }
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "status",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -708,9 +763,6 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -720,13 +772,10 @@ var doc = `{
                 "summary": "[菜单配置功能]",
                 "parameters": [
                     {
-                        "description": "request param",
-                        "name": "Request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.GetMenuActionsReq"
-                        }
+                        "type": "integer",
+                        "name": "menuId",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -822,9 +871,6 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -834,13 +880,10 @@ var doc = `{
                 "summary": "[菜单配置树]",
                 "parameters": [
                     {
-                        "description": "request param",
-                        "name": "Request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.GetMenuTreeDirsReq"
-                        }
+                        "type": "string",
+                        "name": "appId",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -898,9 +941,6 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -910,13 +950,10 @@ var doc = `{
                 "summary": "[获取角色菜单功能]",
                 "parameters": [
                     {
-                        "description": "request param",
-                        "name": "Request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.GetRoleMenuActionReq"
-                        }
+                        "type": "integer",
+                        "name": "roleId",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1050,9 +1087,6 @@ var doc = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1062,13 +1096,26 @@ var doc = `{
                 "summary": "[角色配置列表]",
                 "parameters": [
                     {
-                        "description": "request param",
-                        "name": "Request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.ListRoleConfigReq"
-                        }
+                        "type": "string",
+                        "name": "appId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1344,17 +1391,6 @@ var doc = `{
                 }
             }
         },
-        "model.GetMenuActionsReq": {
-            "type": "object",
-            "required": [
-                "menuId"
-            ],
-            "properties": {
-                "menuId": {
-                    "type": "integer"
-                }
-            }
-        },
         "model.GetMenuActionsResp": {
             "type": "object",
             "properties": {
@@ -1366,17 +1402,6 @@ var doc = `{
                 }
             }
         },
-        "model.GetMenuTreeDirsReq": {
-            "type": "object",
-            "required": [
-                "appId"
-            ],
-            "properties": {
-                "appId": {
-                    "type": "string"
-                }
-            }
-        },
         "model.GetMenuTreeDirsResp": {
             "type": "object",
             "properties": {
@@ -1385,17 +1410,6 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/model.MenuTreeDir"
                     }
-                }
-            }
-        },
-        "model.GetRoleMenuActionReq": {
-            "type": "object",
-            "required": [
-                "roleId"
-            ],
-            "properties": {
-                "roleId": {
-                    "type": "integer"
                 }
             }
         },
@@ -1457,33 +1471,6 @@ var doc = `{
                 }
             }
         },
-        "model.ListAccountReq": {
-            "type": "object",
-            "required": [
-                "page",
-                "size"
-            ],
-            "properties": {
-                "appId": {
-                    "type": "string"
-                },
-                "nickname": {
-                    "type": "string"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "size": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
         "model.ListActionConfig": {
             "type": "object",
             "properties": {
@@ -1506,36 +1493,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "updatedAt": {
-                    "type": "integer"
-                }
-            }
-        },
-        "model.ListActionConfigReq": {
-            "type": "object",
-            "required": [
-                "page",
-                "size"
-            ],
-            "properties": {
-                "appId": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "method": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "size": {
                     "type": "integer"
                 }
             }
@@ -1577,27 +1534,6 @@ var doc = `{
                 }
             }
         },
-        "model.ListAppConfigReq": {
-            "type": "object",
-            "required": [
-                "page",
-                "size"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "size": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "integer"
-                }
-            }
-        },
         "model.ListRoleConfig": {
             "type": "object",
             "properties": {
@@ -1619,28 +1555,10 @@ var doc = `{
                 "name": {
                     "type": "string"
                 },
+                "status": {
+                    "type": "integer"
+                },
                 "updatedAt": {
-                    "type": "integer"
-                }
-            }
-        },
-        "model.ListRoleConfigReq": {
-            "type": "object",
-            "required": [
-                "page",
-                "size"
-            ],
-            "properties": {
-                "appId": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "size": {
                     "type": "integer"
                 }
             }

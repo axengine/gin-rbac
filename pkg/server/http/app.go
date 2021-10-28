@@ -11,9 +11,8 @@ import (
 // @Description
 // @Tags RBAC APP配置
 // @Security ApiKeyAuth
-// @Accept json
 // @Produce json
-// @Param Request body model.ListAppConfigReq true "request param"
+// @Param Request query model.ListAppConfigReq true "request param"
 // @Success 200 {object} model.ListAppConfig "success"
 // @Router /rbac/v1/app/list [get]
 func listAppConfig(c *gin.Context) {

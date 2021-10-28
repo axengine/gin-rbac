@@ -11,9 +11,8 @@ import (
 // @Description
 // @Tags RBAC 角色配置
 // @Security ApiKeyAuth
-// @Accept json
 // @Produce json
-// @Param Request body model.ListRoleConfigReq true "request param"
+// @Param Request query model.ListRoleConfigReq true "request param"
 // @Success 200 {object} model.ListRoleConfig "success"
 // @Router /rbac/v1/role/list [get]
 func listRoleConfig(c *gin.Context) {
@@ -35,9 +34,8 @@ func listRoleConfig(c *gin.Context) {
 // @Description
 // @Tags RBAC 角色配置
 // @Security ApiKeyAuth
-// @Accept json
 // @Produce json
-// @Param Request body model.GetRoleMenuActionReq true "request param"
+// @Param Request query model.GetRoleMenuActionReq true "request param"
 // @Success 200 {object} model.GetRoleMenuActionResp "success"
 // @Router /rbac/v1/role/action [get]
 func getRoleMenuAction(c *gin.Context) {

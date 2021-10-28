@@ -18,4 +18,4 @@ clean:
 # swag 1.7.0
 .PHONY: docs
 docs:
-	swag init -d ./ --parseDependency --parseDepth 5 -g ./cmd/admin/main.go -o ./docs --md ./cmd/admin
+	swag init -d ./cmd/admin --parseDependency --parseDepth 5 -g ./main.go -o ./docs

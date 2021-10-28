@@ -11,9 +11,8 @@ import (
 // @Description
 // @Tags RBAC 账户配置
 // @Security ApiKeyAuth
-// @Accept json
 // @Produce json
-// @Param Request body model.ListAccountReq true "request param"
+// @Param Request query model.ListAccountReq true "request param"
 // @Success 200 {object} model.ListAccount "success"
 // @Router /rbac/v1/account/list [get]
 func listAccount(c *gin.Context) {

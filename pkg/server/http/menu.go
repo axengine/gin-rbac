@@ -11,9 +11,8 @@ import (
 // @Description
 // @Tags RBAC 功能配置
 // @Security ApiKeyAuth
-// @Accept json
 // @Produce json
-// @Param Request body model.ListActionConfigReq true "request param"
+// @Param Request query model.ListActionConfigReq true "request param"
 // @Success 200 {object} model.ListActionConfig "success"
 // @Router /rbac/v1/action/list [get]
 func listActionConfig(c *gin.Context) {
@@ -128,9 +127,8 @@ func importSwaggerToActions(c *gin.Context) {
 // @Description
 // @Tags RBAC 菜单配置
 // @Security ApiKeyAuth
-// @Accept json
 // @Produce json
-// @Param Request body model.GetMenuTreeDirsReq true "request param"
+// @Param Request query model.GetMenuTreeDirsReq true "request param"
 // @Success 200 {object} model.GetMenuTreeDirsResp "success"
 // @Router /rbac/v1/menu/tree [get]
 func treeMenuConfig(c *gin.Context) {
@@ -152,9 +150,8 @@ func treeMenuConfig(c *gin.Context) {
 // @Description
 // @Tags RBAC 菜单配置
 // @Security ApiKeyAuth
-// @Accept json
 // @Produce json
-// @Param Request body model.GetMenuActionsReq true "request param"
+// @Param Request query model.GetMenuActionsReq true "request param"
 // @Success 200 {object} model.GetMenuActionsResp "success"
 // @Router /rbac/v1/menu/actions [get]
 func menuActions(c *gin.Context) {

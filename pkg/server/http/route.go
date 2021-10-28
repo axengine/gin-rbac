@@ -55,7 +55,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 	role.GET("/list", listRoleConfig)
 	role.POST("/create", createRoleConfig)
 	role.POST("/update", updateRoleConfig)
-	role.DELETE("/delete", delRoleConfig)
+	role.POST("/delete", delRoleConfig)
 	role.GET("/action", getRoleMenuAction)
 	role.POST("/action/upsert", upsertRoleMenuAction)
 }

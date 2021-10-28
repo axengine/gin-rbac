@@ -147,13 +147,6 @@ definitions:
           $ref: '#/definitions/model.ActionBase'
         type: array
     type: object
-  model.GetMenuActionsReq:
-    properties:
-      menuId:
-        type: integer
-    required:
-    - menuId
-    type: object
   model.GetMenuActionsResp:
     properties:
       actions:
@@ -161,26 +154,12 @@ definitions:
           $ref: '#/definitions/model.Action'
         type: array
     type: object
-  model.GetMenuTreeDirsReq:
-    properties:
-      appId:
-        type: string
-    required:
-    - appId
-    type: object
   model.GetMenuTreeDirsResp:
     properties:
       dirs:
         items:
           $ref: '#/definitions/model.MenuTreeDir'
         type: array
-    type: object
-  model.GetRoleMenuActionReq:
-    properties:
-      roleId:
-        type: integer
-    required:
-    - roleId
     type: object
   model.GetRoleMenuActionResp:
     properties:
@@ -220,24 +199,6 @@ definitions:
       username:
         type: string
     type: object
-  model.ListAccountReq:
-    properties:
-      appId:
-        type: string
-      nickname:
-        type: string
-      page:
-        type: integer
-      size:
-        type: integer
-      status:
-        type: integer
-      username:
-        type: string
-    required:
-    - page
-    - size
-    type: object
   model.ListActionConfig:
     properties:
       appId:
@@ -254,26 +215,6 @@ definitions:
         type: integer
       updatedAt:
         type: integer
-    type: object
-  model.ListActionConfigReq:
-    properties:
-      appId:
-        type: string
-      id:
-        type: integer
-      method:
-        type: string
-      name:
-        type: string
-      page:
-        type: integer
-      path:
-        type: string
-      size:
-        type: integer
-    required:
-    - page
-    - size
     type: object
   model.ListAppConfig:
     properties:
@@ -301,20 +242,6 @@ definitions:
       updatedAt:
         type: integer
     type: object
-  model.ListAppConfigReq:
-    properties:
-      name:
-        type: string
-      page:
-        type: integer
-      size:
-        type: integer
-      status:
-        type: integer
-    required:
-    - page
-    - size
-    type: object
   model.ListRoleConfig:
     properties:
       appId:
@@ -329,22 +256,10 @@ definitions:
         type: string
       name:
         type: string
+      status:
+        type: integer
       updatedAt:
         type: integer
-    type: object
-  model.ListRoleConfigReq:
-    properties:
-      appId:
-        type: string
-      name:
-        type: string
-      page:
-        type: integer
-      size:
-        type: integer
-    required:
-    - page
-    - size
     type: object
   model.LoginAccountReq:
     properties:
@@ -670,15 +585,27 @@ paths:
       - RBAC 账户配置
   /rbac/v1/account/list:
     get:
-      consumes:
-      - application/json
       parameters:
-      - description: request param
-        in: body
-        name: Request
+      - in: query
+        name: appId
+        type: string
+      - in: query
+        name: nickname
+        type: string
+      - in: query
+        name: page
         required: true
-        schema:
-          $ref: '#/definitions/model.ListAccountReq'
+        type: integer
+      - in: query
+        name: size
+        required: true
+        type: integer
+      - in: query
+        name: status
+        type: integer
+      - in: query
+        name: username
+        type: string
       produces:
       - application/json
       responses:
@@ -810,15 +737,30 @@ paths:
       - RBAC 功能配置
   /rbac/v1/action/list:
     get:
-      consumes:
-      - application/json
       parameters:
-      - description: request param
-        in: body
-        name: Request
+      - in: query
+        name: appId
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: method
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: page
         required: true
-        schema:
-          $ref: '#/definitions/model.ListActionConfigReq'
+        type: integer
+      - in: query
+        name: path
+        type: string
+      - in: query
+        name: size
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -902,15 +844,21 @@ paths:
       - RBAC APP配置
   /rbac/v1/app/list:
     get:
-      consumes:
-      - application/json
       parameters:
-      - description: request param
-        in: body
-        name: Request
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: page
         required: true
-        schema:
-          $ref: '#/definitions/model.ListAppConfigReq'
+        type: integer
+      - in: query
+        name: size
+        required: true
+        type: integer
+      - in: query
+        name: status
+        type: integer
       produces:
       - application/json
       responses:
@@ -993,15 +941,11 @@ paths:
       - RBAC 菜单配置
   /rbac/v1/menu/actions:
     get:
-      consumes:
-      - application/json
       parameters:
-      - description: request param
-        in: body
-        name: Request
+      - in: query
+        name: menuId
         required: true
-        schema:
-          $ref: '#/definitions/model.GetMenuActionsReq'
+        type: integer
       produces:
       - application/json
       responses:
@@ -1062,15 +1006,11 @@ paths:
       - RBAC 菜单配置
   /rbac/v1/menu/tree:
     get:
-      consumes:
-      - application/json
       parameters:
-      - description: request param
-        in: body
-        name: Request
+      - in: query
+        name: appId
         required: true
-        schema:
-          $ref: '#/definitions/model.GetMenuTreeDirsReq'
+        type: string
       produces:
       - application/json
       responses:
@@ -1108,15 +1048,11 @@ paths:
       - RBAC 菜单配置
   /rbac/v1/role/action:
     get:
-      consumes:
-      - application/json
       parameters:
-      - description: request param
-        in: body
-        name: Request
+      - in: query
+        name: roleId
         required: true
-        schema:
-          $ref: '#/definitions/model.GetRoleMenuActionReq'
+        type: integer
       produces:
       - application/json
       responses:
@@ -1200,15 +1136,21 @@ paths:
       - RBAC 角色配置
   /rbac/v1/role/list:
     get:
-      consumes:
-      - application/json
       parameters:
-      - description: request param
-        in: body
-        name: Request
+      - in: query
+        name: appId
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: page
         required: true
-        schema:
-          $ref: '#/definitions/model.ListRoleConfigReq'
+        type: integer
+      - in: query
+        name: size
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
