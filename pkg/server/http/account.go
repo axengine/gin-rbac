@@ -141,5 +141,5 @@ func getAccountMenuAuth(c *gin.Context) {
 		ginutil.RespErr(c, err)
 		return
 	}
-	ginutil.RespSuccess(c)
+	ginutil.RespData(c, out)
 }

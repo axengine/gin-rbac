@@ -59,6 +59,12 @@ type ListActionConfigReq struct {
 	Method string `json:"method" form:"method"`
 	typ.PageReq
 }
+type ListActionConfigs []*ListActionConfig
+
+func (asc ListActionConfigs) Len() int           { return len(asc) }
+func (asc ListActionConfigs) Swap(i, j int)      { asc[i], asc[j] = asc[j], asc[i] }
+func (asc ListActionConfigs) Less(i, j int) bool { return asc[i].Name < asc[j].Name }
+
 type ListActionConfig struct {
 	Id        int64             `json:"id"`
 	AppId     string            `json:"appId"`

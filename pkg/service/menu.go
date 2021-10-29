@@ -17,8 +17,7 @@ func (svc *Service) ListActionConfig(ctx context.Context, in *model.ListActionCo
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
-	list := make([]*model.ListActionConfig, 0, len(records))
-
+	list := make(model.ListActionConfigs, 0, len(records))
 	for _, v := range records {
 		d := &model.ListActionConfig{}
 		if err := icopier.Copy(d, v); err != nil {
@@ -27,6 +26,7 @@ func (svc *Service) ListActionConfig(ctx context.Context, in *model.ListActionCo
 		d.UpdatedAt = v.UpdatedAt.Unix()
 		list = append(list, d)
 	}
+	//sort.Sort(list)
 	out.Count = c
 	out.List = list
 
