@@ -22,6 +22,10 @@ type ListRoleConfig struct {
 	UpdatedAt int64             `json:"updatedAt"`
 }
 
+type FindRoleConfigReq struct {
+	RoleId []int64
+}
+
 type GetRoleConfigReq struct {
 	Id int64 `json:"id" form:"id"`
 }

@@ -50,6 +50,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 	account.POST("/delete", delAccount)
 	account.POST("/pwd/update", updateAccountPassword)
 	account.POST("/role/update", updateAccountRole)
+	rbac.GET("/account/menu/auth", midAccessTokenVerify(), getAccountMenuAuth)
 
 	role := rbac.Group("/role").Use(midAccessTokenVerify()).Use(MidRBACEnforce())
 	role.GET("/list", listRoleConfig)

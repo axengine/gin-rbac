@@ -236,3 +236,63 @@ func (svc *Service) DelAccount(ctx context.Context, in *model.DelAccountReq) err
 	}
 	return nil
 }
+
+func (svc *Service) GetAccountMenuAuth(ctx context.Context, in *model.GetAccountMenuAuthReq, out *model.GetAccountMenuAuthResp) error {
+	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Token: in.Token})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if !exists {
+		return errc.ErrNotFound.MultiMsg("account")
+	}
+	out.IsRoot = false
+	if acc.IsRoot == 1 {
+		dir := &model.GetMenuTreeDirsResp{}
+		if err := svc.GetMenuTreeDirs(ctx, &model.GetMenuTreeDirsReq{AppId: acc.AppId}, dir); err != nil {
+			return errc.ErrInternalErr.MultiErr(err)
+		}
+		out.Dirs = dir.Dirs
+		return nil
+	}
+	dirs := make(model.MenuTreeDirs, 0)
+	roles, err := svc.d.FindRoleConfig(ctx, &model.FindRoleConfigReq{RoleId: acc.Roles.Unmarshal()})
+	if len(roles) <= 0 {
+		out.Dirs = dirs
+		return nil
+	}
+	isRoot := false
+	roleId := make([]int64, 0, len(roles))
+	for _, v := range roles {
+		if v.IsRoot == 1 {
+			isRoot = true
+		}
+		roleId = append(roleId, v.Id)
+	}
+	if isRoot {
+		out.IsRoot = isRoot
+		dir := &model.GetMenuTreeDirsResp{}
+		if err := svc.GetMenuTreeDirs(ctx, &model.GetMenuTreeDirsReq{AppId: acc.AppId}, dir); err != nil {
+			return errc.ErrInternalErr.MultiErr(err)
+		}
+		out.Dirs = dir.Dirs
+		return nil
+	}
+	// 获取所有角色的菜单
+	menuId, err := svc.d.GroupRolesMenuId(ctx, roleId)
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	root, children, err := svc.d.FindMenuConfigAsRootOrChildren(ctx, menuId)
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+
+	dirs, err = svc.menuTreeDirs(append(root, children...))
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	out.IsRoot = false
+	out.Dirs = dirs
+
+	return nil
+}

@@ -59,6 +59,15 @@ type DelAccountReq struct {
 	typ.IdReq
 }
 
+type GetAccountMenuAuthReq struct {
+	Token string `json:"-"`
+}
+
+type GetAccountMenuAuthResp struct {
+	IsRoot bool         `json:"isRoot"`
+	Dirs   MenuTreeDirs `json:"dirs"`
+}
+
 type LoginAccountReq struct {
 	AppId    string `json:"appId" binding:"required,len=6"`
 	Username string `json:"username" binding:"required,lte=64"`

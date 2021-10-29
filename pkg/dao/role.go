@@ -23,6 +23,38 @@ func (d *Dao) ListRoleConfig(ctx context.Context, in *model.ListRoleConfigReq) (
 	return c, records, errc.WithStack(err)
 }
 
+func (d *Dao) FindRoleConfig(ctx context.Context, in *model.FindRoleConfigReq) ([]*model.RoleConfig, error) {
+	conds := make([]builder.Cond, 0)
+	if len(in.RoleId) > 0 {
+		conds = append(conds, builder.In("id", in.RoleId))
+	}
+
+	if len(conds) == 0 {
+		return nil, errc.ErrParamInvalid.MultiMsg("condition required")
+	}
+
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	for _, c := range conds {
+		sess.And(c)
+	}
+	records := make([]*model.RoleConfig, 0)
+	err := sess.Find(&records)
+	return records, errc.WithStack(err)
+}
+
+func (d *Dao) GroupRolesMenuId(ctx context.Context, roleId []int64) ([]int64, error) {
+	records := make([]*model.RoleMenuAction, 0)
+	err := d.mysql.Context(ctx).In("role_id", roleId).GroupBy("menu_id").Find(&records)
+	if err != nil {
+		return nil, errc.WithStack(err)
+	}
+	menuId := make([]int64, 0, len(records))
+	for _, v := range records {
+		menuId = append(menuId, v.MenuId)
+	}
+	return menuId, nil
+}
+
 func (d *Dao) GetRoleConfig(ctx context.Context, in *model.GetRoleConfigReq) (bool, *model.RoleConfig, error) {
 	conds := make([]builder.Cond, 0)
 	if in.Id > 0 {

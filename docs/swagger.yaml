@@ -154,6 +154,15 @@ definitions:
           $ref: '#/definitions/model.ActionBase'
         type: array
     type: object
+  model.GetAccountMenuAuthResp:
+    properties:
+      dirs:
+        items:
+          $ref: '#/definitions/model.MenuTreeDir'
+        type: array
+      isRoot:
+        type: boolean
+    type: object
   model.GetMenuActionsResp:
     properties:
       actions:
@@ -623,6 +632,20 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: '[账户配置列表]'
+      tags:
+      - RBAC 账户配置
+  /rbac/v1/account/menu/auth:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.GetAccountMenuAuthResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[账户菜单权限]'
       tags:
       - RBAC 账户配置
   /rbac/v1/account/pwd/update:

@@ -154,3 +154,43 @@ func (d *Dao) DelActionConfig(ctx context.Context, id int64) error {
 	_, err := d.mysql.Context(ctx).ID(id).Delete(&model.ActionConfig{})
 	return errc.WithStack(err)
 }
+
+func (d *Dao) FindMenuConfigAsRootOrChildren(ctx context.Context, menuId []int64) (root, children []*model.MenuConfig, err error) {
+	menus := make([]*model.MenuConfig, 0)
+	if err := d.mysql.Context(ctx).In("id", menuId).Find(&menus); err != nil {
+		return nil, nil, errc.WithStack(err)
+	}
+	root = make([]*model.MenuConfig, 0)
+	children = make([]*model.MenuConfig, 0)
+	for _, v := range menus {
+		if v.ParentId <= 0 {
+			root = append(root, v)
+		} else {
+			children = append(children, v)
+		}
+	}
+
+	for _, v := range children {
+		var childrenFindRoot func(ctx context.Context, parentId int64) error
+		childrenFindRoot = func(ctx context.Context, parentId int64) error {
+			exists, m, err := d.GetMenuConfig(ctx, &model.GetMenuConfigReq{Id: parentId})
+			if err != nil {
+				return errc.WithStack(err)
+			}
+			if !exists {
+				return nil
+			}
+			if m.ParentId <= 0 {
+				root = append(root, m)
+				return nil
+			}
+			children = append(children, m)
+			return childrenFindRoot(ctx, m.ParentId)
+		}
+
+		if err := childrenFindRoot(ctx, v.ParentId); err != nil {
+			return nil, nil, err
+		}
+	}
+	return root, children, nil
+}

@@ -229,6 +229,30 @@ var doc = `{
                 }
             }
         },
+        "/rbac/v1/account/menu/auth": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 账户配置"
+                ],
+                "summary": "[账户菜单权限]",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetAccountMenuAuthResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/account/pwd/update": {
             "post": {
                 "security": [
@@ -1399,6 +1423,20 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/model.ActionBase"
                     }
+                }
+            }
+        },
+        "model.GetAccountMenuAuthResp": {
+            "type": "object",
+            "properties": {
+                "dirs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.MenuTreeDir"
+                    }
+                },
+                "isRoot": {
+                    "type": "boolean"
                 }
             }
         },

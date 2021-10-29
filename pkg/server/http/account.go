@@ -4,6 +4,7 @@ import (
 	"github.com/bbdshow/bkit/ginutil"
 	"github.com/bbdshow/bkit/typ"
 	"github.com/bbdshow/gin-rabc/pkg/model"
+	"github.com/bbdshow/gin-rabc/pkg/server/http/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -116,6 +117,27 @@ func updateAccountRole(c *gin.Context) {
 	}
 	err := svc.UpdateAccountRole(c.Request.Context(), in)
 	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
+// @Summary [账户菜单权限]
+// @Description
+// @Tags RBAC 账户配置
+// @Security ApiKeyAuth
+// @Produce json
+// @Success 200 {object} model.GetAccountMenuAuthResp "success"
+// @Router /rbac/v1/account/menu/auth [get]
+func getAccountMenuAuth(c *gin.Context) {
+	token, err := middleware.GetContextAccessToken(c)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	out := &model.GetAccountMenuAuthResp{}
+	if err := svc.GetAccountMenuAuth(c.Request.Context(), &model.GetAccountMenuAuthReq{Token: token}, out); err != nil {
 		ginutil.RespErr(c, err)
 		return
 	}

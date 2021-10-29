@@ -229,7 +229,14 @@ func (svc *Service) DelMenuConfig(ctx context.Context, in *model.DelMenuConfigRe
 
 // GetMenuTreeDirs 获取菜单树目录结构
 func (svc *Service) GetMenuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsReq, out *model.GetMenuTreeDirsResp) error {
-	dirs, err := svc.menuTreeDirs(ctx, in)
+	menus, err := svc.d.FindMenuConfig(ctx, &model.FindMenuConfigReq{
+		AppId:    in.AppId,
+		ParentId: -1, // all menus
+	})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	dirs, err := svc.menuTreeDirs(menus)
 	if err != nil {
 		return err
 	}
@@ -274,14 +281,7 @@ func (svc *Service) GetMenuActions(ctx context.Context, in *model.GetMenuActions
 	return nil
 }
 
-func (svc *Service) menuTreeDirs(ctx context.Context, in *model.GetMenuTreeDirsReq) (model.MenuTreeDirs, error) {
-	menus, err := svc.d.FindMenuConfig(ctx, &model.FindMenuConfigReq{
-		AppId:    in.AppId,
-		ParentId: -1, // all menus
-	})
-	if err != nil {
-		return nil, errc.ErrInternalErr.MultiErr(err)
-	}
+func (svc *Service) menuTreeDirs(menus []*model.MenuConfig) (model.MenuTreeDirs, error) {
 	dirsMap := make(map[int64]model.MenuTreeDirs, 0)
 	for _, v := range menus {
 		dir := &model.MenuTreeDir{
