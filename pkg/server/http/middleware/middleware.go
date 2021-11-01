@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"github.com/bbdshow/bkit/auth/sign"
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/ginutil"
 	"github.com/bbdshow/bkit/logs"
@@ -11,6 +12,7 @@ import (
 	"go.uber.org/zap"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -106,4 +108,20 @@ func RBACEnforce(enable bool, enforce *casbin.SyncedEnforcer, skipPrefixPaths ..
 		}
 		c.Next()
 	}
+}
+
+type GetSecretKey func(accessKey string) (string, error)
+
+func ApiSign(enable bool, secretKey GetSecretKey) gin.HandlerFunc {
+	// API 签名中间件
+	signConfig := ginutil.SignConfig{
+		Enable: enable,
+		Config: sign.Config{
+			SignValidDuration: time.Minute,
+			Method:            sign.HmacSha256Hex,
+			PathSign:          false,
+		},
+		SupportMethods: []string{"GET", "POST", "PUT", "DELETE"},
+	}
+	return ginutil.ApiSignVerify(&signConfig, secretKey)
 }

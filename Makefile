@@ -1,13 +1,14 @@
-SET_OS=""
-prefix="gin-rbac"
+OS=""
+prefix="gin_rbac"
 
 .PHONY: build
 build:
 	export GOPROXY="https://goproxy.io,direct"
 	mkdir -p ./bin && rm -r ./bin
 	mkdir -p ./bin/configs && cp -r configs ./bin
-	@if [ ${SET_OS} != "" ]; then\
-		GOOS=${SET_OS} go build -o bin/admin/${prefix}_admin cmd/admin/main.go;\
+	mkdir -p ./bin/web/admin && cp -r web ./bin/admin
+	@if [ ${OS} != "" ]; then\
+		GOOS=${OS} go build -o bin/admin/${prefix}_admin cmd/admin/main.go;\
 	else\
 		go build -o bin/admin/${prefix}_admin cmd/admin/main.go;\
     fi

@@ -20,6 +20,7 @@ func NewAdminHttpServer(c *conf.Config, s *service.Service) runner.Server {
 	if cfg.Release() {
 		midFlag = ginutil.MRelease | ginutil.MTraceId | ginutil.MRecoverLogger
 	}
+
 	httpHandler := ginutil.DefaultEngine(midFlag)
 	RegisterAdminRouter(httpHandler)
 
