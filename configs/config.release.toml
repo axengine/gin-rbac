@@ -1,0 +1,29 @@
+Env = "dev"
+
+[Admin]
+  AuthEnable = true
+  HttpListenAddr = "0.0.0.0:49000"
+  SignEnable = true
+
+[Casbin]
+  AutoIntervalSec = 60
+  Debug = true
+  Enable = true
+
+[Logger]
+  Addr = ["127.0.0.1:31082"]
+  Filename = "./log/logger.log"
+  Level = -1
+  Module = "example"
+
+[Mysql]
+  ConnMaxLifetime = 7200
+  MaxIdleConn = 200
+  MaxOpenConn = 50
+  ShowSQL = true
+
+  [Mysql.Master]
+    Database = "test"
+    HostPort = "localhost:3306"
+    Password = "111111"
+    Username = "root"
