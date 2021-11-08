@@ -103,6 +103,12 @@ func (svc *Service) UpdateMenuConfig(ctx context.Context, in *model.UpdateMenuCo
 		cols = append(cols, "typ")
 		d.Typ = in.Typ
 	}
+
+	if in.Status > 0 {
+		cols = append(cols, "status")
+		d.Status = in.Status
+	}
+
 	if in.ParentId > -1 {
 		if in.ParentId != 0 {
 			exists, _, err := svc.d.GetMenuConfig(ctx, &model.GetMenuConfigReq{Id: in.ParentId})

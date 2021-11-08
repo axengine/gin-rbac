@@ -9,6 +9,7 @@ type FindMenuConfigReq struct {
 	AppId    string
 	ParentId int64
 	ActionId int64
+	Status   types.LimitStatus
 }
 type GetMenuConfigReq struct {
 	Id    int64
@@ -27,12 +28,13 @@ type CreateMenuConfigReq struct {
 
 type UpdateMenuConfigReq struct {
 	typ.IdReq
-	Name     string `json:"name" binding:"omitempty,gte=1,lte=128"`
-	Memo     string `json:"memo" binding:"omitempty,lte=128"`
-	ParentId int64  `json:"parentId" binding:"omitempty,min=0"`
-	Sequence int    `json:"sequence" binding:"omitempty,min=0"`
-	Path     string `json:"path" binding:"omitempty,gte=1,lte=256"`
-	Typ      int    `json:"typ" binding:"omitempty,min=1,max=2"`
+	Name     string            `json:"name" binding:"omitempty,gte=1,lte=128"`
+	Memo     string            `json:"memo" binding:"omitempty,lte=128"`
+	ParentId int64             `json:"parentId" binding:"omitempty,min=0"`
+	Sequence int               `json:"sequence" binding:"omitempty,min=0"`
+	Path     string            `json:"path" binding:"omitempty,gte=1,lte=256"`
+	Typ      int               `json:"typ" binding:"omitempty,min=1,max=2"`
+	Status   types.LimitStatus `json:"status" binding:"required,min=1,max=2"` // 1-正常 2-锁定
 }
 
 type DelActionConfigReq struct {

@@ -21,6 +21,9 @@ func (d *Dao) FindMenuConfig(ctx context.Context, in *model.FindMenuConfigReq) (
 	if in.ActionId > 0 {
 		conds = append(conds, builder.Like{"actions", "%" + fmt.Sprintf("%d", in.ActionId) + "%"})
 	}
+	if in.Status > 0 {
+		conds = append(conds, builder.Eq{"status": in.Status})
+	}
 
 	if len(conds) == 0 {
 		return nil, errc.ErrParamInvalid.MultiMsg("condition required")
