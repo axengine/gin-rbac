@@ -22,6 +22,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 	e.POST("/rbac/login", loginAccount)
 
 	e.POST("/rbac/loginOut", midAccessTokenVerify(), loginOutAccount)
+	e.POST("/rbac/password/update", midAccessTokenVerify(), updateAccountPassword)
 
 	rbac := e.Group("/rbac/v1")
 
@@ -35,7 +36,8 @@ func RegisterAdminRouter(e *gin.Engine) {
 
 	action := rbac.Group("/action").Use(midAccessTokenVerify()).Use(midRBACEnforce())
 	action.GET("/list", listActionConfig)
-	action.POST("/upsert", upsertActionConfig)
+	action.POST("/create", createActionConfig)
+	action.POST("/update", updateActionConfig)
 	action.POST("/delete", delActionConfig)
 	action.POST("/find", findActionConfig)
 	action.POST("/import", importSwaggerToActions)
@@ -52,7 +54,7 @@ func RegisterAdminRouter(e *gin.Engine) {
 	account.GET("/list", listAccount)
 	account.POST("/create", createAccount)
 	account.POST("/delete", delAccount)
-	account.POST("/pwd/update", updateAccountPassword)
+	account.POST("/pwd/reset", resetAccountPassword)
 	account.POST("/role/update", updateAccountRole)
 	rbac.GET("/account/menu/auth", midAccessTokenVerify(), getAccountMenuAuth)
 

@@ -181,7 +181,7 @@ func (svc *Service) CreateAccount(ctx context.Context, in *model.CreateAccountRe
 	return nil
 }
 
-func (svc *Service) UpdateAccountPassword(ctx context.Context, in *model.UpdateAccountPasswordReq) error {
+func (svc *Service) ResetAccountPassword(ctx context.Context, in *model.ResetAccountPasswordReq) error {
 	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Id: in.Id})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
@@ -190,6 +190,31 @@ func (svc *Service) UpdateAccountPassword(ctx context.Context, in *model.UpdateA
 		return errc.ErrNotFound.MultiMsg("account")
 	}
 	acc.Password = str.PasswordSlatMD5(in.Password, acc.Salt)
+	acc.Token = ""
+	acc.LoginLock = 0
+	acc.TokenExpired = 0
+	acc.PwdWrong = 0
+
+	if err := svc.d.UpdateAccount(ctx, acc, []string{"password", "token", "token_expired", "pwd_wrong", "login_lock"}); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	return nil
+}
+
+func (svc *Service) UpdateAccountPassword(ctx context.Context, in *model.UpdateAccountPasswordReq) error {
+	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Token: in.Token})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if !exists {
+		return errc.ErrNotFound.MultiMsg("account")
+	}
+
+	if acc.Password != str.PasswordSlatMD5(in.OldPassword, acc.Salt) {
+		return errc.ErrAuthInvalid.MultiMsg("old password")
+	}
+
+	acc.Password = str.PasswordSlatMD5(in.NewPassword, acc.Salt)
 	acc.Token = ""
 	acc.LoginLock = 0
 	acc.TokenExpired = 0

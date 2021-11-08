@@ -77,22 +77,22 @@ func delAccount(c *gin.Context) {
 	ginutil.RespSuccess(c)
 }
 
-// @Summary [账户配置密码更改]
+// @Summary [账户配置密码重置]
 // @Description
 // @Tags RBAC 账户配置
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
-// @Param Request body model.UpdateAccountPasswordReq true "request param"
+// @Param Request body model.ResetAccountPasswordReq true "request param"
 // @Success 200 {object} ginutil.BaseResp "success"
-// @Router /rbac/v1/account/pwd/update [post]
-func updateAccountPassword(c *gin.Context) {
-	in := &model.UpdateAccountPasswordReq{}
+// @Router /rbac/v1/account/pwd/reset [post]
+func resetAccountPassword(c *gin.Context) {
+	in := &model.ResetAccountPasswordReq{}
 	if err := ginutil.ShouldBind(c, in); err != nil {
 		ginutil.RespErr(c, err)
 		return
 	}
-	err := svc.UpdateAccountPassword(c.Request.Context(), in)
+	err := svc.ResetAccountPassword(c.Request.Context(), in)
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return

@@ -33,7 +33,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RBAC 登录/登出"
+                    "RBAC 登录/登出/修改密码"
                 ],
                 "summary": "[RBAC 登录]",
                 "parameters": [
@@ -71,7 +71,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RBAC 登录/登出"
+                    "RBAC 登录/登出/修改密码"
                 ],
                 "summary": "[RBAC 登出]",
                 "parameters": [
@@ -82,6 +82,44 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.LoginOutAccountReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/password/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 登录/登出/修改密码"
+                ],
+                "summary": "[修改密码]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateAccountPasswordReq"
                         }
                     }
                 ],
@@ -253,7 +291,7 @@ var doc = `{
                 }
             }
         },
-        "/rbac/v1/account/pwd/update": {
+        "/rbac/v1/account/pwd/reset": {
             "post": {
                 "security": [
                     {
@@ -269,7 +307,7 @@ var doc = `{
                 "tags": [
                     "RBAC 账户配置"
                 ],
-                "summary": "[账户配置密码更改]",
+                "summary": "[账户配置密码重置]",
                 "parameters": [
                     {
                         "description": "request param",
@@ -277,7 +315,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UpdateAccountPasswordReq"
+                            "$ref": "#/definitions/model.ResetAccountPasswordReq"
                         }
                     }
                 ],
@@ -316,6 +354,44 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/model.UpdateAccountRoleReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/v1/action/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 功能配置"
+                ],
+                "summary": "[功能配置创建]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateActionConfigReq"
                         }
                     }
                 ],
@@ -508,7 +584,7 @@ var doc = `{
                 }
             }
         },
-        "/rbac/v1/action/upsert": {
+        "/rbac/v1/action/update": {
             "post": {
                 "security": [
                     {
@@ -524,7 +600,7 @@ var doc = `{
                 "tags": [
                     "RBAC 功能配置"
                 ],
-                "summary": "[功能配置创建/更新]",
+                "summary": "[功能配置更新]",
                 "parameters": [
                     {
                         "description": "request param",
@@ -532,7 +608,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UpsertActionConfigReq"
+                            "$ref": "#/definitions/model.UpdateActionConfigReq"
                         }
                     }
                 ],
@@ -1189,6 +1265,54 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/rbac/v1/verify/enforce": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "http请求验证是否拥有权限， 通过 accessToken 和要验证的 Path Method, 请求需签名",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC HTTP验证权限"
+                ],
+                "summary": "[HTTP验证权限]",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "accessToken",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/model.RBACEnforceResp"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -1272,6 +1396,35 @@ var doc = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "model.CreateActionConfigReq": {
+            "type": "object",
+            "required": [
+                "appId",
+                "method",
+                "name",
+                "path",
+                "status"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "method": {
+                    "description": "GET POST PUT DELETE",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "1-正常 2-锁定",
+                    "type": "integer"
                 }
             }
         },
@@ -1709,6 +1862,42 @@ var doc = `{
                 "$ref": "#/definitions/model.MenuTreeDir"
             }
         },
+        "model.RBACEnforceResp": {
+            "type": "object",
+            "properties": {
+                "accountId": {
+                    "type": "integer"
+                },
+                "actionPass": {
+                    "description": "false-无权限",
+                    "type": "boolean"
+                },
+                "appId": {
+                    "type": "string"
+                },
+                "isRoot": {
+                    "type": "integer"
+                },
+                "nickname": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ResetAccountPasswordReq": {
+            "type": "object",
+            "required": [
+                "id",
+                "password"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "model.RoleBase": {
             "type": "object",
             "properties": {
@@ -1780,14 +1969,14 @@ var doc = `{
         "model.UpdateAccountPasswordReq": {
             "type": "object",
             "required": [
-                "id",
-                "pwd"
+                "newPassword",
+                "oldPassword"
             ],
             "properties": {
-                "id": {
-                    "type": "integer"
+                "newPassword": {
+                    "type": "string"
                 },
-                "pwd": {
+                "oldPassword": {
                     "type": "string"
                 }
             }
@@ -1807,6 +1996,35 @@ var doc = `{
                     "items": {
                         "type": "integer"
                     }
+                }
+            }
+        },
+        "model.UpdateActionConfigReq": {
+            "type": "object",
+            "required": [
+                "id",
+                "method",
+                "name",
+                "path",
+                "status"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "method": {
+                    "description": "GET POST PUT DELETE",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "1-正常 2-锁定",
+                    "type": "integer"
                 }
             }
         },
@@ -1900,35 +2118,6 @@ var doc = `{
                     "type": "string"
                 },
                 "status": {
-                    "type": "integer"
-                }
-            }
-        },
-        "model.UpsertActionConfigReq": {
-            "type": "object",
-            "required": [
-                "appId",
-                "method",
-                "name",
-                "path",
-                "status"
-            ],
-            "properties": {
-                "appId": {
-                    "type": "string"
-                },
-                "method": {
-                    "description": "GET POST PUT DELETE",
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "status": {
-                    "description": "1-正常 2-锁定",
                     "type": "integer"
                 }
             }

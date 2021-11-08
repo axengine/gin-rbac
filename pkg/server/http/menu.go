@@ -54,22 +54,45 @@ func findActionConfig(c *gin.Context) {
 	ginutil.RespData(c, out)
 }
 
-// @Summary [功能配置创建/更新]
+// @Summary [功能配置创建]
 // @Description
 // @Tags RBAC 功能配置
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
-// @Param Request body model.UpsertActionConfigReq true "request param"
+// @Param Request body model.CreateActionConfigReq true "request param"
 // @Success 200 {object} ginutil.BaseResp "success"
-// @Router /rbac/v1/action/upsert [post]
-func upsertActionConfig(c *gin.Context) {
-	in := &model.UpsertActionConfigReq{}
+// @Router /rbac/v1/action/create [post]
+func createActionConfig(c *gin.Context) {
+	in := &model.CreateActionConfigReq{}
 	if err := ginutil.ShouldBind(c, in); err != nil {
 		ginutil.RespErr(c, err)
 		return
 	}
-	err := svc.UpsertActionConfig(c.Request.Context(), in)
+	err := svc.CreateActionConfig(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
+// @Summary [功能配置更新]
+// @Description
+// @Tags RBAC 功能配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.UpdateActionConfigReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/action/update [post]
+func updateActionConfig(c *gin.Context) {
+	in := &model.UpdateActionConfigReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.UpdateActionConfig(c.Request.Context(), in)
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return

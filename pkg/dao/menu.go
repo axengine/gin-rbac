@@ -115,7 +115,46 @@ func (d *Dao) FindActionConfig(ctx context.Context, in *model.FindActionConfigRe
 	return records, errc.WithStack(err)
 }
 
-func (d *Dao) UpsertActionConfig(ctx context.Context, in *model.UpsertActionConfigReq) error {
+func (d *Dao) GetActionConfig(ctx context.Context, in *model.GetActionConfigReq) (bool, *model.ActionConfig, error) {
+	conds := make([]builder.Cond, 0)
+	if in.Id > 0 {
+		conds = append(conds, builder.Eq{"id": in.Id})
+	}
+	if in.AppId != "" {
+		conds = append(conds, builder.Eq{"app_id": in.AppId})
+	}
+
+	if in.Path != "" {
+		conds = append(conds, builder.Eq{"path": in.Path})
+	}
+
+	if in.Method != "" {
+		conds = append(conds, builder.Eq{"method": in.Method})
+	}
+
+	if len(conds) == 0 {
+		return false, nil, errc.ErrParamInvalid.MultiMsg("condition required")
+	}
+	sess := d.mysql.Context(ctx).Where("1 = 1")
+	for _, c := range conds {
+		sess.And(c)
+	}
+	r := &model.ActionConfig{}
+	exists, err := sess.Get(r)
+	return exists, r, errc.WithStack(err)
+}
+
+func (d *Dao) CreateActionConfig(ctx context.Context, in *model.ActionConfig) error {
+	_, err := d.mysql.Context(ctx).InsertOne(in)
+	return errc.WithStack(err)
+}
+
+func (d *Dao) UpdateActionConfig(ctx context.Context, in *model.ActionConfig, cols []string) error {
+	_, err := d.mysql.Context(ctx).ID(in.Id).Cols(cols...).Update(in)
+	return errc.WithStack(err)
+}
+
+func (d *Dao) ImportActionConfig(ctx context.Context, in *model.ImportActionConfigReq) error {
 	err := d.mysql.Transaction(func(sess *xorm.Session) error {
 		ac := &model.ActionConfig{}
 		exists, err := sess.Context(ctx).Where("app_id = ?", in.AppId).And("path = ?", in.Path).

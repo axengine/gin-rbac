@@ -38,8 +38,23 @@ type UpdateMenuConfigReq struct {
 type DelActionConfigReq struct {
 	typ.IdReq
 }
-type UpsertActionConfigReq struct {
+type ImportActionConfigReq struct {
 	AppId  string            `json:"appId" binding:"required,len=6"`
+	Name   string            `json:"name" binding:"required,gte=1,lte=128"`
+	Path   string            `json:"path" binding:"required,gte=1,lte=256"`
+	Method string            `json:"method" binding:"required,oneof=GET POST PUT DELETE"` // GET POST PUT DELETE
+	Status types.LimitStatus `json:"status" binding:"required,min=1,max=2"`               // 1-正常 2-锁定
+}
+
+type CreateActionConfigReq struct {
+	AppId  string `json:"appId" binding:"required,len=6"`
+	Name   string `json:"name" binding:"required,gte=1,lte=128"`
+	Path   string `json:"path" binding:"required,gte=1,lte=256"`
+	Method string `json:"method" binding:"required,oneof=GET POST PUT DELETE"` // GET POST PUT DELETE
+}
+
+type UpdateActionConfigReq struct {
+	typ.IdReq
 	Name   string            `json:"name" binding:"required,gte=1,lte=128"`
 	Path   string            `json:"path" binding:"required,gte=1,lte=256"`
 	Method string            `json:"method" binding:"required,oneof=GET POST PUT DELETE"` // GET POST PUT DELETE
@@ -73,6 +88,13 @@ type ListActionConfig struct {
 	Method    string            `json:"method"`
 	Status    types.LimitStatus `json:"status"`
 	UpdatedAt int64             `json:"updatedAt"`
+}
+
+type GetActionConfigReq struct {
+	Id     int64
+	AppId  string
+	Path   string
+	Method string
 }
 
 type FindActionConfigReq struct {

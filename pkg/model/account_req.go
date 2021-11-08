@@ -84,8 +84,14 @@ type LoginOutAccountReq struct {
 }
 
 type UpdateAccountPasswordReq struct {
+	Token       string `json:"-"`
+	OldPassword string `json:"oldPassword" binding:"required,len=32"`
+	NewPassword string `json:"newPassword" binding:"required,len=32"`
+}
+
+type ResetAccountPasswordReq struct {
 	typ.IdReq
-	Password string `json:"pwd" binding:"required,lte=32"`
+	Password string `json:"password" binding:"required,len=32"`
 }
 
 type UpdateAccountRoleReq struct {

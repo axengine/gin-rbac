@@ -6,7 +6,7 @@ build:
 	export GOPROXY="https://goproxy.io,direct"
 	mkdir -p ./bin && rm -r ./bin
 	mkdir -p ./bin/configs && cp -r configs ./bin
-	mkdir -p ./bin/web/admin && cp -r web ./bin/admin
+	mkdir -p ./bin/admin/web && cp -r web ./bin/admin
 	@if [ ${OS} != "" ]; then\
 		GOOS=${OS} go build -o bin/admin/${prefix}_admin cmd/admin/main.go;\
 	else\

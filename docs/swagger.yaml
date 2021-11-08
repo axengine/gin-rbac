@@ -55,6 +55,27 @@ definitions:
     - password
     - username
     type: object
+  model.CreateActionConfigReq:
+    properties:
+      appId:
+        type: string
+      method:
+        description: GET POST PUT DELETE
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      status:
+        description: 1-正常 2-锁定
+        type: integer
+    required:
+    - appId
+    - method
+    - name
+    - path
+    - status
+    type: object
   model.CreateAppConfigReq:
     properties:
       memo:
@@ -341,6 +362,30 @@ definitions:
     items:
       $ref: '#/definitions/model.MenuTreeDir'
     type: array
+  model.RBACEnforceResp:
+    properties:
+      accountId:
+        type: integer
+      actionPass:
+        description: false-无权限
+        type: boolean
+      appId:
+        type: string
+      isRoot:
+        type: integer
+      nickname:
+        type: string
+    type: object
+  model.ResetAccountPasswordReq:
+    properties:
+      id:
+        type: integer
+      password:
+        type: string
+    required:
+    - id
+    - password
+    type: object
   model.RoleBase:
     properties:
       id:
@@ -388,13 +433,13 @@ definitions:
     type: object
   model.UpdateAccountPasswordReq:
     properties:
-      id:
-        type: integer
-      pwd:
+      newPassword:
+        type: string
+      oldPassword:
         type: string
     required:
-    - id
-    - pwd
+    - newPassword
+    - oldPassword
     type: object
   model.UpdateAccountRoleReq:
     properties:
@@ -407,6 +452,27 @@ definitions:
     required:
     - id
     - roles
+    type: object
+  model.UpdateActionConfigReq:
+    properties:
+      id:
+        type: integer
+      method:
+        description: GET POST PUT DELETE
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      status:
+        description: 1-正常 2-锁定
+        type: integer
+    required:
+    - id
+    - method
+    - name
+    - path
+    - status
     type: object
   model.UpdateAppConfigReq:
     properties:
@@ -470,27 +536,6 @@ definitions:
     required:
     - id
     type: object
-  model.UpsertActionConfigReq:
-    properties:
-      appId:
-        type: string
-      method:
-        description: GET POST PUT DELETE
-        type: string
-      name:
-        type: string
-      path:
-        type: string
-      status:
-        description: 1-正常 2-锁定
-        type: integer
-    required:
-    - appId
-    - method
-    - name
-    - path
-    - status
-    type: object
   model.UpsertRoleMenuActionReq:
     properties:
       menuActions:
@@ -529,7 +574,7 @@ paths:
             $ref: '#/definitions/model.LoginAccountResp'
       summary: '[RBAC 登录]'
       tags:
-      - RBAC 登录/登出
+      - RBAC 登录/登出/修改密码
   /rbac/loginOut:
     post:
       consumes:
@@ -552,7 +597,30 @@ paths:
       - ApiKeyAuth: []
       summary: '[RBAC 登出]'
       tags:
-      - RBAC 登录/登出
+      - RBAC 登录/登出/修改密码
+  /rbac/password/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateAccountPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[修改密码]'
+      tags:
+      - RBAC 登录/登出/修改密码
   /rbac/v1/account/create:
     post:
       consumes:
@@ -648,7 +716,7 @@ paths:
       summary: '[账户菜单权限]'
       tags:
       - RBAC 账户配置
-  /rbac/v1/account/pwd/update:
+  /rbac/v1/account/pwd/reset:
     post:
       consumes:
       - application/json
@@ -658,7 +726,7 @@ paths:
         name: Request
         required: true
         schema:
-          $ref: '#/definitions/model.UpdateAccountPasswordReq'
+          $ref: '#/definitions/model.ResetAccountPasswordReq'
       produces:
       - application/json
       responses:
@@ -668,7 +736,7 @@ paths:
             $ref: '#/definitions/ginutil.BaseResp'
       security:
       - ApiKeyAuth: []
-      summary: '[账户配置密码更改]'
+      summary: '[账户配置密码重置]'
       tags:
       - RBAC 账户配置
   /rbac/v1/account/role/update:
@@ -694,6 +762,29 @@ paths:
       summary: '[账户配置角色更改]'
       tags:
       - RBAC 账户配置
+  /rbac/v1/action/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateActionConfigReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[功能配置创建]'
+      tags:
+      - RBAC 功能配置
   /rbac/v1/action/delete:
     post:
       consumes:
@@ -803,7 +894,7 @@ paths:
       summary: '[功能配置列表]'
       tags:
       - RBAC 功能配置
-  /rbac/v1/action/upsert:
+  /rbac/v1/action/update:
     post:
       consumes:
       - application/json
@@ -813,7 +904,7 @@ paths:
         name: Request
         required: true
         schema:
-          $ref: '#/definitions/model.UpsertActionConfigReq'
+          $ref: '#/definitions/model.UpdateActionConfigReq'
       produces:
       - application/json
       responses:
@@ -823,7 +914,7 @@ paths:
             $ref: '#/definitions/ginutil.BaseResp'
       security:
       - ApiKeyAuth: []
-      summary: '[功能配置创建/更新]'
+      summary: '[功能配置更新]'
       tags:
       - RBAC 功能配置
   /rbac/v1/app/create:
@@ -1216,4 +1307,34 @@ paths:
       summary: '[角色配置更新]'
       tags:
       - RBAC 角色配置
+  /rbac/v1/verify/enforce:
+    post:
+      consumes:
+      - application/json
+      description: http请求验证是否拥有权限， 通过 accessToken 和要验证的 Path Method, 请求需签名
+      parameters:
+      - in: query
+        name: accessToken
+        required: true
+        type: string
+      - in: query
+        name: method
+        required: true
+        type: string
+      - in: query
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/model.RBACEnforceResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[HTTP验证权限]'
+      tags:
+      - RBAC HTTP验证权限
 swagger: "2.0"

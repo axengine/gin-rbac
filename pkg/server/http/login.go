@@ -9,7 +9,7 @@ import (
 
 // @Summary [RBAC 登录]
 // @Description
-// @Tags RBAC 登录/登出
+// @Tags RBAC 登录/登出/修改密码
 // @Accept json
 // @Produce json
 // @Param Request body model.LoginAccountReq true "request param"
@@ -32,7 +32,7 @@ func loginAccount(c *gin.Context) {
 
 // @Summary [RBAC 登出]
 // @Description
-// @Tags RBAC 登录/登出
+// @Tags RBAC 登录/登出/修改密码
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json
@@ -46,6 +46,29 @@ func loginOutAccount(c *gin.Context) {
 		return
 	}
 	err = svc.LoginOutAccount(c.Request.Context(), &model.LoginOutAccountReq{Token: token})
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
+// @Summary [修改密码]
+// @Description
+// @Tags RBAC 登录/登出/修改密码
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.UpdateAccountPasswordReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/password/update [post]
+func updateAccountPassword(c *gin.Context) {
+	in := &model.UpdateAccountPasswordReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.UpdateAccountPassword(c.Request.Context(), in)
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return

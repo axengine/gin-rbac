@@ -20,13 +20,13 @@ func (svc *Service) SwaggerJSONToActions(ctx context.Context, in *model.SwaggerJ
 	}
 	tests.PrintBeautifyJSON(s)
 
-	actions := make([]*model.UpsertActionConfigReq, 0)
+	actions := make([]*model.ImportActionConfigReq, 0)
 	for p, methods := range s.Paths {
 		if in.Prefix != "" && !strings.HasPrefix(p, in.Prefix) {
 			continue
 		}
 		for m, c := range methods {
-			ac := &model.UpsertActionConfigReq{
+			ac := &model.ImportActionConfigReq{
 				AppId:  in.AppId,
 				Name:   c.Summary,
 				Path:   path.Join(s.BasePath, p),
@@ -37,7 +37,7 @@ func (svc *Service) SwaggerJSONToActions(ctx context.Context, in *model.SwaggerJ
 		}
 	}
 	for _, v := range actions {
-		if err := svc.UpsertActionConfig(ctx, v); err != nil {
+		if err := svc.ImportActionConfig(ctx, v); err != nil {
 			return errc.ErrInternalErr.MultiErr(err)
 		}
 	}

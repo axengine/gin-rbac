@@ -127,10 +127,69 @@ func (svc *Service) UpdateMenuConfig(ctx context.Context, in *model.UpdateMenuCo
 	return nil
 }
 
-func (svc *Service) UpsertActionConfig(ctx context.Context, in *model.UpsertActionConfigReq) error {
+func (svc *Service) ImportActionConfig(ctx context.Context, in *model.ImportActionConfigReq) error {
 	in.Method = strings.ToUpper(in.Method)
-	if err := svc.d.UpsertActionConfig(ctx, in); err != nil {
+	if err := svc.d.ImportActionConfig(ctx, in); err != nil {
 		return errc.WithStack(err)
+	}
+	return nil
+}
+
+func (svc *Service) CreateActionConfig(ctx context.Context, in *model.CreateActionConfigReq) error {
+	in.Method = strings.ToUpper(in.Method)
+	exists, _, err := svc.d.GetActionConfig(ctx, &model.GetActionConfigReq{
+		AppId:  in.AppId,
+		Path:   in.Path,
+		Method: in.Method,
+	})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if exists {
+		return errc.ErrParamInvalid.MultiMsg("action config exists")
+	}
+
+	r := &model.ActionConfig{
+		AppId:  in.AppId,
+		Name:   in.Name,
+		Path:   in.Path,
+		Method: in.Method,
+		Status: types.LimitNormal,
+	}
+
+	if err := svc.d.CreateActionConfig(ctx, r); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+
+	return nil
+}
+
+func (svc *Service) UpdateActionConfig(ctx context.Context, in *model.UpdateActionConfigReq) error {
+	r := &model.ActionConfig{
+		Id: in.Id,
+	}
+	cols := make([]string, 0)
+	if len(in.Name) > 0 {
+		cols = append(cols, "name")
+		r.Name = in.Name
+	}
+	if in.Path != "" {
+		cols = append(cols, "path")
+		r.Path = in.Path
+	}
+
+	if in.Method != "" {
+		cols = append(cols, "method")
+		r.Method = in.Method
+	}
+
+	if in.Status > 0 {
+		cols = append(cols, "status")
+		r.Status = in.Status
+	}
+
+	if err := svc.d.UpdateActionConfig(ctx, r, cols); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
 	}
 	return nil
 }
