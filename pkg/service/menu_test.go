@@ -6,8 +6,8 @@ import (
 	"testing"
 )
 
-func TestService_UpsertActionConfig(t *testing.T) {
-	if err := svc.UpsertActionConfig(ctx, &model.UpsertActionConfigReq{
+func TestService_ImportActionConfig(t *testing.T) {
+	if err := svc.ImportActionConfig(ctx, &model.ImportActionConfigReq{
 		AppId:  "",
 		Name:   "时区",
 		Path:   "/v1/date/update",
