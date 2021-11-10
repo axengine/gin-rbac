@@ -64,9 +64,18 @@ func (ca *CasbinAdapter) loadAccount(m casbinM.Model) error {
 		return err
 	}
 	for _, v := range accounts {
-		roles := v.Roles.Unmarshal()
-		for _, roleId := range roles {
-			persist.LoadPolicyLine(fmt.Sprintf("g,%d,%d", v.Id, roleId), m)
+		// 找到所有激活的
+		activates, err := ca.d.FindAccountAppActivate(context.Background(), &model.FindAccountAppActivateReq{
+			AccountId: v.Id,
+		})
+		if err != nil {
+			return err
+		}
+		for _, act := range activates {
+			roles := act.Roles.Unmarshal()
+			for _, roleId := range roles {
+				persist.LoadPolicyLine(fmt.Sprintf("g,%d,%d", v.Id, roleId), m)
+			}
 		}
 	}
 	return nil

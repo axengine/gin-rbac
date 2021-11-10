@@ -7,9 +7,10 @@ type RBACEnforceReq struct {
 }
 
 type RBACEnforceResp struct {
-	AccountId  int64  `json:"accountId"`
+	Verify     bool   `json:"verify"`
+	Message    string `json:"message"`
 	AppId      string `json:"appId"`
 	Nickname   string `json:"nickname"`
-	IsRoot     int32  `json:"isRoot"`
+	Username   string `json:"username"`
 	ActionPass bool   `json:"actionPass"` // false-无权限
 }

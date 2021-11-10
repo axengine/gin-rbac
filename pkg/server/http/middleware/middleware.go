@@ -37,15 +37,20 @@ func AccessTokenVerify(enable bool, verify VerifyAccountToken) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		acc := model.VerifyAccountTokenResp{}
-		err := verify(c.Request.Context(), token, &acc)
+		vat := model.VerifyAccountTokenResp{}
+		err := verify(c.Request.Context(), token, &vat)
 		if err != nil {
-			ginutil.RespErr(c, errc.ErrAuthInvalid.MultiErr(err))
+			ginutil.RespErr(c, err)
+			c.Abort()
+			return
+		}
+		if !vat.Verify {
+			ginutil.RespErr(c, errc.ErrAuthInvalid.MultiMsg(vat.Message))
 			c.Abort()
 			return
 		}
 		c.Set(AccessTokenHeader, token)
-		c.Set(ContextKeyAccount, acc)
+		c.Set(ContextKeyAccount, vat)
 	}
 }
 
@@ -83,18 +88,14 @@ func RBACEnforce(enable bool, enforce *casbin.SyncedEnforcer, skipPrefixPaths ..
 			c.Abort()
 			return
 		}
-		account, ok := acc.(model.VerifyAccountTokenResp)
+		vat, ok := acc.(model.VerifyAccountTokenResp)
 		if !ok {
-			logs.Qezap.Error("MidRBACEnforce", zap.Any("account", account))
+			logs.Qezap.Error("MidRBACEnforce", zap.Any("account", vat))
 			ginutil.RespErr(c, errc.ErrAuthInternalErr.MultiMsg("account invalid"))
 			c.Abort()
 			return
 		}
-		if account.IsRoot == 1 {
-			c.Next()
-			return
-		}
-		pass, err := enforce.Enforce(strconv.FormatInt(account.Id, 10), path, method)
+		pass, err := enforce.Enforce(strconv.FormatInt(vat.AccountId, 10), path, method)
 		if err != nil {
 			logs.Qezap.Error("MidRBACEnforce", zap.Any("Enforce", err))
 			ginutil.RespErr(c, errc.ErrInternalErr.MultiErr(err))

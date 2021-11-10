@@ -41,6 +41,7 @@ func (d *Dao) Sync2() {
 			new(model.RoleConfig),
 			new(model.RoleMenuAction),
 			new(model.Account),
+			new(model.AccountAppActivate),
 		)
 		if err != nil {
 			panic(err)

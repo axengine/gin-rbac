@@ -3,7 +3,6 @@ package model
 import (
 	"github.com/bbdshow/bkit/typ"
 	"github.com/bbdshow/gin-rabc/pkg/types"
-	"time"
 )
 
 type ListAccountReq struct {
@@ -15,32 +14,36 @@ type ListAccountReq struct {
 }
 
 type ListAccount struct {
-	Id           int64             `json:"id"`
-	AppName      string            `json:"appName"`
-	AppId        string            `json:"appId"`
-	Nickname     string            `json:"nickname"`
-	Username     string            `json:"username"`
-	PwdWrong     int               `json:"pwdWrong"`
-	LoginLock    int64             `json:"loginLock"`
-	TokenExpired int64             `json:"tokenExpired"`
-	Memo         string            `json:"memo"`
-	Status       types.LimitStatus `json:"status"`
-	Roles        []RoleBase        `json:"roles"`
-	UpdatedAt    int64             `json:"updatedAt"`
-	CreatedAt    int64             `json:"createdAt"`
+	Id        int64             `json:"id"`
+	Nickname  string            `json:"nickname"`
+	Username  string            `json:"username"`
+	PwdWrong  int               `json:"pwdWrong"`
+	LoginLock int64             `json:"loginLock"`
+	Memo      string            `json:"memo"`
+	Status    types.LimitStatus `json:"status"`
+	Roles     []RoleBase        `json:"roles"`
+	UpdatedAt int64             `json:"updatedAt"`
+	CreatedAt int64             `json:"createdAt"`
 }
 
 type RoleBase struct {
-	Id     int64             `json:"id"`
-	Name   string            `json:"name"`
-	Status types.LimitStatus `json:"status"`
+	Id      int64             `json:"id"`
+	Name    string            `json:"name"`
+	AppId   string            `json:"appId"`
+	AppName string            `json:"appName"`
+	Status  types.LimitStatus `json:"status"`
 }
 
 type GetAccountReq struct {
 	Id       int64
-	AppId    string
 	Username string
-	Token    string
+}
+
+type GetAccountAppActivateReq struct {
+	Id        int64
+	AccountId int64
+	AppId     string
+	Token     string
 }
 
 type FindAccountReq struct {
@@ -48,11 +51,23 @@ type FindAccountReq struct {
 	Status types.LimitStatus
 }
 
+type FindAccountAppActivateReq struct {
+	AccountId int64
+	AppId     string
+}
+
 type CreateAccountReq struct {
-	AppId    string `json:"appId" binding:"required,len=6"`
 	Nickname string `json:"nickname" binding:"required,lte=64"`
 	Username string `json:"username" binding:"required,lte=64"`
 	Password string `json:"password" binding:"required,len=32"`
+	Memo     string `json:"memo" binding:"omitempty,lte=128"`
+}
+
+type UpdateAccountReq struct {
+	typ.IdReq
+	Nickname string            `json:"nickname"`
+	Memo     string            `json:"memo"`
+	Status   types.LimitStatus `json:"status"`
 }
 
 type DelAccountReq struct {
@@ -77,6 +92,7 @@ type LoginAccountReq struct {
 type LoginAccountResp struct {
 	Token        string `json:"token"`
 	TokenExpired int64  `json:"tokenExpired"`
+	Nickname     string `json:"nickname"`
 }
 
 type LoginOutAccountReq struct {
@@ -100,13 +116,10 @@ type UpdateAccountRoleReq struct {
 }
 
 type VerifyAccountTokenResp struct {
-	Id        int64
-	AppId     string
+	Verify    bool   // false-验证不通过
+	Message   string // 验证不通过原因
+	AccountId int64
 	Nickname  string
 	Username  string
-	LoginLock int64
-	Status    types.LimitStatus
-	IsRoot    int32
-	Roles     types.IntSplitStr
-	CreatedAt time.Time
+	AppId     string
 }

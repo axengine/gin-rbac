@@ -26,3 +26,20 @@ func (iss IntSplitStr) Marshal(ints []int64) IntSplitStr {
 	}
 	return IntSplitStr(strings.Join(strs, ","))
 }
+
+func (iss IntSplitStr) Set(i int64) (bool, IntSplitStr) {
+	istr := strconv.FormatInt(i, 10)
+	strs := strings.Split(string(iss), ",")
+	hit := false
+	for _, s := range strs {
+		if s == istr {
+			hit = true
+			break
+		}
+	}
+	if hit {
+		return false, iss
+	}
+	strs = append(strs, istr)
+	return true, IntSplitStr(strings.Join(strs, ","))
+}

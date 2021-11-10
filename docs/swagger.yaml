@@ -41,7 +41,7 @@ definitions:
     type: object
   model.CreateAccountReq:
     properties:
-      appId:
+      memo:
         type: string
       nickname:
         type: string
@@ -50,7 +50,6 @@ definitions:
       username:
         type: string
     required:
-    - appId
     - nickname
     - password
     - username
@@ -66,15 +65,11 @@ definitions:
         type: string
       path:
         type: string
-      status:
-        description: 1-正常 2-锁定
-        type: integer
     required:
     - appId
     - method
     - name
     - path
-    - status
     type: object
   model.CreateAppConfigReq:
     properties:
@@ -207,10 +202,6 @@ definitions:
     type: object
   model.ListAccount:
     properties:
-      appId:
-        type: string
-      appName:
-        type: string
       createdAt:
         type: integer
       id:
@@ -228,8 +219,6 @@ definitions:
           $ref: '#/definitions/model.RoleBase'
         type: array
       status:
-        type: integer
-      tokenExpired:
         type: integer
       updatedAt:
         type: integer
@@ -364,17 +353,19 @@ definitions:
     type: array
   model.RBACEnforceResp:
     properties:
-      accountId:
-        type: integer
       actionPass:
         description: false-无权限
         type: boolean
       appId:
         type: string
-      isRoot:
-        type: integer
+      message:
+        type: string
       nickname:
         type: string
+      username:
+        type: string
+      verify:
+        type: boolean
     type: object
   model.ResetAccountPasswordReq:
     properties:
@@ -388,6 +379,10 @@ definitions:
     type: object
   model.RoleBase:
     properties:
+      appId:
+        type: string
+      appName:
+        type: string
       id:
         type: integer
       name:
@@ -440,6 +435,19 @@ definitions:
     required:
     - newPassword
     - oldPassword
+    type: object
+  model.UpdateAccountReq:
+    properties:
+      id:
+        type: integer
+      memo:
+        type: string
+      nickname:
+        type: string
+      status:
+        type: integer
+    required:
+    - id
     type: object
   model.UpdateAccountRoleReq:
     properties:
@@ -516,10 +524,14 @@ definitions:
         type: string
       sequence:
         type: integer
+      status:
+        description: 1-正常 2-锁定
+        type: integer
       typ:
         type: integer
     required:
     - id
+    - status
     type: object
   model.UpdateRoleConfigReq:
     properties:
@@ -760,6 +772,29 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: '[账户配置角色更改]'
+      tags:
+      - RBAC 账户配置
+  /rbac/v1/account/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request param
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateAccountReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ginutil.BaseResp'
+      security:
+      - ApiKeyAuth: []
+      summary: '[账户配置更新]'
       tags:
       - RBAC 账户配置
   /rbac/v1/action/create:

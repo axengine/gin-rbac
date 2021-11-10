@@ -54,6 +54,29 @@ func createAccount(c *gin.Context) {
 	ginutil.RespSuccess(c)
 }
 
+// @Summary [账户配置更新]
+// @Description
+// @Tags RBAC 账户配置
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param Request body model.UpdateAccountReq true "request param"
+// @Success 200 {object} ginutil.BaseResp "success"
+// @Router /rbac/v1/account/update [post]
+func updateAccount(c *gin.Context) {
+	in := &model.UpdateAccountReq{}
+	if err := ginutil.ShouldBind(c, in); err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	err := svc.UpdateAccount(c.Request.Context(), in)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	ginutil.RespSuccess(c)
+}
+
 // @Summary [账户配置删除]
 // @Description
 // @Tags RBAC 账户配置

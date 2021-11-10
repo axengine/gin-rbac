@@ -6,7 +6,6 @@ import (
 	"github.com/bbdshow/bkit/errc"
 	"github.com/bbdshow/bkit/gen/str"
 	"github.com/bbdshow/bkit/typ"
-	"github.com/bbdshow/bkit/util/icopier"
 	"github.com/bbdshow/gin-rabc/pkg/model"
 	"github.com/bbdshow/gin-rabc/pkg/types"
 	"time"
@@ -14,7 +13,6 @@ import (
 
 func (svc *Service) LoginAccount(ctx context.Context, in *model.LoginAccountReq, out *model.LoginAccountResp) error {
 	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
-		AppId:    in.AppId,
 		Username: in.Username,
 	})
 	if err != nil {
@@ -45,24 +43,38 @@ func (svc *Service) LoginAccount(ctx context.Context, in *model.LoginAccountReq,
 		return errc.ErrParamInvalid.MultiMsg("username or password invalid")
 	}
 
-	acc.GenToken()
-	acc.GenTokenExpiredAt()
+	exists, activate, err := svc.d.GetAccountAppActivate(ctx, &model.GetAccountAppActivateReq{
+		AccountId: acc.Id,
+		AppId:     in.AppId,
+	})
+	if !exists {
+		return errc.ErrAuthInvalid.MultiMsg("The account is not registered for this APP")
+	}
 	acc.PwdWrong = 0
 	acc.LoginLock = 0
 
-	// 更新Token, 更新错误次数
+	// 更新错误次数
 	if err := svc.d.UpdateAccount(ctx, acc, []string{"token", "token_expired", "pwd_wrong", "login_lock"}); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
+	// 更新Token
+	activate.Token = activate.GenToken()
+	activate.TokenExpired = activate.GenTokenExpiredAt()
 
-	out.Token = acc.Token
-	out.TokenExpired = acc.TokenExpired
+	// 更新Token
+	if err := svc.d.UpdateAccountAppActivate(ctx, activate, []string{"token", "token_expired"}); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+
+	out.Token = activate.Token
+	out.TokenExpired = activate.TokenExpired
+	out.Nickname = acc.Nickname
 
 	return nil
 }
 
 func (svc *Service) LoginOutAccount(ctx context.Context, in *model.LoginOutAccountReq) error {
-	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
+	exists, activate, err := svc.d.GetAccountAppActivate(ctx, &model.GetAccountAppActivateReq{
 		Token: in.Token,
 	})
 	if err != nil {
@@ -71,10 +83,10 @@ func (svc *Service) LoginOutAccount(ctx context.Context, in *model.LoginOutAccou
 	if !exists {
 		return nil
 	}
-	acc.Token = ""
-	acc.TokenExpired = 0
+	activate.Token = activate.GenToken()
+	activate.TokenExpired = 0
 
-	if err := svc.d.UpdateAccount(ctx, acc, []string{"token", "token_expired"}); err != nil {
+	if err := svc.d.UpdateAccountAppActivate(ctx, activate, []string{"token", "token_expired"}); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	return nil
@@ -89,39 +101,47 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 	list := make([]*model.ListAccount, 0, len(records))
 	for _, v := range records {
 		d := &model.ListAccount{
-			Id:           v.Id,
-			AppName:      "",
-			AppId:        v.AppId,
-			Nickname:     v.Nickname,
-			Username:     v.Username,
-			PwdWrong:     v.PwdWrong,
-			LoginLock:    v.LoginLock,
-			TokenExpired: v.TokenExpired,
-			Memo:         v.Memo,
-			Status:       v.Status,
-			Roles:        make([]model.RoleBase, 0),
-			UpdatedAt:    v.UpdatedAt.Unix(),
-			CreatedAt:    v.CreatedAt.Unix(),
+			Id:        v.Id,
+			Nickname:  v.Nickname,
+			Username:  v.Username,
+			PwdWrong:  v.PwdWrong,
+			LoginLock: v.LoginLock,
+			Memo:      v.Memo,
+			Status:    v.Status,
+			Roles:     make([]model.RoleBase, 0),
+			UpdatedAt: v.UpdatedAt.Unix(),
+			CreatedAt: v.CreatedAt.Unix(),
 		}
-		if exists, app, err := svc.d.GetAppConfigFromCache(ctx, &model.GetAppConfigReq{
-			AppId: v.AppId,
-		}); err == nil && exists {
-			d.AppName = app.Name
+		// 查看激活的渠道
+		activates, err := svc.d.FindAccountAppActivate(ctx, &model.FindAccountAppActivateReq{
+			AccountId: v.Id,
+		})
+		if err != nil {
+			return errc.ErrInternalErr.MultiErr(err)
 		}
 		roles := make([]model.RoleBase, 0)
-		for _, rId := range v.Roles.Unmarshal() {
-			if exists, role, err := svc.d.GetRoleConfigFromCache(ctx, &model.GetRoleConfigReq{
-				Id: rId,
-			}); err == nil && exists {
-				roles = append(roles, model.RoleBase{
-					Id:     role.Id,
-					Name:   role.Name,
-					Status: role.Status,
-				})
+		for _, act := range activates {
+			for _, rId := range act.Roles.Unmarshal() {
+				r := model.RoleBase{}
+				if exists, role, err := svc.d.GetRoleConfigFromCache(ctx, &model.GetRoleConfigReq{
+					Id: rId,
+				}); err == nil && exists {
+					r.Id = role.Id
+					r.Name = role.Name
+					r.Status = role.Status
+					r.AppId = role.AppId
+				}
+				if r.AppId != "" {
+					if exists, app, err := svc.d.GetAppConfigFromCache(ctx, &model.GetAppConfigReq{
+						AppId: r.AppId,
+					}); err == nil && exists {
+						r.AppName = app.Name
+					}
+				}
+				roles = append(roles, r)
 			}
 		}
 		d.Roles = roles
-
 		list = append(list, d)
 	}
 
@@ -131,27 +151,42 @@ func (svc *Service) ListAccount(ctx context.Context, in *model.ListAccountReq, o
 }
 
 func (svc *Service) VerifyAccountToken(ctx context.Context, token string, out *model.VerifyAccountTokenResp) error {
-	exists, acc, err := svc.d.GetAccountByTokenFromCache(ctx, token)
+	exists, activate, err := svc.d.GetAccountAppActivateFromCache(ctx, token)
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	if !exists {
-		return fmt.Errorf("token not found")
+		out.Message = "token not found"
+		return nil
 	}
-	if acc.TokenExpired < time.Now().Unix() {
-		return fmt.Errorf("token expired")
+	if activate.TokenExpired < time.Now().Unix() {
+		out.Message = "token expired"
+		return nil
+	}
+
+	exists, acc, err := svc.d.GetAccountFromCache(ctx, activate.AccountId)
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if !exists {
+		out.Message = "account not found"
+		return nil
 	}
 	if acc.LoginLock > time.Now().Unix() {
-		return fmt.Errorf("account locked")
+		out.Message = "account locked"
+		return nil
 	}
-	if err := icopier.Copy(out, acc); err != nil {
-		return err
-	}
+
+	out.Verify = true
+	out.AccountId = acc.Id
+	out.Nickname = acc.Nickname
+	out.Username = acc.Username
+	out.AppId = activate.AppId
 	return nil
 }
 
 func (svc *Service) CreateAccount(ctx context.Context, in *model.CreateAccountReq) error {
-	exists, _, err := svc.d.GetAccount(ctx, &model.GetAccountReq{AppId: in.AppId, Username: in.Username})
+	exists, _, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Username: in.Username})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
@@ -160,22 +195,39 @@ func (svc *Service) CreateAccount(ctx context.Context, in *model.CreateAccountRe
 	}
 
 	acc := &model.Account{
-		AppId:        in.AppId,
-		Nickname:     in.Nickname,
-		Username:     in.Username,
-		Salt:         str.RandAlphaNumString(6),
-		PwdWrong:     0,
-		LoginLock:    0,
-		Token:        "",
-		TokenExpired: 0,
-		Memo:         "",
-		Status:       types.LimitNormal,
-		IsRoot:       0,
-		Roles:        "",
+		Nickname: in.Nickname,
+		Username: in.Username,
+		Salt:     str.RandAlphaNumString(6),
+		Memo:     in.Memo,
+		Status:   types.LimitNormal,
 	}
 	acc.Password = str.PasswordSlatMD5(in.Password, acc.Salt)
 
 	if err := svc.d.CreateAccount(ctx, acc); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	return nil
+}
+
+func (svc *Service) UpdateAccount(ctx context.Context, in *model.UpdateAccountReq) error {
+	r := &model.Account{
+		Id:       in.Id,
+		Nickname: in.Nickname,
+		Memo:     in.Memo,
+		Status:   in.Status,
+	}
+	cols := make([]string, 0)
+	if in.Nickname != "" {
+		cols = append(cols, "nickname")
+	}
+	if in.Memo != "" {
+		cols = append(cols, "memo")
+	}
+	if in.Status > 0 {
+		cols = append(cols, "status")
+	}
+
+	if err := svc.d.UpdateAccount(ctx, r, cols); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	return nil
@@ -190,19 +242,24 @@ func (svc *Service) ResetAccountPassword(ctx context.Context, in *model.ResetAcc
 		return errc.ErrNotFound.MultiMsg("account")
 	}
 	acc.Password = str.PasswordSlatMD5(in.Password, acc.Salt)
-	acc.Token = ""
 	acc.LoginLock = 0
-	acc.TokenExpired = 0
 	acc.PwdWrong = 0
-
-	if err := svc.d.UpdateAccount(ctx, acc, []string{"password", "token", "token_expired", "pwd_wrong", "login_lock"}); err != nil {
+	if err := svc.d.UpdateAccount(ctx, acc, []string{"password", "pwd_wrong", "login_lock"}); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	return nil
 }
 
 func (svc *Service) UpdateAccountPassword(ctx context.Context, in *model.UpdateAccountPasswordReq) error {
-	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Token: in.Token})
+	exists, activate, err := svc.d.GetAccountAppActivate(ctx, &model.GetAccountAppActivateReq{Token: in.Token})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	if !exists {
+		return errc.ErrAuthInvalid.MultiMsg("token")
+	}
+
+	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Id: activate.AccountId})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
@@ -215,19 +272,20 @@ func (svc *Service) UpdateAccountPassword(ctx context.Context, in *model.UpdateA
 	}
 
 	acc.Password = str.PasswordSlatMD5(in.NewPassword, acc.Salt)
-	acc.Token = ""
 	acc.LoginLock = 0
-	acc.TokenExpired = 0
 	acc.PwdWrong = 0
-
-	if err := svc.d.UpdateAccount(ctx, acc, []string{"password", "token", "token_expired", "pwd_wrong", "login_lock"}); err != nil {
+	if err := svc.d.UpdateAccount(ctx, acc, []string{"password", "pwd_wrong", "login_lock"}); err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	activate.TokenExpired = 0
+	if err := svc.d.UpdateAccountAppActivate(ctx, activate, []string{"token_expired"}); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	return nil
 }
 
 func (svc *Service) UpdateAccountRole(ctx context.Context, in *model.UpdateAccountRoleReq) error {
-	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Id: in.Id})
+	exists, _, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Id: in.Id})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
@@ -235,8 +293,24 @@ func (svc *Service) UpdateAccountRole(ctx context.Context, in *model.UpdateAccou
 		return errc.ErrNotFound.MultiMsg("account")
 	}
 
+	activates, err := svc.d.FindAccountAppActivate(ctx, &model.FindAccountAppActivateReq{AccountId: in.Id})
+	if err != nil {
+		return errc.ErrInternalErr.MultiErr(err)
+	}
+	type isChange struct {
+		IsChange bool
+		Value    *model.AccountAppActivate
+	}
+	activatesMap := map[string]*isChange{}
+	for _, v := range activates {
+		activatesMap[v.AppId] = &isChange{
+			IsChange: false,
+			Value:    v,
+		}
+	}
+
 	for _, rId := range in.Roles {
-		exists, _, err := svc.d.GetRoleConfigFromCache(ctx, &model.GetRoleConfigReq{
+		exists, role, err := svc.d.GetRoleConfigFromCache(ctx, &model.GetRoleConfigReq{
 			Id: rId,
 		})
 		if err != nil {
@@ -245,10 +319,31 @@ func (svc *Service) UpdateAccountRole(ctx context.Context, in *model.UpdateAccou
 		if !exists {
 			return errc.ErrNotFound.MultiMsg(fmt.Sprintf("role id %d", rId))
 		}
+		// 如果没有激活APP，添加了角色就自动激活此APP
+		act, ok := activatesMap[role.AppId]
+		if !ok {
+			a := &model.AccountAppActivate{
+				AccountId: in.Id,
+				AppId:     role.AppId,
+				Roles:     new(types.IntSplitStr).Marshal([]int64{role.Id}),
+			}
+			a.Token = a.GenToken()
+			activatesMap[role.AppId] = &isChange{
+				IsChange: true,
+				Value:    a,
+			}
+		} else {
+			act.IsChange, act.Value.Roles = act.Value.Roles.Set(role.Id)
+		}
 	}
 
-	acc.Roles = new(types.IntSplitStr).Marshal(in.Roles)
-	if err := svc.d.UpdateAccount(ctx, acc, []string{"roles"}); err != nil {
+	ups := make([]*model.AccountAppActivate, 0)
+	for _, v := range activatesMap {
+		if v.IsChange {
+			ups = append(ups, v.Value)
+		}
+	}
+	if err := svc.d.UpsertAccountAppActivateRole(ctx, ups); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 
@@ -263,24 +358,17 @@ func (svc *Service) DelAccount(ctx context.Context, in *model.DelAccountReq) err
 }
 
 func (svc *Service) GetAccountMenuAuth(ctx context.Context, in *model.GetAccountMenuAuthReq, out *model.GetAccountMenuAuthResp) error {
-	exists, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{Token: in.Token})
+	exists, activate, err := svc.d.GetAccountAppActivate(ctx, &model.GetAccountAppActivateReq{Token: in.Token})
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
 	if !exists {
-		return errc.ErrNotFound.MultiMsg("account")
+		return errc.ErrAuthInvalid.MultiMsg("token")
 	}
 	out.IsRoot = false
-	if acc.IsRoot == 1 {
-		dir := &model.GetMenuTreeDirsResp{}
-		if err := svc.GetMenuTreeDirs(ctx, &model.GetMenuTreeDirsReq{AppId: acc.AppId}, dir); err != nil {
-			return errc.ErrInternalErr.MultiErr(err)
-		}
-		out.Dirs = dir.Dirs
-		return nil
-	}
+
 	dirs := make(model.MenuTreeDirs, 0)
-	roles, err := svc.d.FindRoleConfig(ctx, &model.FindRoleConfigReq{RoleId: acc.Roles.Unmarshal()})
+	roles, err := svc.d.FindRoleConfig(ctx, &model.FindRoleConfigReq{RoleId: activate.Roles.Unmarshal()})
 	if len(roles) <= 0 {
 		out.Dirs = dirs
 		return nil
@@ -296,7 +384,7 @@ func (svc *Service) GetAccountMenuAuth(ctx context.Context, in *model.GetAccount
 	if isRoot {
 		out.IsRoot = isRoot
 		dir := &model.GetMenuTreeDirsResp{}
-		if err := svc.GetMenuTreeDirs(ctx, &model.GetMenuTreeDirsReq{AppId: acc.AppId}, dir); err != nil {
+		if err := svc.GetMenuTreeDirs(ctx, &model.GetMenuTreeDirsReq{AppId: activate.AppId}, dir); err != nil {
 			return errc.ErrInternalErr.MultiErr(err)
 		}
 		out.Dirs = dir.Dirs

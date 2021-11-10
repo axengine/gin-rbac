@@ -367,6 +367,44 @@ var doc = `{
                 }
             }
         },
+        "/rbac/v1/account/update": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC 账户配置"
+                ],
+                "summary": "[账户配置更新]",
+                "parameters": [
+                    {
+                        "description": "request param",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateAccountReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/ginutil.BaseResp"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/v1/action/create": {
             "post": {
                 "security": [
@@ -1379,13 +1417,12 @@ var doc = `{
         "model.CreateAccountReq": {
             "type": "object",
             "required": [
-                "appId",
                 "nickname",
                 "password",
                 "username"
             ],
             "properties": {
-                "appId": {
+                "memo": {
                     "type": "string"
                 },
                 "nickname": {
@@ -1405,8 +1442,7 @@ var doc = `{
                 "appId",
                 "method",
                 "name",
-                "path",
-                "status"
+                "path"
             ],
             "properties": {
                 "appId": {
@@ -1421,10 +1457,6 @@ var doc = `{
                 },
                 "path": {
                     "type": "string"
-                },
-                "status": {
-                    "description": "1-正常 2-锁定",
-                    "type": "integer"
                 }
             }
         },
@@ -1629,12 +1661,6 @@ var doc = `{
         "model.ListAccount": {
             "type": "object",
             "properties": {
-                "appId": {
-                    "type": "string"
-                },
-                "appName": {
-                    "type": "string"
-                },
                 "createdAt": {
                     "type": "integer"
                 },
@@ -1660,9 +1686,6 @@ var doc = `{
                     }
                 },
                 "status": {
-                    "type": "integer"
-                },
-                "tokenExpired": {
                     "type": "integer"
                 },
                 "updatedAt": {
@@ -1865,9 +1888,6 @@ var doc = `{
         "model.RBACEnforceResp": {
             "type": "object",
             "properties": {
-                "accountId": {
-                    "type": "integer"
-                },
                 "actionPass": {
                     "description": "false-无权限",
                     "type": "boolean"
@@ -1875,11 +1895,17 @@ var doc = `{
                 "appId": {
                     "type": "string"
                 },
-                "isRoot": {
-                    "type": "integer"
+                "message": {
+                    "type": "string"
                 },
                 "nickname": {
                     "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "verify": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1901,6 +1927,12 @@ var doc = `{
         "model.RoleBase": {
             "type": "object",
             "properties": {
+                "appId": {
+                    "type": "string"
+                },
+                "appName": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -1978,6 +2010,26 @@ var doc = `{
                 },
                 "oldPassword": {
                     "type": "string"
+                }
+            }
+        },
+        "model.UpdateAccountReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
@@ -2073,7 +2125,8 @@ var doc = `{
         "model.UpdateMenuConfigReq": {
             "type": "object",
             "required": [
-                "id"
+                "id",
+                "status"
             ],
             "properties": {
                 "id": {
@@ -2092,6 +2145,10 @@ var doc = `{
                     "type": "string"
                 },
                 "sequence": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "1-正常 2-锁定",
                     "type": "integer"
                 },
                 "typ": {

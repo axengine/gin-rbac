@@ -11,18 +11,22 @@ import (
 )
 
 func (svc *Service) RBACEnforce(ctx context.Context, in *model.RBACEnforceReq, out *model.RBACEnforceResp) error {
-	acc := &model.VerifyAccountTokenResp{}
-	if err := svc.VerifyAccountToken(ctx, in.AccessToken, acc); err != nil {
-		return errc.ErrAuthInvalid.MultiErr(err)
+	vat := &model.VerifyAccountTokenResp{}
+	if err := svc.VerifyAccountToken(ctx, in.AccessToken, vat); err != nil {
+		return err
 	}
-	out.AccountId = acc.Id
-	out.AppId = acc.AppId
-	out.Nickname = acc.Nickname
-	out.IsRoot = acc.IsRoot
+	if !vat.Verify {
+		out.Message = vat.Message
+		return nil
+	}
 
-	pass, err := svc.enforce.Enforce(strconv.FormatInt(acc.Id, 10), in.Path, in.Method)
+	out.AppId = vat.AppId
+	out.Nickname = vat.Nickname
+	out.Username = vat.Username
+
+	pass, err := svc.enforce.Enforce(strconv.FormatInt(vat.AccountId, 10), in.Path, in.Method)
 	if err != nil {
-		logs.Qezap.Error("RBACEnforce", zap.Any("in", in), zap.Any("accountId", acc.Id), zap.Error(err))
+		logs.Qezap.Error("RBACEnforce", zap.Any("in", in), zap.Any("accountId", vat.AccountId), zap.Error(err))
 		return errc.ErrAuthInternalErr.MultiErr(err)
 	}
 	out.ActionPass = pass
