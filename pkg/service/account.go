@@ -297,16 +297,11 @@ func (svc *Service) UpdateAccountRole(ctx context.Context, in *model.UpdateAccou
 	if err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}
-	type isChange struct {
-		IsChange bool
-		Value    *model.AccountAppActivate
-	}
-	activatesMap := map[string]*isChange{}
+
+	activatesMap := map[string]*model.AccountAppActivate{}
 	for _, v := range activates {
-		activatesMap[v.AppId] = &isChange{
-			IsChange: false,
-			Value:    v,
-		}
+		v.Roles = "" // 以前的角色全部清除
+		activatesMap[v.AppId] = v
 	}
 
 	for _, rId := range in.Roles {
@@ -328,20 +323,15 @@ func (svc *Service) UpdateAccountRole(ctx context.Context, in *model.UpdateAccou
 				Roles:     new(types.IntSplitStr).Marshal([]int64{role.Id}),
 			}
 			a.Token = a.GenToken()
-			activatesMap[role.AppId] = &isChange{
-				IsChange: true,
-				Value:    a,
-			}
+			activatesMap[role.AppId] = a
 		} else {
-			act.IsChange, act.Value.Roles = act.Value.Roles.Set(role.Id)
+			_, act.Roles = act.Roles.Set(role.Id)
 		}
 	}
 
 	ups := make([]*model.AccountAppActivate, 0)
 	for _, v := range activatesMap {
-		if v.IsChange {
-			ups = append(ups, v.Value)
-		}
+		ups = append(ups, v)
 	}
 	if err := svc.d.UpsertAccountAppActivateRole(ctx, ups); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)

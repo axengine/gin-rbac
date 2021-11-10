@@ -170,7 +170,7 @@ func (d *Dao) GetAccountFromCache(ctx context.Context, id int64) (bool, *model.A
 	if !exists {
 		return false, nil, nil
 	}
-	_ = d.memCache.SetWithTTL(key, c, 15*time.Minute)
+	_ = d.memCache.SetWithTTL(key, c, 5*time.Minute)
 	return true, c, nil
 }
 
