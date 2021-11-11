@@ -68,7 +68,15 @@ func updateAccountPassword(c *gin.Context) {
 		ginutil.RespErr(c, err)
 		return
 	}
-	err := svc.UpdateAccountPassword(c.Request.Context(), in)
+
+	token, err := middleware.GetContextAccessToken(c)
+	if err != nil {
+		ginutil.RespErr(c, err)
+		return
+	}
+	in.Token = token
+
+	err = svc.UpdateAccountPassword(c.Request.Context(), in)
 	if err != nil {
 		ginutil.RespErr(c, err)
 		return
