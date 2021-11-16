@@ -17,9 +17,10 @@ func (svc *Service) RBACEnforce(ctx context.Context, in *model.RBACEnforceReq, o
 	}
 	if !vat.Verify {
 		out.Message = vat.Message
-		return nil
+		return errc.ErrAuthInvalid.MultiMsg(out.Message)
 	}
 
+	out.Verify = true
 	out.AppId = vat.AppId
 	out.Nickname = vat.Nickname
 	out.Username = vat.Username
