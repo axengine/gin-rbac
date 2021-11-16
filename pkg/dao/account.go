@@ -190,7 +190,7 @@ func (d *Dao) GetAccountAppActivateFromCache(ctx context.Context, token string) 
 	if !exists {
 		return false, nil, nil
 	}
-	_ = d.memCache.SetWithTTL(key, c, 15*time.Minute)
+	_ = d.memCache.SetWithTTL(key, c, 5*time.Minute)
 	return true, c, nil
 }
 
