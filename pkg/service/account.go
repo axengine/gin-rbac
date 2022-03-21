@@ -341,6 +341,7 @@ func (svc *Service) UpdateAccountRole(ctx context.Context, in *model.UpdateAccou
 }
 
 func (svc *Service) DelAccount(ctx context.Context, in *model.DelAccountReq) error {
+	// 同时删掉激活的菜单
 	if err := svc.d.DelAccount(ctx, in.Id); err != nil {
 		return errc.ErrInternalErr.MultiErr(err)
 	}

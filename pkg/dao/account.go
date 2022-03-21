@@ -195,6 +195,16 @@ func (d *Dao) GetAccountAppActivateFromCache(ctx context.Context, token string) 
 }
 
 func (d *Dao) DelAccount(ctx context.Context, id int64) error {
-	_, err := d.mysql.Context(ctx).ID(id).Delete(&model.Account{})
+	err := d.mysql.Transaction(func(sess *xorm.Session) error {
+		_, err := sess.Context(ctx).ID(id).Delete(&model.Account{})
+		if err != nil {
+			return errc.WithStack(err)
+		}
+		_, err = sess.Context(ctx).Where("account_id = ?", id).Delete(&model.AccountAppActivate{})
+		if err != nil {
+			return errc.WithStack(err)
+		}
+		return nil
+	})
 	return errc.WithStack(err)
 }
