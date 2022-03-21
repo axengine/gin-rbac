@@ -223,10 +223,31 @@ func (d *Dao) FindMenuConfigAsRootOrChildren(ctx context.Context, menuId []int64
 				return nil
 			}
 			if m.ParentId <= 0 {
-				root = append(root, m)
+				// 如果root不重复在放进去
+				isHit := false
+				for _, vRoot := range root {
+					if vRoot.Id == m.Id {
+						isHit = true
+						break
+					}
+				}
+				if !isHit {
+					root = append(root, m)
+				}
 				return nil
+			} else {
+				isHit := false
+				for _, vChildren := range children {
+					if vChildren.Id == m.Id {
+						isHit = true
+						break
+					}
+				}
+				if !isHit {
+					children = append(children, m)
+				}
 			}
-			children = append(children, m)
+
 			return childrenFindRoot(ctx, m.ParentId)
 		}
 
