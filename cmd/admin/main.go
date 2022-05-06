@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"flag"
 	"github.com/bbdshow/bkit/logs"
 	"github.com/bbdshow/bkit/runner"
 	"github.com/bbdshow/gin-rabc/pkg/conf"
@@ -19,6 +21,7 @@ import (
 // @host 127.0.0.1:49000
 // @BasePath /
 func main() {
+	flag.Parse()
 	if err := conf.InitConf(); err != nil {
 		panic(err)
 	}
@@ -30,10 +33,20 @@ func main() {
 	svc := service.New(conf.Conf)
 	defer svc.Close()
 
-	if err := runner.Run(http.NewAdminHttpServer(conf.Conf, svc), func() error {
-		// dealloc
-		return nil
-	}, runner.WithListenAddr(conf.Conf.Admin.HttpListenAddr)); err != nil {
+	if isInit {
+		if err := svc.InitRBAC(context.Background()); err != nil {
+			log.Println("InitRBAC err " + err.Error())
+		}
+		return
+	}
+
+	if err := runner.RunServer(http.NewAdminHttpServer(conf.Conf, svc), runner.WithListenAddr(conf.Conf.Admin.HttpListenAddr)); err != nil {
 		log.Printf("runner exit: %v\n", err)
 	}
+}
+
+var isInit bool
+
+func init() {
+	flag.BoolVar(&isInit, "init", false, "deploy rbac, init data")
 }

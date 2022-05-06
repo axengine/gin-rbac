@@ -47,7 +47,6 @@ type GetAccountAppActivateReq struct {
 }
 
 type FindAccountReq struct {
-	AppId  string
 	Status types.LimitStatus
 }
 

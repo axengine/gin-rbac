@@ -302,6 +302,8 @@ definitions:
     type: object
   model.LoginAccountResp:
     properties:
+      nickname:
+        type: string
       token:
         type: string
       tokenExpired:

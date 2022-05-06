@@ -1810,6 +1810,9 @@ var doc = `{
         "model.LoginAccountResp": {
             "type": "object",
             "properties": {
+                "nickname": {
+                    "type": "string"
+                },
                 "token": {
                     "type": "string"
                 },

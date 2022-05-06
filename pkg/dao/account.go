@@ -131,9 +131,6 @@ func (d *Dao) UpsertAccountAppActivateRole(ctx context.Context, in []*model.Acco
 
 func (d *Dao) FindAccount(ctx context.Context, in *model.FindAccountReq) ([]*model.Account, error) {
 	sess := d.mysql.Context(ctx).Where("1 = 1")
-	if len(in.AppId) > 0 {
-		sess.And("app_id = ?", in.AppId)
-	}
 	if in.Status > 0 {
 		sess.And("status = ?", in.Status)
 	}
