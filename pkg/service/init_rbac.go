@@ -198,10 +198,24 @@ func (svc *Service) InitRBAC(ctx context.Context) error {
 	}); err != nil {
 		return err
 	}
+
 	// 绑定角色
+	_, acc, err := svc.d.GetAccount(ctx, &model.GetAccountReq{
+		Username: "rbac_admin",
+	})
+	if err != nil {
+		return err
+	}
+	_, role, err := svc.d.GetRoleConfig(ctx, &model.GetRoleConfigReq{
+		Name: "RBAC ROOT",
+	})
+	if err != nil {
+		return err
+	}
+
 	if err := svc.UpdateAccountRole(ctx, &model.UpdateAccountRoleReq{
-		IdReq: typ.IdReq{Id: 1},
-		Roles: []int64{1},
+		IdReq: typ.IdReq{Id: acc.Id},
+		Roles: []int64{role.Id},
 	}); err != nil {
 		return err
 	}
@@ -215,7 +229,9 @@ var (
 	menuMenus    = []string{"/rbac/v1/menu/action/update", "/rbac/v1/menu/update", "/rbac/v1/menu/tree", "/rbac/v1/menu/actions", "/rbac/v1/menu/create", "/rbac/v1/menu/delete"}
 	actionMenus  = []string{"/rbac/v1/action/create", "/rbac/v1/action/import", "/rbac/v1/action/find", "/rbac/v1/action/list", "/rbac/v1/action/delete", "/rbac/v1/action/update"}
 	appMenus     = []string{"/rbac/v1/app/list", "/rbac/v1/app/update", "/rbac/v1/app/create", "/rbac/v1/app/delete"}
-	swaggerJSON  = `{
+)
+
+var swaggerJSON = `{
     "swagger": "2.0",
     "info": {
         "description": "gin rbac manage API",
@@ -2403,4 +2419,3 @@ var (
         }
     }
 }`
-)

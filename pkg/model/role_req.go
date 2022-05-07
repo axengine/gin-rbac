@@ -27,7 +27,8 @@ type FindRoleConfigReq struct {
 }
 
 type GetRoleConfigReq struct {
-	Id int64 `json:"id" form:"id"`
+	Id   int64 `json:"id" form:"id"`
+	Name string
 }
 
 type GetRoleMenuActionReq struct {

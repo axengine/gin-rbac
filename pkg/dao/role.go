@@ -60,7 +60,9 @@ func (d *Dao) GetRoleConfig(ctx context.Context, in *model.GetRoleConfigReq) (bo
 	if in.Id > 0 {
 		conds = append(conds, builder.Eq{"id": in.Id})
 	}
-
+	if in.Name != "" {
+		conds = append(conds, builder.Eq{"name": in.Name})
+	}
 	if len(conds) == 0 {
 		return false, nil, errc.ErrParamInvalid.MultiMsg("condition required")
 	}
