@@ -21,7 +21,6 @@ import (
 // @host 127.0.0.1:49000
 // @BasePath /
 func main() {
-	flag.Parse()
 	if err := conf.InitConf(); err != nil {
 		panic(err)
 	}
